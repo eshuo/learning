@@ -16,13 +16,48 @@ import java.util.List;
 public interface ConditionInfoMapper extends BaseMapper<ConditionInfo> {
 
 
-
+    /**
+     * 带子集
+     *
+     * @param id
+     * @return
+     */
     ConditionInfo findById(Integer id);
+
+
+    ConditionInfo findId(Integer id);
 
     List<ConditionInfo> selectAllConditionInfo();
 
 
     List<ConditionInfo> getSubConditionInfo();
+
+    /**
+     * 获取规则条件
+     *
+     * @param ruleId
+     * @return
+     */
+    List<ConditionInfo> findByRuleId(Integer ruleId);
+
+
+
+    //curd
+//
+//    int insertConditionInfo(ConditionInfo conditionInfo);
+//
+//
+//    int updateConditionInfo(ConditionInfo conditionInfo);
+//
+//
+//    int delteConfitionInfo(Integer id);
+
+
+
+
+
+
+
 
 
 }

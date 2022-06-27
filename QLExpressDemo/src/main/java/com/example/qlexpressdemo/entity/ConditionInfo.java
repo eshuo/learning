@@ -46,7 +46,8 @@ public class ConditionInfo implements Serializable {
 
     private String contextInfo;
 
-    private Integer paramInfoId;
+//    @TableField(typeHandler = com.example.qlexpressdemo.handler.IntegerListTypeHandler.class)
+    private List<Integer> paramInfoIds;
 
     private Integer ruleId;
 
@@ -54,13 +55,19 @@ public class ConditionInfo implements Serializable {
     /**
      * 子级
      */
-    @JsonIgnoreProperties("parentConditionInfo")
     private List<ConditionInfo> subConditionInfos;
 
+
     /**
-     * 父级
+     * 参数集合
      */
-    private ConditionInfo parentConditionInfo;
+    private List<ParamInfo> paramInfos;
+
+//
+//    /**
+//     * 父级
+//     */
+//    private ConditionInfo parentConditionInfo;
 
 
 }

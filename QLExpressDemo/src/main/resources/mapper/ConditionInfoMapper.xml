@@ -4,9 +4,21 @@
 
 
     <sql id="selectConditionInfoSql">
-        select ci.id, ci.context_info, ci.expression, ci.param_info_id, ci.parent_id, ci.result_info, ci.rule_id from condition_info ci
+        SELECT "ci"."id", "ci"."context_info", "ci"."expression", "ci"."param_info_id", "ci"."parent_id", "ci"."result_info", "ci"."rule_id"
+        FROM "condition_info" "ci"
     </sql>
 
+
+    <resultMap id="conditionInfoBase" type="com.example.qlexpressdemo.entity.ConditionInfo">
+        <id property="id" column="id"></id>
+        <result property="expression" column="expression"></result>
+        <result property="parentId" column="parent_id"></result>
+        <result property="resultInfo" column="result_info"></result>
+        <result property="contextInfo" column="context_info"></result>
+        <result property="paramInfoIds" column="param_info_id" typeHandler="com.example.qlexpressdemo.handler.IntegerListTypeHandler"></result>
+
+        <result property="ruleId" column="rule_id"></result>
+    </resultMap>
 
     <resultMap id="conditionInfo" type="com.example.qlexpressdemo.entity.ConditionInfo">
         <id property="id" column="id"></id>
@@ -14,55 +26,51 @@
         <result property="parentId" column="parent_id"></result>
         <result property="resultInfo" column="result_info"></result>
         <result property="contextInfo" column="context_info"></result>
-        <result property="paramInfoId" column="param_info_id"></result>
+        <result property="paramInfoIds" column="param_info_id" typeHandler="com.example.qlexpressdemo.handler.IntegerListTypeHandler"></result>
         <result property="ruleId" column="rule_id"></result>
 
 
-        <collection  property="subConditionInfos"
-                     ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="getSubConditionInfo"  column="id"/>
+        <collection property="paramInfos"
+                    ofType="com.example.qlexpressdemo.entity.ParamInfo" select="getSubConditionInfo" column="param_info_id"/>
 
-        <collection  property="parentConditionInfo"
-                    ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="findById" column="parent_id">
+        <collection property="subConditionInfos"
+                    ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="getSubConditionInfo" column="id"/>
 
-        </collection>
+        <!--        <collection  property="parentConditionInfo"-->
+        <!--                    ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="findById" column="parent_id">-->
+
+        <!--        </collection>-->
 
     </resultMap>
 
 
-    <select id="findParent" resultType="java.util.Map">
-               <include refid="selectConditionInfoSql"></include>
-
-                <where>
-
-                </where>
-
-
-
-    </select>
-
-
-
-
-    <!--级联查询父菜单-->
+    <!--级联查询父级-->
     <select id="selectAllConditionInfo" resultMap="conditionInfo">
-      <include refid="selectConditionInfoSql"/>
+        <include refid="selectConditionInfoSql"/>
         where parent_id is null
     </select>
 
 
-    <!--级联查询子菜单-->
+    <!--级联查询子集-->
     <select id="getSubConditionInfo" parameterType="java.lang.Integer" resultMap="conditionInfo">
         <include refid="selectConditionInfoSql"/>
         where ci.parent_id = #{id}
     </select>
 
 
-<!--    <select id="findById" resultType="com.example.qlexpressdemo.entity.ConditionInfo" parameterType="java.lang.Integer">-->
+    <select id="getParamInfo" parameterType="java.lang.Integer" resultMap="conditionInfo">
+        SELECT *
+        FROM "param_info"
+        WHERE "id" = #{id}
+    </select>
 
-<!--        <include refid="selectConditionInfoSql"></include>-->
-<!--        where ci.id = #{id}-->
 
-<!--    </select>-->
+    <!--    <select id="findById" resultType="com.example.qlexpressdemo.entity.ConditionInfo" parameterType="java.lang.Integer">-->
+
+    <!--        <include refid="selectConditionInfoSql"></include>-->
+    <!--        where ci.id = #{id}-->
+
+    <!--    </select>-->
 
 
     <select id="findById" resultMap="conditionInfo" parameterType="java.lang.Integer">
@@ -72,9 +80,31 @@
 
     </select>
 
+    <select id="findId" resultMap="conditionInfoBase" parameterType="java.lang.Integer">
+        <include refid="selectConditionInfoSql"></include>
+        where ci.id = #{id}
+    </select>
+    <select id="findByRuleId" resultMap="conditionInfo" parameterType="java.lang.Integer">
+
+        <include refid="selectConditionInfoSql"></include>
+        where ci.rule_id = #{ruleId}
+
+    </select>
+
 
     <!--    </select>-->
 
 
-    
+    <!--    curd-->
+
+    <!--    <insert id="insert" parameterType="com.example.qlexpressdemo.entity.ConditionInfo">-->
+    <insert id="insert" parameterType="com.example.qlexpressdemo.entity.ConditionInfo">
+        INSERT INTO condition_info( expression, parent_id, result_info, context_info, param_info_id, rule_id)
+        VALUES (#{contextInfo},#{expression},#{paramInfoIds},#{parentId},#{resultInfo},#{ruleId})
+        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
+            select @@identity
+        </selectKey>
+    </insert>
+
+
 </mapper>

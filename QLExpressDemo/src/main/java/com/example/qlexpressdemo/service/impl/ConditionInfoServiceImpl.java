@@ -36,4 +36,15 @@ public class ConditionInfoServiceImpl extends ServiceImpl<ConditionInfoMapper, C
 
 //        return new ArrayList<>();
     }
+
+
+    @Override
+    public boolean save(ConditionInfo entity) {
+        final int insert = conditionInfoMapper.insert(entity);
+        return true;
+    }
+
+
+
+
 }

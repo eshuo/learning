@@ -41,4 +41,8 @@ public class RuleInfo implements Serializable {
 
 
 
+
+
+
+
 }

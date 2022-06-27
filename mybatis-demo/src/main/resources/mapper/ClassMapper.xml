@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisdemo.mapper.ClassMapper">
+
+    <!--
+        一对多 关联查询：
+
+        方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集
+        SELECT * FROM class c, teacher t, student s WHERE c.tid=t.tid AND c.cid=s.cid AND c.cid=#{id}
+     -->
+    <!-- 查询班级及其老师信息 -->
+    <select id="getClazz" parameterType="int" resultMap="getClazzMap">
+        SELECT * FROM class c, teacher t, student s WHERE c.tid=t.tid AND c.cid=s.cid AND c.cid=#{id}
+    </select>
+
+    <resultMap type="com.example.mybatisdemo.entity.Clazz" id="getClazzMap">
+        <id property="id" column="cid"/>
+        <result property="name" column="cname"/>
+        <!-- 关联查询teacher 一对一 -->
+        <association property="teacher" javaType="com.example.mybatisdemo.entity.Teacher">
+            <id property="id" column="tid"/>
+            <result property="name" column="tname"/>
+        </association>
+        <!-- 关联班级对应的student 一对多 ofType代表集合中存放的对象类型-->
+        <collection property="stuList" ofType="com.example.mybatisdemo.entity.Student">
+            <id property="id" column="sid"/>
+            <result property="name" column="sname"/>
+        </collection>
+    </resultMap>
+
+
+    <!--
+         一对多 关联查询：
+
+         方式二：嵌套查询：使用嵌套结果映射来处理重复的联合结果的子集
+         SELECT * FROM class WHERE cid=#{id}   //查询得到tid、cid用于给下面2条语句使用
+        SELECT * FROM teacher WHERE tid=#{id} //tid为第一条sql查询后的tid
+        SELECT * FROM student WHERE cid=#{id} //cid为第一条sql查询后的cid
+      -->
+    <!-- 查询班级及其老师信息 -->
+    <select id="getClazz2" parameterType="int" resultMap="getClazzMap2">
+        SELECT * FROM class WHERE cid=#{id}
+
+    </select>
+    <!-- 这里必须写成别名形式SELECT tid id, tname name，否则查询结果为null -->
+    <select id="getTeacher" parameterType="int" resultType="com.example.mybatisdemo.entity.Teacher">
+        SELECT tid id, tname name FROM teacher WHERE tid=#{id}
+    </select>
+    <select id="getStuList" parameterType="int" resultType="com.example.mybatisdemo.entity.Student">
+        SELECT sid id, sname name FROM student WHERE cid=#{id}
+    </select>
+
+    <resultMap type="com.example.mybatisdemo.entity.Clazz" id="getClazzMap2">
+        <id property="id" column="cid"/>
+        <result property="name" column="cname"/>
+        <!-- 关联查询teacher 一对一 -->
+        <association property="teacher" column="tid" select="getTeacher"/>
+        <!-- 关联班级对应的student 一对多 ofType代表集合中存放的对象类型-->
+        <collection property="stuList" column="cid" select="getStuList"/>
+    </resultMap>
+</mapper>
