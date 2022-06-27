@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.qlexpressdemo.mapper.ConditionInfoMapper">
+
+
+    <sql id="selectConditionInfoSql">
+        select ci.id, ci.context_info, ci.expression, ci.param_info_id, ci.parent_id, ci.result_info, ci.rule_id from condition_info ci
+    </sql>
+
+
+    <resultMap id="conditionInfo" type="com.example.qlexpressdemo.entity.ConditionInfo">
+        <id property="id" column="id"></id>
+        <result property="expression" column="expression"></result>
+        <result property="parentId" column="parent_id"></result>
+        <result property="resultInfo" column="result_info"></result>
+        <result property="contextInfo" column="context_info"></result>
+        <result property="paramInfoId" column="param_info_id"></result>
+        <result property="ruleId" column="rule_id"></result>
+
+
+        <collection  property="subConditionInfos"
+                     ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="getSubConditionInfo"  column="id"/>
+
+        <collection  property="parentConditionInfo"
+                    ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="findById" column="parent_id">
+
+        </collection>
+
+    </resultMap>
+
+
+    <select id="findParent" resultType="java.util.Map">
+               <include refid="selectConditionInfoSql"></include>
+
+                <where>
+
+                </where>
+
+
+
+    </select>
+
+
+
+
+    <!--级联查询父菜单-->
+    <select id="selectAllConditionInfo" resultMap="conditionInfo">
+      <include refid="selectConditionInfoSql"/>
+        where parent_id is null
+    </select>
+
+
+    <!--级联查询子菜单-->
+    <select id="getSubConditionInfo" parameterType="java.lang.Integer" resultMap="conditionInfo">
+        <include refid="selectConditionInfoSql"/>
+        where ci.parent_id = #{id}
+    </select>
+
+
+<!--    <select id="findById" resultType="com.example.qlexpressdemo.entity.ConditionInfo" parameterType="java.lang.Integer">-->
+
+<!--        <include refid="selectConditionInfoSql"></include>-->
+<!--        where ci.id = #{id}-->
+
+<!--    </select>-->
+
+
+    <select id="findById" resultMap="conditionInfo" parameterType="java.lang.Integer">
+
+        <include refid="selectConditionInfoSql"></include>
+        where ci.id = #{id}
+
+    </select>
+
+
+    <!--    </select>-->
+
+
+    
+</mapper>
