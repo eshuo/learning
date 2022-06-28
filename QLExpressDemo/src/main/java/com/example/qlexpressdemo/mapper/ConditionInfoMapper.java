@@ -2,6 +2,7 @@ package com.example.qlexpressdemo.mapper;
 
 import com.example.qlexpressdemo.entity.ConditionInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.qlexpressdemo.entity.ParamInfo;
 
 import java.util.List;
 
@@ -22,10 +23,10 @@ public interface ConditionInfoMapper extends BaseMapper<ConditionInfo> {
      * @param id
      * @return
      */
-    ConditionInfo findById(Integer id);
+    ConditionInfo findById(String id);
 
 
-    ConditionInfo findId(Integer id);
+    ConditionInfo findId(String id);
 
     List<ConditionInfo> selectAllConditionInfo();
 
@@ -38,8 +39,7 @@ public interface ConditionInfoMapper extends BaseMapper<ConditionInfo> {
      * @param ruleId
      * @return
      */
-    List<ConditionInfo> findByRuleId(Integer ruleId);
-
+    List<ConditionInfo> findByRuleId(String ruleId);
 
 
     //curd
@@ -53,11 +53,7 @@ public interface ConditionInfoMapper extends BaseMapper<ConditionInfo> {
 //    int delteConfitionInfo(Integer id);
 
 
-
-
-
-
-
+    List<ParamInfo> getParamInfoList(String ids);
 
 
 }

@@ -19,4 +19,7 @@ public interface IConditionInfoService extends IService<ConditionInfo> {
     public List<ConditionInfo> getAll();
 
 
+
+    List<ConditionInfo> findByRuleId(String ruleId);
+
 }

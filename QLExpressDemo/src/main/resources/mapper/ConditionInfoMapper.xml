@@ -4,8 +4,8 @@
 
 
     <sql id="selectConditionInfoSql">
-        SELECT "ci"."id", "ci"."context_info", "ci"."expression", "ci"."param_info_id", "ci"."parent_id", "ci"."result_info", "ci"."rule_id"
-        FROM "condition_info" "ci"
+        SELECT ci.id,ci.expression,  ci.parent_id,  ci.result_info, ci.context_info, ci.rule_id
+        FROM condition_info ci
     </sql>
 
 
@@ -15,9 +15,11 @@
         <result property="parentId" column="parent_id"></result>
         <result property="resultInfo" column="result_info"></result>
         <result property="contextInfo" column="context_info"></result>
-        <result property="paramInfoIds" column="param_info_id" typeHandler="com.example.qlexpressdemo.handler.IntegerListTypeHandler"></result>
-
+        <result property="paramInfoIds" column="param_info_ids"></result>
         <result property="ruleId" column="rule_id"></result>
+        <!--        <collection property="paramInfoIds" ofType="string" javaType="list">-->
+        <!--            <result column="param_info_ids"/>-->
+        <!--        </collection>-->
     </resultMap>
 
     <resultMap id="conditionInfo" type="com.example.qlexpressdemo.entity.ConditionInfo">
@@ -26,12 +28,22 @@
         <result property="parentId" column="parent_id"></result>
         <result property="resultInfo" column="result_info"></result>
         <result property="contextInfo" column="context_info"></result>
-        <result property="paramInfoIds" column="param_info_id" typeHandler="com.example.qlexpressdemo.handler.IntegerListTypeHandler"></result>
+        <!--        <result property="paramInfoIds" column="param_info_ids" typeHandler="com.example.qlexpressdemo.handler.StringListTypeHandler"></result>-->
+        <result property="paramInfoIds" column="param_info_ids"></result>
+
         <result property="ruleId" column="rule_id"></result>
 
+        <!--        <collection property="paramInfoIds" ofType="string" javaType="list">-->
+        <!--            <result column="param_info_ids"/>-->
+        <!--        </collection>-->
+<!--        <collection property="paramInfos"-->
+<!--                    ofType="com.example.qlexpressdemo.entity.ParamInfo" select="getParamInfoList" column="param_info_ids"/>-->
 
-        <collection property="paramInfos"
-                    ofType="com.example.qlexpressdemo.entity.ParamInfo" select="getSubConditionInfo" column="param_info_id"/>
+
+<!--        <collection property="paramInfos" ofType="com.example.qlexpressdemo.entity.ParamInfo">-->
+<!--            <id property="id" column="id"/>-->
+<!--&lt;!&ndash;            <result property="name" column="sname"/>&ndash;&gt;-->
+<!--        </collection>-->
 
         <collection property="subConditionInfos"
                     ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="getSubConditionInfo" column="id"/>
@@ -58,11 +70,22 @@
     </select>
 
 
-    <select id="getParamInfo" parameterType="java.lang.Integer" resultMap="conditionInfo">
-        SELECT *
-        FROM "param_info"
-        WHERE "id" = #{id}
-    </select>
+<!--    <select id="getParamInfoList" parameterType="java.lang.String" resultMap="com.example.qlexpressdemo.entity.ParamInfo">-->
+    <!--        SELECT *-->
+    <!--        FROM "param_info"-->
+    <!--        WHERE 1=1-->
+
+    <!--        <if test="ids!=null and ids!='' and ids.indexOf(',')!=-1">-->
+    <!--            and id in-->
+    <!--            <foreach collection="ids.split(',')" item="item" index="index" open="(" separator="," close=")">-->
+    <!--                #{item}-->
+    <!--            </foreach>-->
+    <!--        </if>-->
+    <!--        <if test="ids !=null and ids.indexOf(',') == -1">-->
+    <!--            AND id = #{ids}-->
+    <!--        </if>-->
+
+    <!--    </select>-->
 
 
     <!--    <select id="findById" resultType="com.example.qlexpressdemo.entity.ConditionInfo" parameterType="java.lang.Integer">-->
@@ -73,18 +96,18 @@
     <!--    </select>-->
 
 
-    <select id="findById" resultMap="conditionInfo" parameterType="java.lang.Integer">
+    <select id="findById" resultMap="conditionInfo" parameterType="java.lang.String">
 
         <include refid="selectConditionInfoSql"></include>
         where ci.id = #{id}
 
     </select>
 
-    <select id="findId" resultMap="conditionInfoBase" parameterType="java.lang.Integer">
+    <select id="findId" resultMap="conditionInfoBase" parameterType="java.lang.String">
         <include refid="selectConditionInfoSql"></include>
         where ci.id = #{id}
     </select>
-    <select id="findByRuleId" resultMap="conditionInfo" parameterType="java.lang.Integer">
+    <select id="findByRuleId" resultMap="conditionInfo" parameterType="java.lang.String">
 
         <include refid="selectConditionInfoSql"></include>
         where ci.rule_id = #{ruleId}
@@ -99,12 +122,39 @@
 
     <!--    <insert id="insert" parameterType="com.example.qlexpressdemo.entity.ConditionInfo">-->
     <insert id="insert" parameterType="com.example.qlexpressdemo.entity.ConditionInfo">
-        INSERT INTO condition_info( expression, parent_id, result_info, context_info, param_info_id, rule_id)
-        VALUES (#{contextInfo},#{expression},#{paramInfoIds},#{parentId},#{resultInfo},#{ruleId})
-        <selectKey resultType="Integer" keyProperty="id" order="AFTER">
-            select @@identity
-        </selectKey>
+        INSERT INTO condition_info (id, expression, parent_id, result_info, context_info, param_info_ids, rule_id)
+        VALUES (#{id},#{expression},#{parentId},#{resultInfo},#{contextInfo},#{paramInfoIds},#{ruleId})
     </insert>
+
+    <update id="update" parameterType="com.example.qlexpressdemo.entity.ConditionInfo">
+
+    update condition_info
+    <trim prefix="SET" suffixOverrides=",">
+
+        <if test="expression != null">expression = #{expression}</if>
+        <if test="parentId != null">parent_id = #{parentId}</if>
+        <if test="resultInfo != null">result_info = #{resultInfo}</if>
+        <if test="contextInfo != null">context_info = #{contextInfo}</if>
+        <if test="paramInfoIds != null">param_info_ids = #{paramInfoIds}</if>
+        <if test="ruleId != null">rule_id = #{ruleId}</if>
+
+    </trim>
+    where id = #{id}
+    </update>
+
+
+    <delete id="deleteById" parameterType="string">
+        delete from condition_info where id = #{id}
+    </delete>
+
+    <delete id="deleteBatchIds" parameterType="string">
+
+        delete from condition_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 
 
 </mapper>

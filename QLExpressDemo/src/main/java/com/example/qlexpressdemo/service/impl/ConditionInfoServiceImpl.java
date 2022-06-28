@@ -1,14 +1,12 @@
 package com.example.qlexpressdemo.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.qlexpressdemo.entity.ConditionInfo;
 import com.example.qlexpressdemo.mapper.ConditionInfoMapper;
 import com.example.qlexpressdemo.service.IConditionInfoService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,28 +21,44 @@ import java.util.List;
 public class ConditionInfoServiceImpl extends ServiceImpl<ConditionInfoMapper, ConditionInfo> implements IConditionInfoService {
 
 
-    @Resource
-    private ConditionInfoMapper conditionInfoMapper;
-
+//    baseMapper
 
     @Override
     public List<ConditionInfo> getAll() {
 
-        final ConditionInfo byId = conditionInfoMapper.findById(1000);
 
-        return conditionInfoMapper.selectAllConditionInfo();
+        final ConditionInfo byId = getBaseMapper().findById(String.valueOf(1000));
+
+        return getBaseMapper().selectAllConditionInfo();
 
 //        return new ArrayList<>();
+    }
+
+    @Override
+    public List<ConditionInfo> findByRuleId(String ruleId) {
+        return baseMapper.findByRuleId(ruleId);
     }
 
 
     @Override
     public boolean save(ConditionInfo entity) {
-        final int insert = conditionInfoMapper.insert(entity);
+        final int insert = getBaseMapper().insert(entity);
         return true;
     }
 
 
+    @Override
+    public boolean updateById(ConditionInfo conditionInfo) {
+
+        final int i = getBaseMapper().updateById(conditionInfo);
+        return true;
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        final int i = getBaseMapper().deleteById(id);
+        return true;
+    }
 
 
 }

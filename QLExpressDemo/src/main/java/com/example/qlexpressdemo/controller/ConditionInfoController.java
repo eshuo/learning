@@ -4,11 +4,7 @@ package com.example.qlexpressdemo.controller;
 import com.example.qlexpressdemo.entity.ConditionInfo;
 import com.example.qlexpressdemo.service.IConditionInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -30,6 +26,26 @@ public class ConditionInfoController {
     @ResponseBody
     public boolean save(@RequestBody ConditionInfo conditionInfo) {
         return iConditionInfoService.save(conditionInfo);
+    }
+
+    @RequestMapping("/update")
+    @ResponseBody
+    public boolean update(@RequestBody ConditionInfo info) {
+        return iConditionInfoService.updateById(info);
+    }
+
+
+    @RequestMapping("/del")
+    @ResponseBody
+    public boolean delete(@PathVariable("id") String id) {
+        final boolean b = iConditionInfoService.removeById(id);
+        return b;
+    }
+
+    @GetMapping("/get/{id}")
+    @ResponseBody
+    public ConditionInfo get(@PathVariable("id") String id) {
+        return iConditionInfoService.getById(id);
     }
 
 

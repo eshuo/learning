@@ -32,35 +32,45 @@ public class ConditionInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private String id;
 
     @ApiModelProperty(value = "表达式 ")
     private String expression;
 
     @ApiModelProperty(value = "自引用id ")
-    private Integer parentId;
+    private String parentId;
 
     @ApiModelProperty(value = "响应信息")
     private String resultInfo;
 
     private String contextInfo;
 
-//    @TableField(typeHandler = com.example.qlexpressdemo.handler.IntegerListTypeHandler.class)
-    private List<Integer> paramInfoIds;
+    private String ruleId;
 
-    private Integer ruleId;
 
+    public ConditionInfo(String id, String expression, String parentId, String resultInfo, String contextInfo, String ruleId) {
+        this.id = id;
+        this.expression = expression;
+        this.parentId = parentId;
+        this.resultInfo = resultInfo;
+        this.contextInfo = contextInfo;
+        this.ruleId = ruleId;
+    }
 
     /**
      * 子级
      */
+    @TableField(exist = false)  //标志此属性不是表的字段
     private List<ConditionInfo> subConditionInfos;
 
+    //    逗号拆分
+    //    @TableField(typeHandler = com.example.qlexpressdemo.handler.IntegerListTypeHandler.class)
+    private String paramInfoIds;
 
     /**
      * 参数集合
      */
+    @TableField(exist = false)  //标志此属性不是表的字段
     private List<ParamInfo> paramInfos;
 
 //
