@@ -11,3 +11,6 @@ mybatis:
   type-aliases-package: com.example.qlexpressdemo
   configuration:
     map-underscore-to-camel-case: true
+logging:
+  level:
+    root: debug

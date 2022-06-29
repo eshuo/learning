@@ -24,5 +24,10 @@ public interface QLDemoService {
 
 
 
+    boolean check(QLDemo.verify verify);
+
+
+
+
 
 }

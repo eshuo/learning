@@ -4,7 +4,7 @@
 
 
     <sql id="selectConditionInfoSql">
-        SELECT ci.id,ci.expression,  ci.parent_id,  ci.result_info, ci.context_info, ci.rule_id
+        SELECT ci.id,ci.expression,  ci.parent_id,  ci.result_info, ci.context_info, ci.rule_id,ci.param_info_ids
         FROM condition_info ci
     </sql>
 
@@ -36,8 +36,8 @@
         <!--        <collection property="paramInfoIds" ofType="string" javaType="list">-->
         <!--            <result column="param_info_ids"/>-->
         <!--        </collection>-->
-<!--        <collection property="paramInfos"-->
-<!--                    ofType="com.example.qlexpressdemo.entity.ParamInfo" select="getParamInfoList" column="param_info_ids"/>-->
+        <collection property="paramInfos"
+                    ofType="com.example.qlexpressdemo.entity.ParamInfo" select="getParamInfoList" column="param_info_ids"/>
 
 
 <!--        <collection property="paramInfos" ofType="com.example.qlexpressdemo.entity.ParamInfo">-->
@@ -52,6 +52,25 @@
         <!--                    ofType="com.example.qlexpressdemo.entity.ConditionInfo" select="findById" column="parent_id">-->
 
         <!--        </collection>-->
+
+<!--        <collection property="paramInfos" ofType="com.example.qlexpressdemo.entity.ParamInfo">-->
+<!--            <id property="id" column="id"/>-->
+<!--            <result property="field" column="field"/>-->
+<!--            <result property="title" column="title"/>-->
+<!--            <result property="type" column="type"/>-->
+<!--            <result property="cInfo" column="c_info"/>-->
+<!--        </collection>-->
+
+    </resultMap>
+
+
+    <resultMap id="paramInfoData" type="com.example.qlexpressdemo.entity.ParamInfo">
+
+        <id property="id" column="id"/>
+        <result property="field" column="fie_id"/>
+        <result property="title" column="title"/>
+        <result property="type" column="type"/>
+        <result property="cInfo" column="c_info"/>
 
     </resultMap>
 
@@ -70,22 +89,22 @@
     </select>
 
 
-<!--    <select id="getParamInfoList" parameterType="java.lang.String" resultMap="com.example.qlexpressdemo.entity.ParamInfo">-->
-    <!--        SELECT *-->
-    <!--        FROM "param_info"-->
-    <!--        WHERE 1=1-->
+    <select id="getParamInfoList" parameterType="java.lang.String" resultMap="paramInfoData">
+            SELECT *
+            FROM param_info
+            WHERE 1=1
 
-    <!--        <if test="ids!=null and ids!='' and ids.indexOf(',')!=-1">-->
-    <!--            and id in-->
-    <!--            <foreach collection="ids.split(',')" item="item" index="index" open="(" separator="," close=")">-->
-    <!--                #{item}-->
-    <!--            </foreach>-->
-    <!--        </if>-->
-    <!--        <if test="ids !=null and ids.indexOf(',') == -1">-->
-    <!--            AND id = #{ids}-->
-    <!--        </if>-->
+            <if test="ids!=null and ids!='' and ids.indexOf(',')!=-1">
+                and id in
+                <foreach collection="ids.split(',')" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="ids !=null and ids.indexOf(',') == -1">
+                AND id = #{ids}
+            </if>
 
-    <!--    </select>-->
+        </select>
 
 
     <!--    <select id="findById" resultType="com.example.qlexpressdemo.entity.ConditionInfo" parameterType="java.lang.Integer">-->

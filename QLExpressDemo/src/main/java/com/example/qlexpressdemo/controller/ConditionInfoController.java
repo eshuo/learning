@@ -45,7 +45,8 @@ public class ConditionInfoController {
     @GetMapping("/get/{id}")
     @ResponseBody
     public ConditionInfo get(@PathVariable("id") String id) {
-        return iConditionInfoService.getById(id);
+        return iConditionInfoService.findById(id);
+//        return iConditionInfoService.getById(id);
     }
 
 

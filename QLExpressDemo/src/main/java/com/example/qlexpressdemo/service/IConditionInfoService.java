@@ -16,6 +16,8 @@ import java.util.List;
 public interface IConditionInfoService extends IService<ConditionInfo> {
 
 
+    ConditionInfo findById(String id);
+
     public List<ConditionInfo> getAll();
 
 

@@ -3,13 +3,12 @@ package com.example.qlexpressdemo.service.impl;
 import com.example.qlexpressdemo.bean.rest.QLDemo;
 import com.example.qlexpressdemo.context.QLAliasContext;
 import com.example.qlexpressdemo.entity.ConditionInfo;
+import com.example.qlexpressdemo.entity.ParamInfo;
+import com.example.qlexpressdemo.entity.UIndex;
 import com.example.qlexpressdemo.entity.UserIndex;
 import com.example.qlexpressdemo.mapper.RuleInfoMapper;
 import com.example.qlexpressdemo.mapper.UserIndexMapper;
-import com.example.qlexpressdemo.service.IConditionInfoService;
-import com.example.qlexpressdemo.service.IRuleInfoService;
-import com.example.qlexpressdemo.service.IUserIndexService;
-import com.example.qlexpressdemo.service.QLDemoService;
+import com.example.qlexpressdemo.service.*;
 import com.ql.util.express.ExpressRunner;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,9 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description
@@ -36,6 +37,10 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
 
     @Autowired
     private IConditionInfoService iConditionInfoService;
+
+
+    @Autowired
+    private IUIndexService iuIndexService;
 
     @Override
     public boolean verify(QLDemo.verify verify) {
@@ -80,6 +85,63 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
             }
         }
 //        return booleanList.stream().anyMatch(s -> s);
+        return false;
+    }
+
+    @Override
+    public boolean check(QLDemo.verify verify) {
+
+
+        final String userId = verify.getUserId();
+        final UIndex byId = iuIndexService.getById(userId);
+        if (null == byId) {
+            return false;
+        }
+
+        final Map<String, String> indexInfo = byId.getIndexInfo();
+        if (null == indexInfo) {
+            return false;
+        }
+        final List<ParamInfo> paramInfos = byId.getParamInfos();
+        if (!CollectionUtils.isEmpty(paramInfos)) {
+            paramInfos.stream().peek(p -> {
+                if (indexInfo.containsKey(p.getId())) {
+                    indexInfo.put(p.getField(), indexInfo.get(p.getId()));
+                }
+            });
+        }
+
+
+        final String ruleId = verify.getRuleId();
+
+        final List<ConditionInfo> byRuleId = iConditionInfoService.findByRuleId(ruleId);
+        if (CollectionUtils.isEmpty(byRuleId)) {
+            return false;
+        }
+
+
+        for (ConditionInfo conditionInfo : byRuleId) {
+
+
+            String expression = conditionInfo.getExpression();
+
+            final List<ParamInfo> paramInfos1 = conditionInfo.getParamInfos();
+
+            if (null != paramInfos1 && StringUtils.isNotBlank(expression)) {
+                for (ParamInfo paramInfo : paramInfos1) {
+                    expression = expression.replaceAll(paramInfo.getTitle(), paramInfo.getField());
+                }
+            }
+
+
+        }
+
+
+        //匹配规则
+
+        ExpressRunner runner = new ExpressRunner();
+
+
         return false;
     }
 }

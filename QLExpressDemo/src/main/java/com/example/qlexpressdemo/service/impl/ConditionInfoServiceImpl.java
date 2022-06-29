@@ -2,8 +2,10 @@ package com.example.qlexpressdemo.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.qlexpressdemo.entity.ConditionInfo;
+import com.example.qlexpressdemo.entity.ParamInfo;
 import com.example.qlexpressdemo.mapper.ConditionInfoMapper;
 import com.example.qlexpressdemo.service.IConditionInfoService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
@@ -22,6 +24,12 @@ public class ConditionInfoServiceImpl extends ServiceImpl<ConditionInfoMapper, C
 
 
 //    baseMapper
+
+    @Override
+    public ConditionInfo findById(String id) {
+        final ConditionInfo byId = baseMapper.findById(id);
+        return byId;
+    }
 
     @Override
     public List<ConditionInfo> getAll() {

@@ -1,0 +1,80 @@
+{
+  "id": "001",
+  "expression": "指标.锁定次数<3",
+  "parentId": null,
+  "resultInfo": null,
+  "contextInfo": null,
+  "ruleId": "123",
+  "subConditionInfos": [
+    {
+      "id": "005",
+      "expression": "指标.认证方式 = 1",
+      "parentId": "001",
+      "resultInfo": null,
+      "contextInfo": null,
+      "ruleId": null,
+      "subConditionInfos": [],
+      "paramInfoIds": "1,2,3",
+      "paramInfos": [
+        {
+          "id": "1",
+          "field": "safe_credit",
+          "title": "安全信用",
+          "type": "String",
+          "cinfo": null
+        },
+        {
+          "id": "2",
+          "field": "verification",
+          "title": "认证方式",
+          "type": "String",
+          "cinfo": null
+        },
+        {
+          "id": "3",
+          "field": "lock_num",
+          "title": "锁定次数",
+          "type": "String",
+          "cinfo": null
+        }
+      ]
+    }
+  ],
+  "paramInfoIds": "3",
+  "paramInfos": [
+    {
+      "id": "3",
+      "field": "lock_num",
+      "title": "锁定次数",
+      "type": "String",
+      "cinfo": null
+    }
+  ]
+}
+
+
+{
+  "id": "1",
+  "userName": "zhangsan",
+  "indexIds": "0,1",
+  "indexInfo": {
+    "0": "66",
+    "1": "3"
+  },
+  "paramInfos": [
+    {
+      "id": "0",
+      "field": "rule",
+      "title": "规则",
+      "type": "String",
+      "cinfo": null
+    },
+    {
+      "id": "1",
+      "field": "safe_credit",
+      "title": "安全信用",
+      "type": "String",
+      "cinfo": null
+    }
+  ]
+}

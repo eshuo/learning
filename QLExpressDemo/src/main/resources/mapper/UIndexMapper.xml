@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.qlexpressdemo.mapper.UIndexMapper">
+
+
+
+    <resultMap id="uIndex" type="com.example.qlexpressdemo.entity.UIndex">
+
+        <id property="id" column="id"/>
+        <result property="indexIds" column="index_ids"/>
+        <result property="userName" column="user_name"/>
+
+<!--        Map 转换-->
+<!--        <collection property="indexInfo" javaType="java.util.HashMap" column="index_info" ofType="java.lang.String"/>-->
+<!--        <collection property="indexInfo" javaType="java.lang.String" column="index_info" ofType="java.util.HashMap"-->
+<!--                    typeHandler="com.example.qlexpressdemo.handler.JsonToMapTypeHandler"/>-->
+        <result column="index_info" jdbcType="VARCHAR" property="indexInfo" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+
+
+        <collection property="paramInfos"
+                    ofType="com.example.qlexpressdemo.entity.ParamInfo" select="getParamInfoList" column="index_ids"/>
+
+    </resultMap>
+
+    <resultMap id="paramInfoData" type="com.example.qlexpressdemo.entity.ParamInfo">
+        <id property="id" column="id"/>
+        <result property="field" column="fie_id"/>
+        <result property="title" column="title"/>
+        <result property="type" column="type"/>
+        <result property="cInfo" column="c_info"/>
+    </resultMap>
+
+
+    <select id="getParamInfoList" parameterType="java.lang.String" resultMap="paramInfoData">
+        SELECT *
+        FROM param_info
+        WHERE 1=1
+        <if test="ids!=null and ids!='' and ids.indexOf(',')!=-1">
+            and id in
+            <foreach collection="ids.split(',')" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="ids !=null and ids.indexOf(',') == -1">
+            AND id = #{ids}
+        </if>
+    </select>
+
+    <select id="findById" resultMap="uIndex" parameterType="java.lang.String">
+        SELECT * from u_index where id  =#{id}
+    </select>
+
+    <insert id="save" parameterType="com.example.qlexpressdemo.entity.UIndex">
+        INSERT INTO `u_index` (`id`, `user_name`, `index_ids`, `index_info`) VALUES (#{id}, #{userName}, #{indexIds},
+        <if test="indexInfo != null" >
+            <foreach collection="indexInfo" item="value"
+                     index="key" open="'{" close="}'">
+                #{key}:#{value}
+            </foreach>
+        </if>
+
+        <if test="indexInfo == null" >
+             NULL
+        </if>
+    );
+    </insert>
+
+
+</mapper>
