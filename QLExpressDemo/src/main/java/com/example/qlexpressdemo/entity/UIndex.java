@@ -40,6 +40,9 @@ public class UIndex implements Serializable {
 
     private String indexIds;
 
+    /**
+     * 动态指标集合
+     */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private Map<String, String> indexInfo;
 

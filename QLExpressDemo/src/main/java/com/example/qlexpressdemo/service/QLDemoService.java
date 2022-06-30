@@ -22,12 +22,15 @@ public interface QLDemoService {
     boolean verify(QLDemo.verify verify);
 
 
+    boolean check(QLDemo.verify verify) throws Exception;
 
 
-    boolean check(QLDemo.verify verify);
-
-
-
+    /**
+     * 评分卡
+     */
+    default Object score(QLDemo.verify verify) throws Exception {
+        return null;
+    }
 
 
 }

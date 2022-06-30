@@ -28,4 +28,16 @@ public class QLDemoController {
         return qlDemoService.verify(verify);
     }
 
+
+    @RequestMapping("/check")
+    @ResponseBody
+    public boolean check(@RequestBody QLDemo.verify verify) {
+        try {
+            return qlDemoService.check(verify);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

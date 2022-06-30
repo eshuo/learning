@@ -6,19 +6,16 @@ import com.example.qlexpressdemo.entity.ConditionInfo;
 import com.example.qlexpressdemo.entity.ParamInfo;
 import com.example.qlexpressdemo.entity.UIndex;
 import com.example.qlexpressdemo.entity.UserIndex;
-import com.example.qlexpressdemo.mapper.RuleInfoMapper;
-import com.example.qlexpressdemo.mapper.UserIndexMapper;
 import com.example.qlexpressdemo.service.*;
+import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
+import com.ql.util.express.IExpressContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,12 +85,20 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
         return false;
     }
 
+
+    /**
+     * 动态指标判断  （全部匹配才判断）
+     *
+     * @param verify
+     * @return
+     * @throws Exception
+     */
     @Override
-    public boolean check(QLDemo.verify verify) {
+    public boolean check(QLDemo.verify verify) throws Exception {
 
 
         final String userId = verify.getUserId();
-        final UIndex byId = iuIndexService.getById(userId);
+        final UIndex byId = iuIndexService.findById(userId);
         if (null == byId) {
             return false;
         }
@@ -103,14 +108,17 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
             return false;
         }
         final List<ParamInfo> paramInfos = byId.getParamInfos();
+        IExpressContext<String, Object> context = new DefaultContext<>();
         if (!CollectionUtils.isEmpty(paramInfos)) {
-            paramInfos.stream().peek(p -> {
-                if (indexInfo.containsKey(p.getId())) {
-                    indexInfo.put(p.getField(), indexInfo.get(p.getId()));
+            for (ParamInfo paramInfo : paramInfos) {
+                if (indexInfo.containsKey(paramInfo.getId())) {
+                    indexInfo.put(paramInfo.getField(), indexInfo.get(paramInfo.getId()));
+//                    context.put(paramInfo.getField(), indexInfo.get(paramInfo.getId()));
                 }
-            });
+            }
         }
-
+        context.put("指标", indexInfo);
+        context.put("规则", indexInfo);
 
         final String ruleId = verify.getRuleId();
 
@@ -118,30 +126,45 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
         if (CollectionUtils.isEmpty(byRuleId)) {
             return false;
         }
-
-
-        for (ConditionInfo conditionInfo : byRuleId) {
-
-
-            String expression = conditionInfo.getExpression();
-
-            final List<ParamInfo> paramInfos1 = conditionInfo.getParamInfos();
-
-            if (null != paramInfos1 && StringUtils.isNotBlank(expression)) {
-                for (ParamInfo paramInfo : paramInfos1) {
-                    expression = expression.replaceAll(paramInfo.getTitle(), paramInfo.getField());
-                }
-            }
-
-
+        //匹配规则
+        ExpressRunner runner = new ExpressRunner();
+        if (filterRules(context, byRuleId, runner, indexInfo)) {
+            return true;
         }
 
+        return false;
+    }
 
-        //匹配规则
-
-        ExpressRunner runner = new ExpressRunner();
-
-
+    /**
+     * 过滤rule
+     *
+     * @param context
+     * @param byRuleId
+     * @param runner
+     * @param indexInfo
+     * @return
+     * @throws Exception
+     */
+    private boolean filterRules(IExpressContext<String, Object> context, List<ConditionInfo> byRuleId, ExpressRunner runner, Map<String, String> indexInfo) throws Exception {
+        for (ConditionInfo conditionInfo : byRuleId) {
+            String expression = conditionInfo.getExpression();
+            final List<ParamInfo> infos = conditionInfo.getParamInfos();
+            if (null != infos && null != indexInfo && infos.stream().allMatch(p -> indexInfo.containsKey(p.getId())) && StringUtils.isNotBlank(expression)) {
+                for (ParamInfo paramInfo : infos) {
+                    expression = expression.replaceAll(paramInfo.getTitle(), paramInfo.getField());
+                }
+            } else {
+                continue;
+            }
+            final Object execute = runner.execute(expression, context, null, false, false);
+            if (Boolean.TRUE.equals(execute)) {
+                if (CollectionUtils.isEmpty(conditionInfo.getSubConditionInfos())) {
+                    return true;
+                } else {
+                    return filterRules(context, conditionInfo.getSubConditionInfos(), runner, indexInfo);
+                }
+            }
+        }
         return false;
     }
 }

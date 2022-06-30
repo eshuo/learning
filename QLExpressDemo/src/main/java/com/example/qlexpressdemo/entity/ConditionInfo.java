@@ -43,8 +43,14 @@ public class ConditionInfo implements Serializable {
     @ApiModelProperty(value = "响应信息")
     private String resultInfo;
 
+    /**
+     * 响应信息
+     */
     private String contextInfo;
 
+    /**
+     * 所属规则
+     */
     private String ruleId;
 
 
