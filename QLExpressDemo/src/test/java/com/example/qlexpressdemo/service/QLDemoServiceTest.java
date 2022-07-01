@@ -1,6 +1,7 @@
 package com.example.qlexpressdemo.service;
 
 import com.example.qlexpressdemo.entity.ConditionInfo;
+import com.example.qlexpressdemo.entity.ParamInfo;
 import com.ql.util.express.*;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -52,6 +55,7 @@ class QLDemoServiceTest {
          */
 
         final String[] express = {"if ( ruleId:001 or ruleId:002  ) { run  '允许访问';  } else {  run '不允许访问'; }  "};
+//        if ( rule.lock_num<3 or rule.safe_credit>=5  ) { run  '允许访问';  } else {  run '不允许访问'; }
         final Matcher matcher = R_REGEX.matcher(express[0]);
 
         Map<String, String> rMap = new HashMap<>();
@@ -62,7 +66,16 @@ class QLDemoServiceTest {
                 final ConditionInfo byId = iConditionInfoService.findById(ruleId);
                 if (null != byId) {
                     final String expression = byId.getExpression();
-                    rMap.put(matcher.group(1) + ruleId, expression);
+                    //替换英文
+                    final List<ParamInfo> paramInfos = byId.getParamInfos();
+                    if (null != paramInfos) {
+                        final Map<String, String> collect = paramInfos.stream().collect(Collectors.toMap(ParamInfo::getTitle, ParamInfo::getField));
+                        final String[] replaceAll = {expression};
+                        collect.forEach((k, v) -> replaceAll[0] = replaceAll[0].replaceAll(k, v).replaceAll("指标","rule"));
+                        rMap.put(matcher.group(1) + ruleId, replaceAll[0]);
+                    } else {
+                        rMap.put(matcher.group(1) + ruleId, expression);
+                    }
                 }
             }
         }
@@ -71,7 +84,6 @@ class QLDemoServiceTest {
 //        todo 1 正则 替换
         //todo 2 预加载表达式 false
         if (!CollectionUtils.isEmpty(rMap)) {
-
             rMap.forEach((k, v) -> express[0] = express[0].replaceAll(k, v));
 //            for (Map.Entry<String, String> entry : rMap.entrySet()) {
 //                runner.loadMultiExpress(entry.getKey(), entry.getValue());
@@ -98,9 +110,12 @@ class QLDemoServiceTest {
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
         Map<String, String> dataMap = new HashMap<>();
         dataMap.put("锁定次数", "2");
+        dataMap.put("lock_num", "2");
         dataMap.put("安全信用", "7");
+        dataMap.put("safe_credit", "7");
 
         expressContext.put("指标", dataMap);
+        expressContext.put("rule", dataMap);
 
         System.err.println("express = " + express[0]);
 
