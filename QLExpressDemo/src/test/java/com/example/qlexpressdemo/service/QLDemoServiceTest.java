@@ -1,7 +1,9 @@
 package com.example.qlexpressdemo.service;
 
+import com.example.qlexpressdemo.context.QlExpressBeanRunner;
 import com.example.qlexpressdemo.entity.ConditionInfo;
 import com.example.qlexpressdemo.entity.ParamInfo;
+import com.example.qlexpressdemo.entity.UIndex;
 import com.ql.util.express.*;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -30,6 +32,12 @@ class QLDemoServiceTest {
     @Autowired
     private IConditionInfoService iConditionInfoService;
 
+    @Autowired
+    private IUIndexService iuIndexService;
+
+    @Autowired
+    private QlExpressBeanRunner qlExpressBeanRunner;
+
     private final static Pattern R_REGEX = Pattern.compile("(ruleId:)([\\S\\d]+)");
 
 
@@ -54,7 +62,8 @@ class QLDemoServiceTest {
          * }
          */
 
-        final String[] express = {"if ( ruleId:001 or ruleId:002  ) { run  '允许访问';  } else {  run '不允许访问'; }  "};
+        final String[] express = {"if ( ruleId:001 or ruleId:002  ) { 返回  '允许访问';  } else {  返回 '不允许访问'; }  "};
+
 //        if ( rule.lock_num<3 or rule.safe_credit>=5  ) { run  '允许访问';  } else {  run '不允许访问'; }
         final Matcher matcher = R_REGEX.matcher(express[0]);
 
@@ -71,7 +80,7 @@ class QLDemoServiceTest {
                     if (null != paramInfos) {
                         final Map<String, String> collect = paramInfos.stream().collect(Collectors.toMap(ParamInfo::getTitle, ParamInfo::getField));
                         final String[] replaceAll = {expression};
-                        collect.forEach((k, v) -> replaceAll[0] = replaceAll[0].replaceAll(k, v).replaceAll("指标","rule"));
+                        collect.forEach((k, v) -> replaceAll[0] = replaceAll[0].replaceAll(k, v).replaceAll("指标", "rule"));
                         rMap.put(matcher.group(1) + ruleId, replaceAll[0]);
                     } else {
                         rMap.put(matcher.group(1) + ruleId, expression);
@@ -99,6 +108,7 @@ class QLDemoServiceTest {
         runner.addOperatorWithAlias("如果", "if", null);
         runner.addOperatorWithAlias("否则", "else", null);
         runner.addOperatorWithAlias("大于", ">", null);
+        runner.addOperatorWithAlias("返回", "return", null);
         runner.addOperatorWithAlias("run", "return", null);
 
         //方法
@@ -109,15 +119,20 @@ class QLDemoServiceTest {
 
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
         Map<String, String> dataMap = new HashMap<>();
-        dataMap.put("锁定次数", "2");
+//        dataMap.put("锁定次数", "2");
         dataMap.put("lock_num", "2");
-        dataMap.put("安全信用", "7");
+//        dataMap.put("安全信用", "7");
         dataMap.put("safe_credit", "7");
 
-        expressContext.put("指标", dataMap);
+//        expressContext.put("指标", dataMap);
         expressContext.put("rule", dataMap);
 
         System.err.println("express = " + express[0]);
+        /**
+         *
+         * if ( rule.lock_num<3 or rule.safe_credit>=5  ) { run  '允许访问';  } else {  run '不允许访问'; }
+         *
+         */
 
 //        final Object execute = cacheRunner.execute(express[0], expressContext, null, false, false, null);
         final Object execute = runner.execute(express[0], expressContext, null, false, false);
@@ -134,4 +149,186 @@ class QLDemoServiceTest {
     @Test
     void score() {
     }
+
+    @Test
+    void beanDemo() throws Exception {
+
+        String statement = "getUserInfo(uId)";
+
+        Map<String, Object> innerContext = new HashMap<String, Object>();
+
+        innerContext.put("uId", "1");
+
+        ExpressRunner runner = new ExpressRunner();
+
+//        final IUIndexService expressBeanRunnerBean = qlExpressBeanRunner.getBean(IUIndexService.class);
+
+//        final IExpressContext beanContext = qlExpressBeanRunner.getBeanContext(innerContext);
+
+        runner.addFunctionOfServiceMethod("getUserInfo", qlExpressBeanRunner.getBean(IUIndexService.class), "findById", new Class[]{String.class}, null);
+
+        final Object execute = runner.execute(statement, qlExpressBeanRunner.getBeanContext(innerContext), null, false, false);
+
+
+        System.out.println(execute);
+
+
+    }
+
+    @Test
+    void likeTest() throws Exception {
+//       import  java.lang.String;
+        String express = "name.startsWith(String.valueOf('a'))  ";
+
+        ExpressRunner runner = new ExpressRunner();
+        IExpressContext<String, Object> expressContext = new DefaultContext<>();
+        expressContext.put("name", "azzzs");
+        final Object execute = runner.execute(express, expressContext, null, false, false);
+
+        System.out.println(express);
+
+
+    }
+
+
+    @Test
+    void demo() throws Exception {
+
+
+        String[] express = {"如果 ( ruleId:088 ){\n" +
+                "    如果(ruleId:011 and ruleId:012 ){\n" +
+                "        返回 'true'\n" +
+                "    }否则{\n" +
+                "       如果(ruleId:013 or ruleId:014 ){\n" +
+                "        返回 '第二条规则'\n" +
+                "       }\n" +
+                "    }\n" +
+                "} 返回 '默认'"};
+
+
+        final Matcher matcher = R_REGEX.matcher(express[0]);
+
+        Map<String, String> rMap = new HashMap<>();
+
+        while (matcher.find()) {
+            final String ruleId = matcher.group(2);
+            if (StringUtils.isNotBlank(ruleId)) {
+                final ConditionInfo byId = iConditionInfoService.findById(ruleId);
+                if (null != byId) {
+                    final String expression = byId.getExpression();
+                    //替换英文
+                    final List<ParamInfo> paramInfos = byId.getParamInfos();
+                    if (null != paramInfos) {
+                        final Map<String, String> collect = paramInfos.stream().collect(Collectors.toMap(ParamInfo::getTitle, ParamInfo::getField));
+                        final String[] replaceAll = {expression};
+                        collect.forEach((k, v) -> replaceAll[0] = replaceAll[0].replaceAll(k, v));
+                        rMap.put(matcher.group(1) + ruleId, replaceAll[0]);
+                    } else {
+                        rMap.put(matcher.group(1) + ruleId, expression);
+                    }
+                }
+            }
+        }
+        ExpressRunner runner = new ExpressRunner();
+
+        if (!CollectionUtils.isEmpty(rMap)) {
+            rMap.forEach((k, v) -> express[0] = express[0].replaceAll(k, v));
+        }
+        //定义操作符别名
+        runner.addOperatorWithAlias("如果", "if", null);
+        runner.addOperatorWithAlias("否则", "else", null);
+        runner.addOperatorWithAlias("返回", "return", null);
+        //方法
+
+
+
+
+        //上下文
+        final UIndex uIndex = iuIndexService.findById("3");
+        IExpressContext<String, Object> expressContext = new DefaultContext<>();
+        final Map<String, String> indexInfo = uIndex.getIndexInfo();
+        final List<ParamInfo> paramInfos = uIndex.getParamInfos();
+
+        paramInfos.forEach(p -> {
+            if (indexInfo.containsKey(p.getId())) {
+                final String value = indexInfo.get(p.getId());
+                expressContext.put(p.getField(), value);
+            }
+        });
+
+        //运行
+
+
+        System.err.println("express = " + express[0]);
+        /**
+         如果 ( used_node == 'xingwei' ){
+         如果(verification == 1 and safe_credit == 高 ){
+         返回 'true'
+         }否则{
+         如果(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){
+         返回 '第二条规则'
+         }
+         }
+         } 返回 '默认'
+         */
+
+        final Object execute = runner.execute(express[0], expressContext, null, false, false);
+
+        System.err.println(execute);
+
+
+
+    }
+    @Test
+    void test1() throws Exception {
+
+        String express = "if ( used_node == 'xingwei' ){\n" +
+                "    if(verification == 1 and safe_credit == 高 ){\n" +
+                "        return true;\n" +
+                "    }else{\n" +
+                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
+                "        return '第二条规则';\n" +
+                "       }\n" +
+                "    }\n" +
+                "}";
+
+
+        String demo = "         如果 ( used_node == 'xingwei' ){\n" +
+                "         如果(verification == 1 and safe_credit == 高 ){\n" +
+                "         返回 'true'\n" +
+                "         }否则{\n" +
+                "         如果(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
+                "         返回 '第二条规则'\n" +
+                "         }\n" +
+                "         }\n" +
+                "         } 返回 '默认'";
+
+
+        IExpressContext<String, Object> expressContext = new DefaultContext<>();
+//        Map<String,String> map = new HashMap<>();
+        expressContext.put("lock_num","5");
+        expressContext.put("used_node","xingwei");
+        expressContext.put("used_ip","127.0.0.1");
+        expressContext.put("verification","1");
+        expressContext.put("safe_credit","中");
+//        expressContext.put("rule",map);
+        ExpressRunner runner = new ExpressRunner();
+        runner.addOperatorWithAlias("如果", "if", null);
+        runner.addOperatorWithAlias("否则", "else", null);
+        runner.addOperatorWithAlias("返回", "return", null);
+
+//        final Object execute = runner.execute("rule.used_node == 'xingwei'", expressContext, null, false, false);
+        final Object execute = runner.execute(demo, expressContext, null, false, false);
+
+
+        System.err.println(execute);
+
+
+    }
+
+
+
+
+
+
 }
