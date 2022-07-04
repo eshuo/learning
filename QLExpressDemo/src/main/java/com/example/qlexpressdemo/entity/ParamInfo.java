@@ -43,7 +43,14 @@ public class ParamInfo implements Serializable {
     @ApiModelProperty(value = "类信息")
     private String cInfo;
 
-//    @ApiModelProperty(value = "类方法")
+    public ParamInfo(String id, String field, String title) {
+        this.id = id;
+        this.field = field;
+        this.title = title;
+    }
+
+
+    //    @ApiModelProperty(value = "类方法")
 //    private String cMethod;
 
 

@@ -1,14 +1,9 @@
-package com.example.qlexpressdemo.service;
+package com.example.qlexpressdemo;
 
-import com.example.qlexpressdemo.context.QlExpressBeanRunner;
-import com.example.qlexpressdemo.entity.ConditionInfo;
-import com.example.qlexpressdemo.entity.ParamInfo;
-import com.example.qlexpressdemo.entity.UIndex;
-import com.ql.util.express.*;
+import com.ql.util.express.DefaultContext;
+import com.ql.util.express.ExpressRunner;
+import com.ql.util.express.IExpressContext;
 import org.apache.commons.lang.StringUtils;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -19,25 +14,36 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
 /**
  * @Description
  * @Author wangshuo
- * @Date 2022-06-30 13:53
+ * @Date 2022-07-04 15:48
  * @Version V1.0
  */
-@SpringBootTest
-class QLDemoServiceTest {
+
+
+public class demoTest {
+
+
+    public static void main(String[] args) throws Exception {
+
+        //行为节点条件进行筛选 得到运行规则语句
+
+        // findByAction(actionId,appId);
+
+
+
+//        verify();
+//        demo();
+//        test1();
+
+        likeTest();
+
+    }
 
 
 //    @Autowired
-//    private IConditionInfoService iConditionInfoService;
-//
-//    @Autowired
-//    private IUIndexService iuIndexService;
-
-    @Autowired
-    private QlExpressBeanRunner qlExpressBeanRunner;
+//    private QlExpressBeanRunner qlExpressBeanRunner;
 
     private final static Pattern R_REGEX = Pattern.compile("(ruleId:)([\\S\\d]+)");
 
@@ -46,7 +52,8 @@ class QLDemoServiceTest {
 
     private final static Map<String, ParamInfo> pMap = new HashMap<>();
 
-    {
+
+    static {
         cMap.put("001", new ConditionInfo("001", "指标.锁定次数<3", "123", "3"));
         cMap.put("002", new ConditionInfo("002", "指标.安全信用>=5", "123", "1"));
         cMap.put("003", new ConditionInfo("003", "指标.设备 = 000001", "123", ""));
@@ -75,48 +82,28 @@ class QLDemoServiceTest {
         pMap.put("3", new ParamInfo("3", "lock_num", "锁定次数"));
         pMap.put("4", new ParamInfo("4", "used_ip", "常用IP"));
         pMap.put("5", new ParamInfo("5", "used_node", "行为节点"));
-
-
     }
 
-    private ConditionInfo findById(String ruleId) {
+
+    private static ConditionInfo findById(String ruleId) {
         return cMap.get(ruleId);
     }
 
 
-    private List<ParamInfo> getParamInfos(String ids) {
+    private static List<ParamInfo> getParamInfos(String ids) {
         List<ParamInfo> list = new ArrayList<>();
 
         if (StringUtils.isNotBlank(ids)) {
             final String[] split = ids.split(",");
             for (int i = 0; i < split.length; i++) {
-                list.add(pMap.get(i));
+                list.add(pMap.get(split[i]));
             }
         }
         return list;
     }
 
 
-    @Test
-    void verify() throws Exception {
-
-        /**
-         *if(请求类型=访问服务){
-         *     if(风险等级 ==3){
-         *         if(ip in 常用ip){
-         *             return false
-         *         }else{
-         *             return true
-         *         }
-         *     }else{
-         *         if(用户环境高风险){
-         *             return true
-         *         }else{
-         *             return false
-         *         }
-         *     }
-         * }
-         */
+    static void verify() throws Exception {
 
         final String[] express = {"if ( ruleId:001 or ruleId:002  ) { 返回  '允许访问';  } else {  返回 '不允许访问'; }  "};
 
@@ -136,14 +123,14 @@ class QLDemoServiceTest {
                     //替换英文
                     final List<ParamInfo> paramInfos = getParamInfos(byId.getParamInfoIds());
 //                    final List<ParamInfo> paramInfos = byId.getParamInfos();
-                    if (null != paramInfos) {
-                        final Map<String, String> collect = paramInfos.stream().collect(Collectors.toMap(ParamInfo::getTitle, ParamInfo::getField));
-                        final String[] replaceAll = {expression};
-                        collect.forEach((k, v) -> replaceAll[0] = replaceAll[0].replaceAll(k, v).replaceAll("指标", "rule"));
-                        rMap.put(matcher.group(1) + ruleId, replaceAll[0]);
-                    } else {
-                        rMap.put(matcher.group(1) + ruleId, expression);
-                    }
+//                    if (null != paramInfos) {
+                    final Map<String, String> collect = paramInfos.stream().collect(Collectors.toMap(ParamInfo::getTitle, ParamInfo::getField));
+                    final String[] replaceAll = {expression};
+                    collect.forEach((k, v) -> replaceAll[0] = replaceAll[0].replaceAll(k, v).replaceAll("指标", "rule"));
+                    rMap.put(matcher.group(1) + ruleId, replaceAll[0]);
+//                    } else {
+//                        rMap.put(matcher.group(1) + ruleId, expression);
+//                    }
                 }
             }
         }
@@ -202,33 +189,31 @@ class QLDemoServiceTest {
     }
 
 
-    @Test
-    void beanDemo() throws Exception {
+//    void beanDemo() throws Exception {
+//
+//        String statement = "getUserInfo(uId)";
+//
+//        Map<String, Object> innerContext = new HashMap<String, Object>();
+//
+//        innerContext.put("uId", "1");
+//
+//        ExpressRunner runner = new ExpressRunner();
+//
+////        final IUIndexService expressBeanRunnerBean = qlExpressBeanRunner.getBean(IUIndexService.class);
+//
+////        final IExpressContext beanContext = qlExpressBeanRunner.getBeanContext(innerContext);
+//
+//        runner.addFunctionOfServiceMethod("getUserInfo", qlExpressBeanRunner.getBean(IUIndexService.class), "findById", new Class[]{String.class}, null);
+//
+//        final Object execute = runner.execute(statement, qlExpressBeanRunner.getBeanContext(innerContext), null, false, false);
+//
+//
+//        System.out.println(execute);
+//
+//
+//    }
 
-        String statement = "getUserInfo(uId)";
-
-        Map<String, Object> innerContext = new HashMap<String, Object>();
-
-        innerContext.put("uId", "1");
-
-        ExpressRunner runner = new ExpressRunner();
-
-//        final IUIndexService expressBeanRunnerBean = qlExpressBeanRunner.getBean(IUIndexService.class);
-
-//        final IExpressContext beanContext = qlExpressBeanRunner.getBeanContext(innerContext);
-
-        runner.addFunctionOfServiceMethod("getUserInfo", qlExpressBeanRunner.getBean(IUIndexService.class), "findById", new Class[]{String.class}, null);
-
-        final Object execute = runner.execute(statement, qlExpressBeanRunner.getBeanContext(innerContext), null, false, false);
-
-
-        System.out.println(execute);
-
-
-    }
-
-    @Test
-    void likeTest() throws Exception {
+    static void likeTest() throws Exception {
 //       import  java.lang.String;
         String express = "name.startsWith(String.valueOf('a'))  ";
 
@@ -242,8 +227,7 @@ class QLDemoServiceTest {
     }
 
 
-    @Test
-    void demo() throws Exception {
+    static void demo() throws Exception {
 
 
         String[] express = {"如果 ( ruleId:088 ){\n" +
@@ -348,18 +332,17 @@ class QLDemoServiceTest {
 
     }
 
-    @Test
-    void test1() throws Exception {
+    public static void test1() throws Exception {
 
-        String express = "if ( used_node == 'xingwei' ){\n" +
-                "    if(verification == 1 and safe_credit == 高 ){\n" +
-                "        return true;\n" +
-                "    }else{\n" +
-                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
-                "        return '第二条规则';\n" +
-                "       }\n" +
-                "    }\n" +
-                "}";
+//        String express = "if ( used_node == 'xingwei' ){\n" +
+//                "    if(verification == 1 and safe_credit == 高 ){\n" +
+//                "        return true;\n" +
+//                "    }else{\n" +
+//                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
+//                "        return '第二条规则';\n" +
+//                "       }\n" +
+//                "    }\n" +
+//                "}";
 
 
         String demo = "         如果 ( used_node == 'xingwei' ){\n" +
@@ -394,6 +377,176 @@ class QLDemoServiceTest {
 
 
     }
+
+
+
+    static class ConditionInfo {
+
+        private String id;
+
+        private String expression;
+
+        /**
+         * 所属规则
+         */
+        private String ruleId;
+
+        private String paramInfoIds;
+
+
+        public ConditionInfo(String id, String expression, String ruleId, String paramInfoIds) {
+            this.id = id;
+            this.expression = expression;
+            this.ruleId = ruleId;
+            this.paramInfoIds = paramInfoIds;
+        }
+
+        /**
+         * 参数集合
+         */
+        private List<ParamInfo> paramInfos;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getExpression() {
+            return expression;
+        }
+
+        public void setExpression(String expression) {
+            this.expression = expression;
+        }
+
+        public String getRuleId() {
+            return ruleId;
+        }
+
+        public void setRuleId(String ruleId) {
+            this.ruleId = ruleId;
+        }
+
+        public String getParamInfoIds() {
+            return paramInfoIds;
+        }
+
+        public void setParamInfoIds(String paramInfoIds) {
+            this.paramInfoIds = paramInfoIds;
+        }
+
+        public List<ParamInfo> getParamInfos() {
+            return paramInfos;
+        }
+
+        public void setParamInfos(List<ParamInfo> paramInfos) {
+            this.paramInfos = paramInfos;
+        }
+    }
+
+
+    static class ParamInfo {
+        private String id;
+
+        private String field;
+
+        private String title;
+
+        public ParamInfo(String id, String field, String title) {
+            this.id = id;
+            this.field = field;
+            this.title = title;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+    }
+
+
+    static class UIndex {
+        private String id;
+
+        private String userName;
+
+        private String indexIds;
+
+
+        /**
+         * 动态指标集合
+         */
+        private Map<String, String> indexInfo;
+
+        /**
+         * 参数集合
+         */
+        private List<ParamInfo> paramInfos;
+
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public String getIndexIds() {
+            return indexIds;
+        }
+
+        public void setIndexIds(String indexIds) {
+            this.indexIds = indexIds;
+        }
+
+        public Map<String, String> getIndexInfo() {
+            return indexInfo;
+        }
+
+        public void setIndexInfo(Map<String, String> indexInfo) {
+            this.indexInfo = indexInfo;
+        }
+
+        public List<ParamInfo> getParamInfos() {
+            return paramInfos;
+        }
+
+        public void setParamInfos(List<ParamInfo> paramInfos) {
+            this.paramInfos = paramInfos;
+        }
+    }
+
 
 
 }

@@ -63,6 +63,13 @@ public class ConditionInfo implements Serializable {
         this.ruleId = ruleId;
     }
 
+    public ConditionInfo(String id, String expression, String ruleId, String paramInfoIds) {
+        this.id = id;
+        this.expression = expression;
+        this.ruleId = ruleId;
+        this.paramInfoIds = paramInfoIds;
+    }
+
     /**
      * 子级
      */
