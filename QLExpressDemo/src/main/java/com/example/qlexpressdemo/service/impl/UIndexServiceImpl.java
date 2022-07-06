@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @author author
  * @since 2022-06-29
  */
-@Service
+@Service("iUIndexService")
 public class UIndexServiceImpl extends ServiceImpl<UIndexMapper, UIndex> implements IUIndexService {
 
     @Override

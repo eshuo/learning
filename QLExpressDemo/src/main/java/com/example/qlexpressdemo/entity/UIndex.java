@@ -51,4 +51,16 @@ public class UIndex implements Serializable {
      */
     @TableField(exist = false)  //标志此属性不是表的字段
     private List<ParamInfo> paramInfos;
+
+
+    @Override
+    public String toString() {
+        return "UIndex{" +
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", indexIds='" + indexIds + '\'' +
+                ", indexInfo=" + indexInfo +
+                ", paramInfos=" + paramInfos +
+                '}';
+    }
 }

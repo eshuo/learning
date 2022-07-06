@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.qlexpressdemo.mapper.TableDataInfoMapper">
+
+    <!--简单实现-->
+    <select id="queryTableInfo" resultType="java.util.HashMap" statementType="STATEMENT">
+        select * from ${tableName} where
+        <foreach collection="map" item="value" index="key" separator="and">
+            ${key}='${value}'
+        </foreach>
+    </select>
+    <!--指定查询字段与自定义拼接条件-->
+    <select id="queryInfo" resultType="java.util.HashMap" parameterType="com.example.qlexpressdemo.entity.TableDataInfo">
+        select
+        <choose>
+            <when test="null !=queryRows and !queryRows.isEmpty()">
+                <foreach collection="queryRows" item="value" index="key" separator=",">
+                    ${key}
+                    <if test="null !=value and '' != value">as ${value}</if>
+                </foreach>
+            </when>
+            <otherwise>*</otherwise>
+        </choose>
+        from ${tableName}
+        <if test="null !=queryInfos and !queryInfos.isEmpty()">
+            where
+            <foreach collection="queryInfos" item="item" index="index" separator="${separator}">
+                ${item.name}
+                <if test="item.separator == '='.toString()">=</if>
+                <if test="item.separator == '!='.toString()">!=</if>
+                <if test="item.separator == 'like'.toString()">like</if>
+                <if test="item.separator == 'in'.toString()">in</if>
+                <if test="item.separator == '&gt;'.toString()">&gt;</if>
+                <if test="item.separator == '&lt;'.toString()">&lt;</if>
+                #{item.value}
+            </foreach>
+        </if>
+
+    </select>
+</mapper>

@@ -46,7 +46,7 @@ class QLDemoServiceTest {
 
     private final static Map<String, ParamInfo> pMap = new HashMap<>();
 
-    {
+    static {
         cMap.put("001", new ConditionInfo("001", "指标.锁定次数<3", "123", "3"));
         cMap.put("002", new ConditionInfo("002", "指标.安全信用>=5", "123", "1"));
         cMap.put("003", new ConditionInfo("003", "指标.设备 = 000001", "123", ""));
@@ -205,7 +205,8 @@ class QLDemoServiceTest {
     @Test
     void beanDemo() throws Exception {
 
-        String statement = "getUserInfo(uId)";
+        String statement = "uIndex = iUIndexService.findById(uId); " +
+                " System.out.println('uIndex:'+uIndex.toString()); return false;";
 
         Map<String, Object> innerContext = new HashMap<String, Object>();
 
@@ -216,10 +217,11 @@ class QLDemoServiceTest {
 //        final IUIndexService expressBeanRunnerBean = qlExpressBeanRunner.getBean(IUIndexService.class);
 
 //        final IExpressContext beanContext = qlExpressBeanRunner.getBeanContext(innerContext);
-
-        runner.addFunctionOfServiceMethod("getUserInfo", qlExpressBeanRunner.getBean(IUIndexService.class), "findById", new Class[]{String.class}, null);
-
-        final Object execute = runner.execute(statement, qlExpressBeanRunner.getBeanContext(innerContext), null, false, false);
+//        final Object iUIndexService = qlExpressBeanRunner.getBean("uIndexServiceImpl");
+        //todo beanName 为 uIndexServiceImpl
+//        runner.addFunctionOfServiceMethod("findById", qlExpressBeanRunner.getBean(IUIndexService.class), "findById", new Class[]{String.class}, null);
+        final IExpressContext beanContext = qlExpressBeanRunner.getBeanContext(innerContext);
+        final Object execute = runner.execute(statement, beanContext, null, false, false);
 
 
         System.out.println(execute);
