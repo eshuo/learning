@@ -1,16 +1,14 @@
 package com.example.qlexpressdemo;
 
+import com.example.qlexpressdemo.entity.ConditionInfo;
+import com.example.qlexpressdemo.entity.ParamInfo;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
-import com.ql.util.express.InstructionSet;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,12 +31,16 @@ public class demoTest {
         // findByAction(actionId,appId);
 
 
-
 //        verify();
 //        demo();
-        test1();
+        test();
+//        test1();
 
 //        likeTest();
+
+
+        //三分钟之内错误次数大于3
+
 
     }
 
@@ -49,10 +51,11 @@ public class demoTest {
     private final static Pattern R_REGEX = Pattern.compile("(ruleId:)([\\S\\d]+)");
 
 
-    private final static Map<String, ConditionInfo> cMap = new HashMap<>();
+    private final static Map<String, ConditionInfo> cMap = new HashMap<>(10);
 
-    private final static Map<String, ParamInfo> pMap = new HashMap<>();
+    private final static Map<String, ParamInfo> pMap = new HashMap<>(10);
 
+    private final static List<UserLog> userLogList = new ArrayList<>(10);
 
     static {
         cMap.put("001", new ConditionInfo("001", "指标.锁定次数<3", "123", "3"));
@@ -83,6 +86,14 @@ public class demoTest {
         pMap.put("3", new ParamInfo("3", "lock_num", "锁定次数"));
         pMap.put("4", new ParamInfo("4", "used_ip", "常用IP"));
         pMap.put("5", new ParamInfo("5", "used_node", "行为节点"));
+
+
+        userLogList.add(new UserLog("3", "1", System.currentTimeMillis() - 1 * 60 * 1000));
+        userLogList.add(new UserLog("3", "1", System.currentTimeMillis() - 2 * 60 * 1000));
+        userLogList.add(new UserLog("3", "1", System.currentTimeMillis() - 3 * 60 * 1000));
+        userLogList.add(new UserLog("3", "1", System.currentTimeMillis() - 4 * 60 * 1000));
+
+
     }
 
 
@@ -101,6 +112,47 @@ public class demoTest {
             }
         }
         return list;
+    }
+
+
+    static void test() throws Exception {
+        //五分钟之内错误次数大于3
+
+
+        String express = " 用户时间段锁定(uId,lockType,5)>3";
+//        String express = " 用户时间段锁定(\"3\",\"1\",5)>3";
+
+        ExpressRunner runner = new ExpressRunner();
+        runner.addFunctionOfClassMethod("用户时间段锁定", demoTest.class.getName(), "checkUserLogType", new Class[]{String.class, String.class, Long.class}, null);
+//        runner.addFunctionOfClassMethod("用户时间段锁定", demoTest.class.getName(), "checkUserLogType", new Class[]{String.class, String.class},                null);
+
+        IExpressContext<String, Object> expressContext = new DefaultContext<>();
+        expressContext.put("uId","3");
+        expressContext.put("lockType","1");
+
+        final Object execute = runner.execute(express, expressContext, null, false, false);
+        System.err.println(execute);
+//        new Date().getTime()-5 * 60 *1000
+
+
+    }
+
+    public static  long checkUserLogType(String userId, String type) {
+        return checkUserLogType(userId, type, null);
+    }
+
+    /**
+     * @param userId
+     * @param type
+     * @param time   几分钟
+     * @return
+     */
+    public static long checkUserLogType(String userId, String type, Long time) {
+        if (null != time) {
+            time = new Date().getTime() - time * 60 * 1000;
+        }
+        Long finalTime = time;
+        return userLogList.stream().filter(u -> u.getId().equals(userId) && u.getType().equals(type) && (null == finalTime || u.getTime() > finalTime)).count();
     }
 
 
@@ -383,8 +435,48 @@ public class demoTest {
     }
 
 
+   public static class UserLog {
 
-    static class ConditionInfo {
+
+        private String id;
+
+        //1 = 锁定
+        private String type;
+
+        private Long time;
+
+        public UserLog(String id, String type, Long time) {
+            this.id = id;
+            this.type = type;
+            this.time = time;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public Long getTime() {
+            return time;
+        }
+
+        public void setTime(Long time) {
+            this.time = time;
+        }
+    }
+
+    public   static class ConditionInfo {
 
         private String id;
 
@@ -452,7 +544,7 @@ public class demoTest {
     }
 
 
-    static class ParamInfo {
+    public  static class ParamInfo {
         private String id;
 
         private String field;
@@ -491,7 +583,7 @@ public class demoTest {
     }
 
 
-    static class UIndex {
+    public  static class UIndex {
         private String id;
 
         private String userName;
@@ -550,7 +642,6 @@ public class demoTest {
             this.paramInfos = paramInfos;
         }
     }
-
 
 
 }

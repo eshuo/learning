@@ -97,6 +97,19 @@ class QLDemoServiceTest {
     }
 
 
+
+    @Test
+    void test(){
+        //三分钟之内错误次数大于3
+
+
+
+
+
+    }
+
+
+
     @Test
     void verify() throws Exception {
 
