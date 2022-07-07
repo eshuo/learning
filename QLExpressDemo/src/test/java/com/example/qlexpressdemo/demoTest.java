@@ -3,6 +3,7 @@ package com.example.qlexpressdemo;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
+import com.ql.util.express.InstructionSet;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -35,9 +36,9 @@ public class demoTest {
 
 //        verify();
 //        demo();
-//        test1();
+        test1();
 
-        likeTest();
+//        likeTest();
 
     }
 
@@ -334,27 +335,28 @@ public class demoTest {
 
     public static void test1() throws Exception {
 
-//        String express = "if ( used_node == 'xingwei' ){\n" +
-//                "    if(verification == 1 and safe_credit == 高 ){\n" +
-//                "        return true;\n" +
-//                "    }else{\n" +
-//                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
-//                "        return '第二条规则';\n" +
-//                "       }\n" +
-//                "    }\n" +
-//                "}";
+        String demo = "if ( used_node == 'xingwei' ){\n" +
+                "    if(verification == 1 and safe_credit == 高 ){\n" +
+                "        return true;\n" +
+                "    }else{\n" +
+                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
+                "        return '第二条规则';\n" +
+                "       }\n" +
+                "    }\n" +
+                "}";
 
 
-        String demo = "         如果 ( used_node == 'xingwei' ){\n" +
-                "         如果(verification == 1 and safe_credit == 高 ){\n" +
-                "         返回 'true'\n" +
-                "         }否则{\n" +
-                "         如果(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
-                "         返回 '第二条规则'\n" +
-                "         }\n" +
-                "         }\n" +
-                "         } 返回 '默认'";
+//        String demo = "         如果 ( used_node == 'xingwei' ){\n" +
+//                "         如果(verification == 1 and safe_credit == 高 ){\n" +
+//                "         返回 'true'\n" +
+//                "         }否则{\n" +
+//                "         如果(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
+//                "         返回 '第二条规则'\n" +
+//                "         }\n" +
+//                "         }\n" +
+//                "         } 返回 '默认'";
 
+//        com.ql.util.express.ExpressRunner.parseInstructionSet
 
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
 //        Map<String,String> map = new HashMap<>();
@@ -365,13 +367,15 @@ public class demoTest {
         expressContext.put("safe_credit", "中");
 //        expressContext.put("rule",map);
         ExpressRunner runner = new ExpressRunner();
+
+        final boolean b = runner.checkSyntax(demo);
+
+
         runner.addOperatorWithAlias("如果", "if", null);
         runner.addOperatorWithAlias("否则", "else", null);
         runner.addOperatorWithAlias("返回", "return", null);
-
 //        final Object execute = runner.execute("rule.used_node == 'xingwei'", expressContext, null, false, false);
         final Object execute = runner.execute(demo, expressContext, null, false, false);
-
 
         System.err.println(execute);
 
