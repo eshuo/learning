@@ -13,6 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.example.qlexpressdemo.utils.QlRunnerUtils.ExpressToFunction;
+
 /**
  * @Description
  * @Author wangshuo
@@ -70,7 +72,7 @@ public class demoTest {
                 "return '低风险2'" +
                 "}";
 
-        expressContext.put("xinyong","低");
+        expressContext.put("xinyong", "低");
 
         String s2 = "if(mima < 3){" +
                 "return '低风险3'" +
@@ -78,31 +80,29 @@ public class demoTest {
                 "return '中风险'" +
                 "}";
 
-        expressContext.put("mima",2);
+        expressContext.put("mima", 2);
 
-        String express = "   dataList = new ArrayList();       " ;
-        express +="function s1(){"+s1+"}";
-        express +="function s2(){"+s2+"}";
-        express+=" dataList.add(s1());dataList.add(s2()); return dataList;";
-        String str =express;
+//        String express = "   dataList = new ArrayList();       " ;
+//        express +="function s1(){"+s1+"}";
+//        express +="function s2(){"+s2+"}";
+//        express+=" dataList.add(s1());dataList.add(s2()); return dataList;";
+        String str = ExpressToFunction(s1, s2);
 
 
-        System.out.println("str = " +str);
-
+        System.out.println("str = " + str);
 
 
         final boolean b = runner.checkSyntax(s1);
         System.err.println(b);
 
-        final Object execute = runner.execute(str, expressContext, null, false, false);
+        List<String> execute = (List<String>) runner.execute(str, expressContext, null, false, false);
+
+        for (String s : execute) {
+            System.err.println("s==>"+s);
+        }
+
 
         System.err.println(execute);
-
-
-
-
-
-
 
 
     }
