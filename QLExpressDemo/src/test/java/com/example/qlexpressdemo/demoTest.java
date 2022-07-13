@@ -33,13 +33,76 @@ public class demoTest {
 
 //        verify();
 //        demo();
-        test();
+//        test();
 //        test1();
 
 //        likeTest();
 
 
+        check1();
+
         //三分钟之内错误次数大于3
+
+
+    }
+
+    private static void check1() throws Exception {
+
+        ExpressRunner runner = new ExpressRunner();
+
+//        runner.addOperatorWithAlias("如果", "if", null);
+//        runner.addOperatorWithAlias("否则", "else", null);
+//        runner.addOperatorWithAlias("大于", ">", null);
+//        runner.addOperatorWithAlias("小于", "<", null);
+//        runner.addOperatorWithAlias("不等于", "!=", null);
+//        runner.addOperatorWithAlias("返回", "return", null);
+        //多个决策点进行汇总一个语句并根据返回结果取最大值
+        IExpressContext<String, Object> expressContext = new DefaultContext<>();
+
+        String s1 = "if( xinyong != '高'   ){" +
+                "if (xinyong == '中'){" +
+                "return '低风险1'" +
+                "} else{" +
+                "return '高风险1'" +
+                "}" +
+                "" +
+                "}else{" +
+                "return '低风险2'" +
+                "}";
+
+        expressContext.put("xinyong","低");
+
+        String s2 = "if(mima < 3){" +
+                "return '低风险3'" +
+                "}else{" +
+                "return '中风险'" +
+                "}";
+
+        expressContext.put("mima",2);
+
+        String express = "   dataList = new ArrayList();       " ;
+        express +="function s1(){"+s1+"}";
+        express +="function s2(){"+s2+"}";
+        express+=" dataList.add(s1());dataList.add(s2()); return dataList;";
+        String str =express;
+
+
+        System.out.println("str = " +str);
+
+
+
+        final boolean b = runner.checkSyntax(s1);
+        System.err.println(b);
+
+        final Object execute = runner.execute(str, expressContext, null, false, false);
+
+        System.err.println(execute);
+
+
+
+
+
+
 
 
     }
@@ -127,8 +190,8 @@ public class demoTest {
 //        runner.addFunctionOfClassMethod("用户时间段锁定", demoTest.class.getName(), "checkUserLogType", new Class[]{String.class, String.class},                null);
 
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
-        expressContext.put("uId","3");
-        expressContext.put("lockType","1");
+        expressContext.put("uId", "3");
+        expressContext.put("lockType", "1");
 
         final Object execute = runner.execute(express, expressContext, null, false, false);
         System.err.println(execute);
@@ -137,7 +200,7 @@ public class demoTest {
 
     }
 
-    public static  long checkUserLogType(String userId, String type) {
+    public static long checkUserLogType(String userId, String type) {
         return checkUserLogType(userId, type, null);
     }
 
@@ -283,14 +346,14 @@ public class demoTest {
     static void demo() throws Exception {
 
 
-        String[] express = {"如果 ( ruleId:088 ){\n" +
-                "    如果(ruleId:011 and ruleId:012 ){\n" +
-                "        返回 'true'\n" +
-                "    }否则{\n" +
-                "       如果(ruleId:013 or ruleId:014 ){\n" +
-                "        返回 '第二条规则'\n" +
-                "       }\n" +
-                "    }\n" +
+        String[] express = {"如果 ( ruleId:088 ){" +
+                "    如果(ruleId:011 and ruleId:012 ){" +
+                "        返回 'true'" +
+                "    }否则{" +
+                "       如果(ruleId:013 or ruleId:014 ){" +
+                "        返回 '第二条规则'" +
+                "       }" +
+                "    }" +
                 "} 返回 '默认'"};
 
 
@@ -387,25 +450,25 @@ public class demoTest {
 
     public static void test1() throws Exception {
 
-        String demo = "if ( used_node == 'xingwei' ){\n" +
-                "    if(verification == 1 and safe_credit == 高 ){\n" +
-                "        return true;\n" +
-                "    }else{\n" +
-                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
-                "        return '第二条规则';\n" +
-                "       }\n" +
-                "    }\n" +
+        String demo = "if ( used_node == 'xingwei' ){" +
+                "    if(verification == 1 and safe_credit == 高 ){" +
+                "        return true;" +
+                "    }else{" +
+                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){" +
+                "        return '第二条规则';" +
+                "       }" +
+                "    }" +
                 "}";
 
 
-//        String demo = "         如果 ( used_node == 'xingwei' ){\n" +
-//                "         如果(verification == 1 and safe_credit == 高 ){\n" +
-//                "         返回 'true'\n" +
-//                "         }否则{\n" +
-//                "         如果(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){\n" +
-//                "         返回 '第二条规则'\n" +
-//                "         }\n" +
-//                "         }\n" +
+//        String demo = "         如果 ( used_node == 'xingwei' ){" +
+//                "         如果(verification == 1 and safe_credit == 高 ){" +
+//                "         返回 'true'" +
+//                "         }否则{" +
+//                "         如果(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){" +
+//                "         返回 '第二条规则'" +
+//                "         }" +
+//                "         }" +
 //                "         } 返回 '默认'";
 
 //        com.ql.util.express.ExpressRunner.parseInstructionSet
@@ -435,7 +498,7 @@ public class demoTest {
     }
 
 
-   public static class UserLog {
+    public static class UserLog {
 
 
         private String id;
@@ -476,7 +539,7 @@ public class demoTest {
         }
     }
 
-    public   static class ConditionInfo {
+    public static class ConditionInfo {
 
         private String id;
 
@@ -544,7 +607,7 @@ public class demoTest {
     }
 
 
-    public  static class ParamInfo {
+    public static class ParamInfo {
         private String id;
 
         private String field;
@@ -583,7 +646,7 @@ public class demoTest {
     }
 
 
-    public  static class UIndex {
+    public static class UIndex {
         private String id;
 
         private String userName;
