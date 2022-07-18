@@ -331,14 +331,15 @@ public class demoTest {
 
     static void likeTest() throws Exception {
 //       import  java.lang.String;
-        String express = "name.startsWith(String.valueOf('a'))  ";
+        String express = "张三.startsWith(String.valueOf('张'))  ";
 
         ExpressRunner runner = new ExpressRunner();
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
-        expressContext.put("name", "azzzs");
+        expressContext.put("张三", "张三");
         final Object execute = runner.execute(express, expressContext, null, false, false);
 
         System.out.println(express);
+        System.out.println(execute);
 
     }
 
