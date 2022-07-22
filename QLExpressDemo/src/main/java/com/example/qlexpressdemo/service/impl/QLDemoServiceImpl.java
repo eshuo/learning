@@ -7,6 +7,7 @@ import com.example.qlexpressdemo.entity.ParamInfo;
 import com.example.qlexpressdemo.entity.UIndex;
 import com.example.qlexpressdemo.entity.UserIndex;
 import com.example.qlexpressdemo.service.*;
+import com.example.qlexpressdemo.utils.QlRunnerUtils;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
@@ -40,7 +41,7 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
     private IUIndexService iuIndexService;
 
     @Override
-    public boolean verify(QLDemo.verify verify) {
+    public boolean verify(QLDemo.Verify verify) {
 
         final String userId = verify.getUserId();
         final UserIndex userIndex = iUserIndexService.getById(userId);
@@ -94,7 +95,7 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
      * @throws Exception
      */
     @Override
-    public boolean check(QLDemo.verify verify) throws Exception {
+    public boolean check(QLDemo.Verify verify) throws Exception {
 
 
         final String userId = verify.getUserId();
@@ -133,6 +134,18 @@ public class QLDemoServiceImpl implements QLDemoService, Serializable {
         }
 
         return false;
+    }
+
+    @Override
+    public String conditions(QLDemo.ConditionsInfo conditionsInfo) throws Exception {
+        final String infoToExpress = QlRunnerUtils.ConditionsInfoToExpress(conditionsInfo);
+
+        ExpressRunner runner = new ExpressRunner();
+
+        System.out.println(infoToExpress);
+        final Object execute = runner.execute(infoToExpress, null, null, false, false);
+
+        return execute.toString();
     }
 
     /**

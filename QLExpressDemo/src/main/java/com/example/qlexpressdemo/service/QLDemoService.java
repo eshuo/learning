@@ -19,16 +19,20 @@ public interface QLDemoService {
      *
      * @return
      */
-    boolean verify(QLDemo.verify verify);
+    boolean verify(QLDemo.Verify verify);
 
 
-    boolean check(QLDemo.verify verify) throws Exception;
+    boolean check(QLDemo.Verify verify) throws Exception;
+
+
+
+    String conditions(QLDemo.ConditionsInfo conditionsInfo) throws Exception;
 
 
     /**
      * 评分卡
      */
-    default Object score(QLDemo.verify verify) throws Exception {
+    default Object score(QLDemo.Verify verify) throws Exception {
         return null;
     }
 

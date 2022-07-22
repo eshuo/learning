@@ -32,14 +32,14 @@ public class QLDemoController {
 
     @RequestMapping("/verify")
     @ResponseBody
-    public boolean verify(@RequestBody QLDemo.verify verify) {
+    public boolean verify(@RequestBody QLDemo.Verify verify) {
         return qlDemoService.verify(verify);
     }
 
 
     @RequestMapping("/check")
     @ResponseBody
-    public boolean check(@RequestBody QLDemo.verify verify) {
+    public boolean check(@RequestBody QLDemo.Verify verify) {
         try {
             return qlDemoService.check(verify);
         } catch (Exception e) {
@@ -60,6 +60,13 @@ public class QLDemoController {
     public List<HashMap<String, Object>> info(@RequestBody TableDataInfo info) {
         final List<HashMap<String, Object>> hashMaps = iTableDataInfoService.queryInfo(info);
         return hashMaps;
+    }
+
+
+    @RequestMapping("/conditions")
+    @ResponseBody
+    public String conditions(@RequestBody QLDemo.ConditionsInfo conditionsInfo) throws Exception {
+        return qlDemoService.conditions(conditionsInfo);
     }
 
 
