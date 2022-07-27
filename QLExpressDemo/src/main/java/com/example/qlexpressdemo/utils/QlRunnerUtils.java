@@ -68,15 +68,15 @@ public class QlRunnerUtils {
         if (QLDemo.ConditionsInfoEnum.RULE.name().equals(conditionsInfo.getType())) {
 
         }
-        final List<QLDemo.Expressions> conditions = conditionsInfo.getConditions();
+        final List<QLDemo.Expressions> policyInfos = conditionsInfo.getPolicyInfos();
 
-        if (!CollectionUtils.isEmpty(conditions)) {
+        if (!CollectionUtils.isEmpty(policyInfos)) {
             //括号
             boolean addBrackets = false;
-            for (QLDemo.Expressions condition : conditions) {
-                final QLDemo.ExpressionsEnum expressionsEnum = QLDemo.ExpressionsEnum.judgeValue(condition.getClassType());
+            for (QLDemo.Expressions expressions : policyInfos) {
+                final QLDemo.ExpressionsEnum expressionsEnum = QLDemo.ExpressionsEnum.judgeValue(expressions.getNodeType());
                 if (expressionsEnum != null) {
-                    final QLDemo.RuleInfoData ruleInfoData = condition.getData();
+                    final QLDemo.RuleInfoData ruleInfoData = expressions.getData();
                     //        如果  规则1 && 规则2 && 规则3 返回 结果1 否则 返回 结果2
                     switch (expressionsEnum) {
                         case SEPARATOR:

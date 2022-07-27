@@ -35,16 +35,16 @@ public interface QLDemo {
          */
         private String type;
 
-        private List<Expressions> conditions;
+        private List<Expressions> policyInfos;
 
     }
 
     @Data
     public static class Expressions {
 
-        private String classType;
+        private String nodeType;
 
-        private Integer seq;
+        private Integer order;
 
         private RuleInfoData data;
 
