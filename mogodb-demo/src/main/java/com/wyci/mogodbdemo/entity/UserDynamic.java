@@ -1,9 +1,16 @@
 package com.wyci.mogodbdemo.entity;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.HashMap;
 
 /**
  * @Description
@@ -11,8 +18,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @Date 2022-07-18 16:11
  * @Version V1.0
  */
-@Document(collection = "user") //通过collection参数指定当前实体类对应的文档
-public class User {
+//TODO https://www.jianshu.com/p/32c21a390e1d
+@Document(collection = "user_dynamic") //通过collection参数指定当前实体类对应的文档
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class UserDynamic {
 
     @Id//主键
     private String id;
@@ -25,23 +34,12 @@ public class User {
     private String message;
 
 
-    private Integer age;
+    //    动态存储
+//    @Transient
+    @JsonIgnore
+    @JsonAnySetter
+    private HashMap<String, Object> dataMap;
 
-    public User() {
-    }
-
-    public User(String id, String name, String message) {
-        this.id = id;
-        this.name = name;
-        this.message = message;
-    }
-
-    public User(String id, String name, String message, Integer age) {
-        this.id = id;
-        this.name = name;
-        this.message = message;
-        this.age = age;
-    }
 
     public String getId() {
         return id;
@@ -67,21 +65,12 @@ public class User {
         this.message = message;
     }
 
-    public Integer getAge() {
-        return age;
+    @JsonAnyGetter
+    public HashMap<String, Object> getDataMap() {
+        return dataMap;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", message='" + message + '\'' +
-                ", age=" + age +
-                '}';
+    public void setDataMap(HashMap<String, Object> dataMap) {
+        this.dataMap = dataMap;
     }
 }

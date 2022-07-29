@@ -3,12 +3,14 @@ package com.wyci.mogodbdemo.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -32,6 +34,11 @@ public class MongodbUtils {
     @Autowired
     private MongoTemplate mongoTemplate;
 
+
+    public MongoTemplate getMongoTemplate() {
+        return mongoTemplate;
+    }
+
     /**
      * 保存数据对象，集合为数据对象中@Document 注解所配置的collection
      *
@@ -52,6 +59,7 @@ public class MongodbUtils {
 
         mongodbUtils.mongoTemplate.save(obj, collectionName);
     }
+
 
     /**
      * 根据数据对象中的id删除数据，集合为数据对象中@Document 注解所配置的collection
@@ -128,6 +136,16 @@ public class MongodbUtils {
         for (int i = 0; i < updateKeys.length; i++) {
             update.set(updateKeys[i], updateValues[i]);
         }
+        mongodbUtils.mongoTemplate.updateMulti(query, update, collectionName);
+    }
+
+    public static void updateMultiOne(String accordingKey, Object accordingValue, String updateKey, Object updateValue,
+                                   String collectionName) {
+
+        Criteria criteria = Criteria.where(accordingKey).is(accordingValue);
+        Query query = Query.query(criteria);
+        Update update = new Update();
+            update.set(updateKey, updateValue);
         mongodbUtils.mongoTemplate.updateMulti(query, update, collectionName);
     }
 
@@ -273,4 +291,17 @@ public class MongodbUtils {
         List<? extends Object> resultList = mongodbUtils.mongoTemplate.findAll(obj.getClass(), collectionName);
         return resultList;
     }
+
+
+    public static String getDocumentInvokeAnnotation(Class c) {
+        final Annotation annotation = c.getAnnotation(Document.class);
+        if (null != annotation) {
+            final Document document = (Document) annotation;
+            return document.collection();
+        }
+        return "";
+
+    }
+
+
 }
