@@ -3,14 +3,13 @@ package com.wyci.mogodbdemo.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
@@ -140,12 +139,12 @@ public class MongodbUtils {
     }
 
     public static void updateMultiOne(String accordingKey, Object accordingValue, String updateKey, Object updateValue,
-                                   String collectionName) {
+                                      String collectionName) {
 
         Criteria criteria = Criteria.where(accordingKey).is(accordingValue);
         Query query = Query.query(criteria);
         Update update = new Update();
-            update.set(updateKey, updateValue);
+        update.set(updateKey, updateValue);
         mongodbUtils.mongoTemplate.updateMulti(query, update, collectionName);
     }
 
@@ -221,6 +220,17 @@ public class MongodbUtils {
         return resultList;
     }
 
+    @Nullable
+    public static <T> T findById(Object id, Class<T> entityClass) {
+        return mongodbUtils.mongoTemplate.findById(id, entityClass);
+    }
+
+
+    public static <T> T findById(Object id, Class<T> entityClass, String collectionName) {
+        return mongodbUtils.mongoTemplate.findById(id, entityClass, collectionName);
+    }
+
+
     /**
      * 根据条件查询出符合的第一条数据 集合为数据对象中 @Document 注解所配置的collection
      *
@@ -242,6 +252,20 @@ public class MongodbUtils {
         Object resultObj = mongodbUtils.mongoTemplate.findOne(query, obj.getClass());
         return resultObj;
     }
+
+//error
+//    public static <T> T findOne(String[] findKeys, Object[] findValues) {
+//        Criteria criteria = null;
+//        for (int i = 0; i < findKeys.length; i++) {
+//            if (i == 0) {
+//                criteria = Criteria.where(findKeys[i]).is(findValues[i]);
+//            } else {
+//                criteria.and(findKeys[i]).is(findValues[i]);
+//            }
+//        }
+//        Query query = Query.query(criteria);
+//        return (T) mongodbUtils.mongoTemplate.findOne(query, T.class);
+//    }
 
     /**
      * 指定集合 根据条件查询出符合的第一条数据
@@ -293,14 +317,13 @@ public class MongodbUtils {
     }
 
 
-    public static String getDocumentInvokeAnnotation(Class c) {
-        final Annotation annotation = c.getAnnotation(Document.class);
-        if (null != annotation) {
-            final Document document = (Document) annotation;
-            return document.collection();
-        }
-        return "";
-
+    public static String getCollectionName(Class c) {
+//        final Annotation annotation = c.getAnnotation(Document.class);
+//        if (null != annotation) {
+//            final Document document = (Document) annotation;
+//            return document.collection();
+//        }
+        return mongodbUtils.mongoTemplate.getCollectionName(c);
     }
 
 

@@ -41,7 +41,7 @@ public class UserDynamicServiceTest {
         map.put("cName_" + i++, "列3");
         map.put("cName_" + i++, "列4");
         map.put("cName_" + i++, "列5");
-        userDynamic.setDataMap(map);
+//        userDynamic.setDataMap(map);
 
         final UserDynamic userDynamic1 = userDynamicService.defaultSave(userDynamic);
 

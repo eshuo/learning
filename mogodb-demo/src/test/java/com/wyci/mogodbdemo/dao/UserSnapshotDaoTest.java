@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +67,7 @@ public class UserSnapshotDaoTest {
 //        MongodbUtils.save(map,"user_snapshot");
 
 
-        final String documentInvokeAnnotation = MongodbUtils.getDocumentInvokeAnnotation(UserSnapshot.class);
+        final String documentInvokeAnnotation = MongodbUtils.getCollectionName(UserSnapshot.class);
 
         System.err.println(documentInvokeAnnotation);
 

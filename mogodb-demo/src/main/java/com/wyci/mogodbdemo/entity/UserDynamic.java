@@ -18,7 +18,6 @@ import java.util.HashMap;
  * @Date 2022-07-18 16:11
  * @Version V1.0
  */
-//TODO https://www.jianshu.com/p/32c21a390e1d
 @Document(collection = "user_dynamic") //通过collection参数指定当前实体类对应的文档
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserDynamic {
@@ -36,9 +35,9 @@ public class UserDynamic {
 
     //    动态存储
 //    @Transient
-    @JsonIgnore
+//    @JsonIgnore
     @JsonAnySetter
-    private HashMap<String, Object> dataMap;
+    private HashMap<String, Object> dataMap = new HashMap<>();
 
 
     public String getId() {
