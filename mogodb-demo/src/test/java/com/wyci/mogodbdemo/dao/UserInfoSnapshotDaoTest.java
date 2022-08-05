@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserSnapshotDaoTest {
+public class UserInfoSnapshotDaoTest {
 
     @Autowired
     private UserSnapshotDao userSnapshotDao;

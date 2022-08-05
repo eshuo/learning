@@ -150,12 +150,14 @@ public class MongoDBHelperTest {
         UserDynamic userDynamic = new UserDynamic();
 
 //        userDynamic.setName("testSaveName");
+        userDynamic.setMessage("testSaveMessage");
 
         HashMap<String, Object> map = new HashMap<>();
 
 
         int i = 10;
         map.put("cName_" + i++, "列1");
+        map.put("cName_" + i++, "列2");
         userDynamic.setDataMap(map);
 
         final List<UserDynamic> ts =mongoDBHelper.selectList(userDynamic);

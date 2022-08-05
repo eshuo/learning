@@ -1,6 +1,6 @@
-package com.wyci.mogodbdemo.rest.response;
+package com.example.mongo.rest.response;
 
-import com.wyci.mogodbdemo.rest.request.RequestPage;
+import com.example.mongo.rest.request.RequestPage;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

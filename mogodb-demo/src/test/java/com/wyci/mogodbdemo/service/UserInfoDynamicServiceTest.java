@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserDynamicServiceTest {
+public class UserInfoDynamicServiceTest {
 
     @Autowired
     private UserDynamicService userDynamicService;

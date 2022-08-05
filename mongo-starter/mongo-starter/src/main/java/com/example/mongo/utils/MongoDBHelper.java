@@ -1,10 +1,10 @@
-package com.wyci.mogodbdemo.utils;
+package com.example.mongo.utils;
 
+import com.example.mongo.rest.request.RequestPage;
+import com.example.mongo.rest.response.ResponsePage;
 import com.mongodb.client.ListIndexesIterable;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
-import com.wyci.mogodbdemo.rest.request.RequestPage;
-import com.wyci.mogodbdemo.rest.response.ResponsePage;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -28,15 +28,17 @@ import java.util.concurrent.atomic.AtomicReference;
  * @Date 2022-08-02 17:46
  * @Version V1.0
  */
-@Component
 public class MongoDBHelper {
 
 
     /**
      * 注入template
      */
-    @Autowired
-    public MongoTemplate mongoTemplate;
+    public final MongoTemplate mongoTemplate;
+
+    public MongoDBHelper(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     private <T> String getCollectionName(Class<T> clazz) {
         return mongoTemplate.getCollectionName(clazz);

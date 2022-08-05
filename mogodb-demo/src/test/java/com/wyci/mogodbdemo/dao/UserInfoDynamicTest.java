@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserDynamicTest {
+public class UserInfoDynamicTest {
 
 
     @Autowired
@@ -55,9 +55,6 @@ public class UserDynamicTest {
 //        userDynamic.setDataMap(map);
 
 
-        //TODO private to map
-
-        //TODO  map to private
 
 
 //        final Object target = ReflectUtil.getTarget(userDynamic, map);
