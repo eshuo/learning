@@ -1,4 +1,4 @@
-package com.wyci.mogodbdemo.dao;
+package com.wyci.mongo.dao;
 
 import com.wyci.mogodbdemo.entity.User;
 import org.springframework.data.mongodb.repository.MongoRepository;

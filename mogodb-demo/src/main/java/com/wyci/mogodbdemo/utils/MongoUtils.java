@@ -18,7 +18,7 @@ import java.util.Map;
  * @Date 2022-08-04 10:12
  * @Version V1.0
  */
-@Component
+//@Component
 public class MongoUtils {
 
 

@@ -1,6 +1,7 @@
 package com.wyci.mogodbdemo.dao;
 
 import com.wyci.mogodbdemo.entity.User;
+import com.wyci.mongo.dao.UserDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

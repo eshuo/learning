@@ -1,5 +1,6 @@
-package com.wyci.mogodbdemo.dao;
+package com.wyci.mongo.dao;
 
+import com.wyci.mogodbdemo.entity.UserDynamic;
 import com.wyci.mogodbdemo.entity.UserSnapshot;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -10,7 +11,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * @Version V1.0
  */
 
-public interface UserSnapshotDao extends MongoRepository<UserSnapshot,String> {
+public interface UserDynamicDao extends MongoRepository<UserDynamic, String> {
 
 
 }

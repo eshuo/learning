@@ -1,6 +1,6 @@
 package com.wyci.mogodbdemo.service.impl;
 
-import com.wyci.mogodbdemo.dao.UserDynamicDao;
+import com.wyci.mongo.dao.UserDynamicDao;
 import com.wyci.mogodbdemo.entity.UserDynamic;
 import com.wyci.mogodbdemo.service.UserDynamicService;
 import org.springframework.stereotype.Service;

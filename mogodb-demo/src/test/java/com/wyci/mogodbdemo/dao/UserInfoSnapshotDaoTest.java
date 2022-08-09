@@ -4,6 +4,7 @@ import com.wyci.mogodbdemo.entity.User;
 import com.wyci.mogodbdemo.entity.UserSnapshot;
 import com.wyci.mogodbdemo.utils.MongodbUtils;
 import com.wyci.mogodbdemo.utils.ReflectUtil;
+import com.wyci.mongo.dao.UserSnapshotDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

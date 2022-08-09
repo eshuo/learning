@@ -1,5 +1,6 @@
 package com.wyci.mogodbdemo.dao;
 
+import com.example.mongo.utils.MongoUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wyci.mogodbdemo.entity.UserDynamic;
@@ -31,6 +32,9 @@ public class UserInfoDynamicTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private MongoUtils mongoUtils;
+
     @Test
     public void testSave() {
 
@@ -45,7 +49,7 @@ public class UserInfoDynamicTest {
         HashMap<String, Object> map = new HashMap<>();
 
 
-        int i = 0;
+        int i = 50;
         map.put("cName_" + i++, "列1");
         map.put("cName_" + i++, "列2");
         map.put("cName_" + i++, "列3");
@@ -66,8 +70,9 @@ public class UserInfoDynamicTest {
         assert (propertiesMap != null);
 
 //        MongodbUtils.save(userDynamic);
-        MongodbUtils.save(propertiesMap, MongodbUtils.getCollectionName(UserDynamic.class));
+//        MongodbUtils.save(propertiesMap, MongodbUtils.getCollectionName(UserDynamic.class));
 
+        mongoUtils.save(userDynamic);
 
     }
 

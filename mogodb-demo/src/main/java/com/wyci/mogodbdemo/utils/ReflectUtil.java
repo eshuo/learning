@@ -5,9 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.util.CollectionUtils;
 
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
