@@ -62,7 +62,7 @@ public class ConditionTest {
 //        conditionWrapper.and("name", ConditionType.IS, "test");
 //                IS_NULL,
 //        conditionWrapper.and("tags", ConditionType.IS_NULL, true);
-//        conditionWrapper.and("tags", ConditionType.IS_NULL, false);
+        conditionWrapper.and("tags", ConditionType.IS_NULL, false);
 //                LT,
 //        conditionWrapper.and("age",ConditionType.LT,20);
 //                LTE,

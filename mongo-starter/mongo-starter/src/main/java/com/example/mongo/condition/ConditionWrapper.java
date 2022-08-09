@@ -194,9 +194,9 @@ public class ConditionWrapper<T> {
                     break;
                 case IS_NULL:
                     if (Boolean.TRUE.equals(condition.getValue())) {
-                        criteriaList.add(Criteria.where(condition.getColumn()).isNull());
+                        criteriaList.add(Criteria.where(condition.getColumn()).is(null));
                     } else {
-                        criteriaList.add(Criteria.where(condition.getColumn()).isNull().not());
+                        criteriaList.add(Criteria.where(condition.getColumn()).ne(null));
                     }
                     break;
                 case LT:
