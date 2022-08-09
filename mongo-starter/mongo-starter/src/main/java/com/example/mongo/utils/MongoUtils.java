@@ -1,5 +1,6 @@
 package com.example.mongo.utils;
 
+import com.example.mongo.rest.Page;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -7,6 +8,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +40,34 @@ public class MongoUtils {
 
 
     /**
-     * 通过条件查询更新数据
+     * 批量添加数据
+     *
+     * @param beans
+     * @param <T>
+     * @return
+     */
+    public <T> boolean saveAll(List<T> beans) {
+        final Collection<T> insertAll = mongoTemplate.insertAll(beans);
+        return beans.size() == insertAll.size();
+    }
+
+    /**
+     * 更新条件全部数据
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public <T> boolean update(T t) {
+        return updateMulti(createQuery(t), t);
+    }
+
+    /**
+     * 通过条件修改所找到的所有数据
      *
      * @param query
      */
-    public <T> boolean update(Query query, T t) {
+    public <T> boolean updateMulti(Query query, T t) {
         Update update = createUpdate(t);
         return mongoTemplate.updateMulti(query, update, t.getClass()).wasAcknowledged();
     }
@@ -58,8 +83,32 @@ public class MongoUtils {
     public <T> boolean updateById(String id, T bean) {
         Query query = new Query();
         query.addCriteria(Criteria.where("id").is(id));
-        return update(query, bean);
+        return updateMulti(query, bean);
     }
+
+    /**
+     * 更新条件第一条数据
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public <T> boolean updateFirst(T t) {
+        return updateFirst(createQuery(t), t);
+    }
+
+    /**
+     * 更新条件第一条数据
+     *
+     * @param t
+     * @param <T>
+     * @return
+     */
+    public <T> boolean updateFirst(Query query, T t) {
+        Update update = createUpdate(t);
+        return mongoTemplate.updateFirst(query, update, t.getClass()).wasAcknowledged();
+    }
+
 
     /**
      * 删除对象
@@ -93,6 +142,25 @@ public class MongoUtils {
         return findAll(createQuery(t), (Class<T>) t.getClass());
     }
 
+
+    /**
+     * 根据实例条件查询分页数据
+     *
+     * @param t
+     * @param page
+     * @param <T>
+     * @return
+     */
+    public <T> Page<T> findPage(T t, Page<T> page) {
+
+
+        final Query query = createQuery(t, page);
+
+        final long count = count(query, t.getClass());
+
+        return new Page<>(findAll(query, (Class<T>) t.getClass()), page, count);
+    }
+
     /**
      * 通过条件查询实体(集合)
      *
@@ -104,12 +172,6 @@ public class MongoUtils {
     }
 
 
-//    public <T> List<T> find(Query query, RequestPage page, Class<T> clazz) {
-//        query.with(page.toPageRequest());
-//        return mongoTemplate.find(query, clazz);
-//    }
-
-
     /**
      * 通过条件查询实体记录数
      *
@@ -117,7 +179,11 @@ public class MongoUtils {
      * @return
      */
     public <T> long count(T t) {
-        return mongoTemplate.count(createQuery(t), t.getClass());
+        return count(createQuery(t), t.getClass());
+    }
+
+    public <T> long count(Query query, Class<T> c) {
+        return mongoTemplate.count(query, c);
     }
 
 
@@ -183,6 +249,10 @@ public class MongoUtils {
      * @return
      */
     public static <T> Query createQuery(T t) {
+        return createQuery(t, null);
+    }
+
+    public static <T> Query createQuery(T t, Page<T> page) {
         Query query = new Query();
         if (t == null) {
             return query;
@@ -202,9 +272,7 @@ public class MongoUtils {
                         fieIdName = annotation.value();
                     }
                 }
-                //todo and or in gt le ...???
                 if (value instanceof Map) {
-                    //TODO 集合查询拼接问题
                     String finalFieIdName = fieIdName;
                     ((Map<?, ?>) value).forEach((k, v) -> query.addCriteria(Criteria.where(finalFieIdName + "." + k).is(v)));
                 } else {
@@ -214,8 +282,13 @@ public class MongoUtils {
                 throw new RuntimeException("createQuery error", e);
             }
         }
+        if (null != page) {
+            query.with(page.toPageRequest());
+        }
         return query;
     }
 
+
+    //TODO 关联查询     AggregationOperation            Aggregation         mongoTemplate.aggregate
 
 }

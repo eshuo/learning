@@ -1,7 +1,6 @@
 package com.example.mongo.config;
 
 import com.example.mongo.repository.MongoDefaultRepositoryBean;
-import com.example.mongo.repository.MongoDefaultRepositoryImpl;
 import com.mongodb.MongoClientSettings;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +31,14 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories(basePackages = {"com.**.mongo.dao"}, repositoryFactoryBeanClass = MongoDefaultRepositoryBean.class)
 public class MongoDBConfig {
 
-    @Autowired
-    private MongoDatabaseFactory mongoDatabaseFactory;
+    private final MongoDatabaseFactory mongoDatabaseFactory;
 
-    @Autowired
-    private MongoMappingContext mongoMappingContext;
+    private final MongoMappingContext mongoMappingContext;
+
+    public MongoDBConfig(MongoDatabaseFactory mongoDatabaseFactory, MongoMappingContext mongoMappingContext) {
+        this.mongoDatabaseFactory = mongoDatabaseFactory;
+        this.mongoMappingContext = mongoMappingContext;
+    }
 
     @Bean
     public MappingMongoConverter mappingMongoConverter() {
@@ -46,7 +48,6 @@ public class MongoDBConfig {
         MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
         // 此处是去除插入数据库的 _class 字段
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-
         return converter;
     }
 

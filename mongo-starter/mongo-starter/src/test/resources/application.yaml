@@ -1,10 +1,10 @@
 demo:
-    mongodb:
-#      uri:  mongodb://docker:mongopw@127.0.0.1:27017/test
-#      database: test
-#      username: admin
-#      password: admin
-#      port: 27017
-#      uri: mongodb://127.0.01:27017/test
-      uri: mongodb://127.0.01:27017/test
+  mongodb:
+    #      database: test
+    #      username: admin
+    #      password: admin
+    #      port: 27017
+    #      uri: mongodb://username:password@ip:posrt/database
+    uri: mongodb://127.0.01:27017/test
+#    print: true
 

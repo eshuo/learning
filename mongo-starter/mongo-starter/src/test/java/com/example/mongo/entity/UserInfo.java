@@ -1,11 +1,13 @@
 package com.example.mongo.entity;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @Description
@@ -14,6 +16,7 @@ import java.io.Serializable;
  * @Version V1.0
  */
 @Document(collection = "userInfo") //通过collection参数指定当前实体类对应的文档
+@Data
 public class UserInfo implements Serializable {
 
     @Id//主键
@@ -28,6 +31,9 @@ public class UserInfo implements Serializable {
 
 
     private Integer age;
+
+
+    private List<String> tags;
 
     public UserInfo() {
     }

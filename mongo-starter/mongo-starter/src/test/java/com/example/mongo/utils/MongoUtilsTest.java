@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description
@@ -35,10 +37,16 @@ public class MongoUtilsTest {
     @Test
     public void save() {
 
-        UserInfo userInfo = new UserInfo("0", "test", "1234");
+        UserInfo userInfo = new UserInfo("10", "test", "1234");
+
+        List<String> tags = new ArrayList<>();
+        tags.add("tags1");
+        tags.add("tags2");
+        userInfo.setTags(tags);
+        userInfo.setAge(20);
 //        mongoUtils.save(userInfo);
 
-
+        userInfoRepository.save(userInfo);
     }
 
     @Test
