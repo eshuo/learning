@@ -35,7 +35,10 @@ public class ConditionTest {
     @Test
     public void testType() {
 
-        ConditionWrapper<UserInfo> conditionWrapper = new ConditionWrapper<>();
+        UserInfo userInfo = new UserInfo();
+//        userInfo.setAge(20);
+
+        ConditionWrapper<UserInfo> conditionWrapper = new ConditionWrapper<>(userInfo);
 
 //                ALL,
 //        List<String> tags = new ArrayList<>();
@@ -47,6 +50,7 @@ public class ConditionTest {
 //        conditionWrapper.and("age",ConditionType.GT,10);
 //                GTE,
 //        conditionWrapper.and("age",ConditionType.GTE,20);
+        conditionWrapper.or("age",ConditionType.GTE,20);
 //                IN,
 //        conditionWrapper.and("name", ConditionType.IN, new String[]{"test", "test1", "test2", "test3"});
 //        conditionWrapper.and("name", ConditionType.IN, Arrays.asList("test1","test"));
@@ -58,11 +62,13 @@ public class ConditionTest {
 //        conditionWrapper.and("name", ConditionType.START_LIKE, "test");
 //                END_LIKE,
 //        conditionWrapper.and("name", ConditionType.END_LIKE, "test");
+        conditionWrapper.or("name",ConditionType.CONCAT,"test");
+
 //                IS,
 //        conditionWrapper.and("name", ConditionType.IS, "test");
 //                IS_NULL,
 //        conditionWrapper.and("tags", ConditionType.IS_NULL, true);
-        conditionWrapper.and("tags", ConditionType.IS_NULL, false);
+//        conditionWrapper.and("tags", ConditionType.IS_NULL, false);
 //                LT,
 //        conditionWrapper.and("age",ConditionType.LT,20);
 //                LTE,

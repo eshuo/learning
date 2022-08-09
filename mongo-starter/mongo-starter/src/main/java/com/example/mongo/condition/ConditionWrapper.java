@@ -114,7 +114,7 @@ public class ConditionWrapper<T> {
     public Criteria toCriteria() {
         Criteria criteria = new Criteria();
 
-        List<Criteria> criteriaAddList = new ArrayList<>(5);
+        List<Criteria> criteriaAndList = new ArrayList<>(5);
         List<Criteria> criteriaOrList = new ArrayList<>(5);
 
         if (null != modal) {
@@ -134,9 +134,9 @@ public class ConditionWrapper<T> {
                     }
                     if (value instanceof Map) {
                         String finalFieIdName = fieIdName;
-                        ((Map<?, ?>) value).forEach((k, v) -> criteriaAddList.add(Criteria.where(finalFieIdName + "." + k).is(v)));
+                        ((Map<?, ?>) value).forEach((k, v) -> criteriaAndList.add(Criteria.where(finalFieIdName + "." + k).is(v)));
                     } else {
-                        criteriaAddList.add(Criteria.where(fieIdName).is(value));
+                        criteriaAndList.add(Criteria.where(fieIdName).is(value));
                     }
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException("toCriteria error", e);
@@ -147,8 +147,10 @@ public class ConditionWrapper<T> {
         }
 
         if (!CollectionUtils.isEmpty(andConditions)) {
-            initCriteria(criteriaAddList, andConditions);
-            criteria.andOperator(criteriaAddList);
+            initCriteria(criteriaAndList, andConditions);
+            criteria.andOperator(criteriaAndList);
+        } else if (!CollectionUtils.isEmpty(criteriaAndList)) {
+            criteria.andOperator(criteriaAndList);
         }
 
         if (!CollectionUtils.isEmpty(orConditions)) {
