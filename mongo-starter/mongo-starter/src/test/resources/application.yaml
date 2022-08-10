@@ -6,5 +6,6 @@ demo:
     #      port: 27017
     #      uri: mongodb://username:password@ip:posrt/database
     uri: mongodb://127.0.01:27017/test
-#    print: true
+    #    print: true
+#    transactionEnabled: true
 

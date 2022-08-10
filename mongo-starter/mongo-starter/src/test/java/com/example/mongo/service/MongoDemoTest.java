@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,14 +29,19 @@ public class MongoDemoTest {
     private MongoDemoService mongoDemoService;
 
     @Test
+//    @Transactional
     public void testSave() {
 
         MongoDemo mongoDemo = new MongoDemo();
-        mongoDemo.setId("1");
+        mongoDemo.setId("11111");
         mongoDemo.setName(null);
 
 
         mongoDemoService.save(mongoDemo);
+
+
+        throw new RuntimeException("1111");
+
 
     }
 
