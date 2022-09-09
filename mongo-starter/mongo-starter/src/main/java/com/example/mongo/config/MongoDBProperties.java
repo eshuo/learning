@@ -80,11 +80,6 @@ public class MongoDBProperties {
      */
     private Boolean autoIndexCreation;
 
-    /**
-     * 事务开关
-     */
-    private Boolean transactionEnabled;
-
     public String getHost() {
         return this.host;
     }
@@ -186,18 +181,6 @@ public class MongoDBProperties {
 
     public void setAutoIndexCreation(Boolean autoIndexCreation) {
         this.autoIndexCreation = autoIndexCreation;
-    }
-
-    public Boolean getAutoIndexCreation() {
-        return autoIndexCreation;
-    }
-
-    public Boolean getTransactionEnabled() {
-        return transactionEnabled;
-    }
-
-    public void setTransactionEnabled(Boolean transactionEnabled) {
-        this.transactionEnabled = transactionEnabled;
     }
 
     public static class Gridfs {

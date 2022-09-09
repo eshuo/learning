@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -40,13 +42,27 @@ public class MongoDefaultRepositoryImpl<T, ID extends Serializable> extends Simp
         this.mongoOperations = mongoOperations;
         this.entityInformation = metadata;
     }
-
+//
+//    /**
+//     * 通过条件修改所找到的所有数据
+//     *
+//     * @param t
+//     */
+//    @Override
+//    public void update(T t) {
+//        update(MongoUtils.createQuery(t), t);
+//    }
 
     @Override
     public void update(ID id, T t) {
         Query query = new Query().addCriteria(Criteria.where("id").is(id));
         final Update update = MongoUtils.createUpdate(t);
         this.mongoOperations.updateFirst(query, update, entityInformation.getJavaType());
+    }
+
+    @Override
+    public void update(Query query, T t) {
+        this.mongoOperations.updateFirst(query, MongoUtils.createUpdate(t), entityInformation.getJavaType()).wasAcknowledged();
     }
 
     @Override
@@ -73,10 +89,21 @@ public class MongoDefaultRepositoryImpl<T, ID extends Serializable> extends Simp
         }
     }
 
+
+    @Override
+    public long count(Query query) {
+        return mongoOperations.count(query, entityInformation.getJavaType());
+    }
+
+    @Override
+    public List<T> findByQuery(Query query) {
+        return mongoOperations.find(query, entityInformation.getJavaType());
+    }
+
     @Override
     public Page<T> findPageByQuery(Query query, Pageable pageable) {
-        long total = mongoOperations.count(query, entityInformation.getJavaType());
-        List<T> list = mongoOperations.find(query.with(pageable), entityInformation.getJavaType());
+        long total = count(query);
+        List<T> list = findByQuery(query.with(pageable));
         return new PageImpl<T>(list, pageable, total);
     }
 
@@ -84,4 +111,29 @@ public class MongoDefaultRepositoryImpl<T, ID extends Serializable> extends Simp
     public Page<T> findPageByCriteria(Criteria criteria, Pageable pageable) {
         return findPageByQuery(new Query(criteria), pageable);
     }
+
+
+    @Override
+    public List<Object> findByAgg(Criteria criteria, Query query, Aggregation aggregation, T t, Object object) {
+        AggregationResults are = mongoOperations.aggregate(aggregation, t.getClass(), object.getClass());
+        return are.getMappedResults();
+    }
+
+    @Override
+    public Object findOneByQuery(Query query, Object object) {
+        return mongoOperations.findOne(query, object.getClass());
+    }
+
+    @Override
+    public void saveOrUpdate(Criteria criteria, T t) {
+        T t1 = (T) mongoOperations.findOne(new Query(criteria), t.getClass());
+        if (t1 != null) {
+            final Update update = MongoUtils.createUpdate(t);
+            this.mongoOperations.updateFirst(new Query(criteria), update, entityInformation.getJavaType());
+        } else {
+            mongoOperations.save(t);
+        }
+    }
+
+
 }

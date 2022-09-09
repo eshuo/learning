@@ -1,7 +1,5 @@
 package com.example.mongo.rest;
 
-import lombok.Data;
-import lombok.ToString;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -18,8 +16,6 @@ import java.util.stream.Collectors;
  * @Date 2022-08-03 14:55
  * @Version V1.0
  */
-@Data
-@ToString
 public class Page<T> {
 
 
@@ -36,7 +32,7 @@ public class Page<T> {
     /**
      * 排序参数
      */
-    private List<Page.PageSort> orders = new ArrayList<>(3);
+    private List<PageSort> orders = new ArrayList<>(3);
 
 
     /**
@@ -201,8 +197,6 @@ public class Page<T> {
     /**
      * 排序
      */
-    @Data
-    @ToString
     public static class PageSort implements Serializable {
 
         private String column = "";
@@ -226,6 +220,109 @@ public class Page<T> {
             this.unsafe = unsafe;
         }
 
+
+        public String getColumn() {
+            return column;
+        }
+
+        public void setColumn(String column) {
+            this.column = column;
+        }
+
+        public boolean isAsc() {
+            return asc;
+        }
+
+        public void setAsc(boolean asc) {
+            this.asc = asc;
+        }
+
+        public boolean isUnsafe() {
+            return unsafe;
+        }
+
+        public void setUnsafe(boolean unsafe) {
+            this.unsafe = unsafe;
+        }
+
+        @Override
+        public String toString() {
+            return "PageSort{" +
+                    "column='" + column + '\'' +
+                    ", asc=" + asc +
+                    ", unsafe=" + unsafe +
+                    '}';
+        }
     }
 
+
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public List<PageSort> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<PageSort> orders) {
+        this.orders = orders;
+    }
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
+    }
+
+    public Integer getMaxPage() {
+        return maxPage;
+    }
+
+    public void setMaxPage(Integer maxPage) {
+        this.maxPage = maxPage;
+    }
+
+    public Integer getMaxSize() {
+        return maxSize;
+    }
+
+    public void setMaxSize(Integer maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public Integer getStart() {
+        return start;
+    }
+
+    public void setStart(Integer start) {
+        this.start = start;
+    }
+
+    public Integer getEnd() {
+        return end;
+    }
+
+    public void setEnd(Integer end) {
+        this.end = end;
+    }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "currentPage=" + currentPage +
+                ", size=" + size +
+                ", orders=" + orders +
+                ", data=" + data +
+                ", maxPage=" + maxPage +
+                ", maxSize=" + maxSize +
+                ", start=" + start +
+                ", end=" + end +
+                '}';
+    }
 }

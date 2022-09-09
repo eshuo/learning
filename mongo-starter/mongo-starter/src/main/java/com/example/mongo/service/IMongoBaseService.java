@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import java.util.List;
 
 /**
- * @Description
+ * @Description 简单实现mongo常用方法
  * @Author wangshuo
  * @Date 2022-08-08 10:56
  * @Version V1.0
@@ -57,7 +57,7 @@ public interface IMongoBaseService<T> {
      *
      * @param t
      */
-    public  void deleteByCondition(T t);
+    public void deleteByCondition(T t);
 
     /**
      * 根据id进行更新
@@ -77,13 +77,12 @@ public interface IMongoBaseService<T> {
     public void update(T t);
 
 
-
     /**
      * 通过条件修改所找到的所有数据
      *
      * @param query
      */
-    public  boolean updateMulti(Query query, T t);
+    public boolean updateMulti(Query query, T t);
 
 
     /**
@@ -92,7 +91,7 @@ public interface IMongoBaseService<T> {
      * @param t
      * @return
      */
-    public  boolean updateFirst(T t);
+    public boolean updateFirst(T t);
 
     /**
      * 更新条件第一条数据
@@ -100,8 +99,7 @@ public interface IMongoBaseService<T> {
      * @param t
      * @return
      */
-    public  boolean updateFirst(Query query, T t);
-
+    public boolean updateFirst(Query query, T t);
 
 
     /**
@@ -163,7 +161,7 @@ public interface IMongoBaseService<T> {
      * @param t
      * @return
      */
-    public  List<T> findAll(T t);
+    public List<T> findAll(T t);
 
     /**
      * 通过条件查询实体(集合)
@@ -171,8 +169,7 @@ public interface IMongoBaseService<T> {
      * @param query
      * @return
      */
-    public  List<T> findAll(Query query);
-
+    public List<T> findAll(Query query);
 
 
     /**
@@ -189,7 +186,7 @@ public interface IMongoBaseService<T> {
      * @param t
      * @return
      */
-    public  long count(T t);
+    public long count(T t);
 
     /**
      * 获取MongoDB模板操作

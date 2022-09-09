@@ -54,7 +54,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     /**
      * 打印日志开关
      */
-    @Value("${demo.mongodb.print:true}")
+    @Value("${eetrust.mongodb.print:true}")
     private boolean print;
 
 
@@ -254,9 +254,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
                         fieIdName = annotation.value();
                     }
                 }
-                //todo and or in gt le ...???
                 if (value instanceof Map) {
-                    //TODO 集合查询拼接问题
                     String finalFieIdName = fieIdName;
                     ((Map<?, ?>) value).forEach((k, v) -> query.addCriteria(Criteria.where(finalFieIdName + "." + k).is(v)));
                 } else {

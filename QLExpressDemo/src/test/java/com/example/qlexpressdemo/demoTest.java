@@ -38,10 +38,10 @@ public class demoTest {
 //        test();
 //        test1();
 
-//        likeTest();
+        likeTest();
 
 
-        check1();
+//        check1();
 
         //三分钟之内错误次数大于3
 
@@ -331,11 +331,19 @@ public class demoTest {
 
     static void likeTest() throws Exception {
 //       import  java.lang.String;
-        String express = "张三.startsWith(String.valueOf('张'))  ";
+//        String express = "return abc.acb.size() == 1 ";
+//        String express = "return ! (aaa in bbb) ";
+        String express = "then {return 33}";
 
         ExpressRunner runner = new ExpressRunner();
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
-        expressContext.put("张三", "张三");
+
+        HashMap<String,Object> aaa = new HashMap<>();
+        aaa.put("acb", Collections.singletonList("a"));
+        expressContext.put("abc", aaa);
+        expressContext.put("aaa","a");
+        expressContext.put("bbb",Arrays.asList("a","b"));
+
         final Object execute = runner.execute(express, expressContext, null, false, false);
 
         System.out.println(express);

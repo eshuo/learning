@@ -2,10 +2,9 @@ package com.example.mongo.condition;
 
 import com.example.mongo.rest.Page;
 import com.example.mongo.utils.ReflectUtil;
-import lombok.Data;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.schema.JsonSchemaObject;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -23,7 +22,6 @@ import java.util.regex.Pattern;
  * @Date 2022-08-09 10:05
  * @Version V1.0
  */
-@Data
 public class ConditionWrapper<T> {
 
     boolean orType = false;
@@ -99,7 +97,7 @@ public class ConditionWrapper<T> {
 
 
     public Query toQuery() {
-        return toQuery(null);
+        return toQuery((Page) null);
     }
 
     public Query toQuery(Page page) {
@@ -111,46 +109,32 @@ public class ConditionWrapper<T> {
         return query;
     }
 
+    public Query toQuery(Pageable page) {
+        final Criteria criteria = toCriteria();
+        final Query query = new Query(criteria);
+        if (null != page) {
+            query.with(page);
+        }
+        return query;
+    }
+
     public Criteria toCriteria() {
         Criteria criteria = new Criteria();
 
-        List<Criteria> criteriaAndList = new ArrayList<>(5);
+        List<Criteria> criteriaAddList = new ArrayList<>(5);
         List<Criteria> criteriaOrList = new ArrayList<>(5);
 
         if (null != modal) {
             for (Field field : modal.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                try {
-                    Object value = field.get(modal);
-                    if (ReflectUtil.isNullOrEmpty(value)) {
-                        continue;
-                    }
-                    final org.springframework.data.mongodb.core.mapping.Field annotation = field.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
-                    String fieIdName = field.getName();
-                    if (null != annotation) {
-                        if (StringUtils.hasText(annotation.value())) {
-                            fieIdName = annotation.value();
-                        }
-                    }
-                    if (value instanceof Map) {
-                        String finalFieIdName = fieIdName;
-                        ((Map<?, ?>) value).forEach((k, v) -> criteriaAndList.add(Criteria.where(finalFieIdName + "." + k).is(v)));
-                    } else {
-                        criteriaAndList.add(Criteria.where(fieIdName).is(value));
-                    }
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException("toCriteria error", e);
-                }
+                convertCriteria(criteriaAddList,modal,field,null);
             }
-
-
         }
 
         if (!CollectionUtils.isEmpty(andConditions)) {
-            initCriteria(criteriaAndList, andConditions);
-            criteria.andOperator(criteriaAndList);
-        } else if (!CollectionUtils.isEmpty(criteriaAndList)) {
-            criteria.andOperator(criteriaAndList);
+            initCriteria(criteriaAddList, andConditions);
+            criteria.andOperator(criteriaAddList);
+        } else if (!CollectionUtils.isEmpty(criteriaAddList)) {
+            criteria.andOperator(criteriaAddList);
         }
 
         if (!CollectionUtils.isEmpty(orConditions)) {
@@ -158,6 +142,57 @@ public class ConditionWrapper<T> {
             criteria.orOperator(criteriaOrList);
         }
         return criteria;
+    }
+
+
+    private static <T> void convertCriteria(List<Criteria> criteriaAddList, T t, Field field, String parentName) {
+        field.setAccessible(true);
+        try {
+            Object value = field.get(t);
+            if (ReflectUtil.isNullOrEmpty(value)) {
+                return;
+            }
+
+            String fieIdName = getFieIdName(field, parentName);
+            final ClassLoader classLoader = value.getClass().getClassLoader();
+            if (null != classLoader) {
+                try {
+                    final Field[] declaredFields = value.getClass().getDeclaredFields();
+                    if (declaredFields.length > 0) {
+                        for (Field declaredField : declaredFields) {
+                            convertCriteria(criteriaAddList, value, declaredField, fieIdName);
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException("convertCriteria ClassLoader error", e);
+//                    criteriaAddList.add(Criteria.where(fieIdName).is(value));
+                }
+            } else {
+                if (value instanceof Map) {
+                    ((Map<?, ?>) value).forEach((k, v) -> criteriaAddList.add(Criteria.where(fieIdName + "." + k).is(v)));
+                } else {
+                    criteriaAddList.add(Criteria.where(fieIdName).is(value));
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("convertCriteria error", e);
+        }
+    }
+
+    private static String getFieIdName(Field field, String parentName) {
+        final org.springframework.data.mongodb.core.mapping.Field annotation = field.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
+        String fieIdName = field.getName();
+
+        if (null != annotation) {
+            if (StringUtils.hasText(annotation.value())) {
+                fieIdName = annotation.value();
+            }
+        }
+        //x.xx
+        if (StringUtils.hasText(parentName)) {
+            fieIdName = parentName.concat(".").concat(fieIdName);
+        }
+        return fieIdName;
     }
 
     private void initCriteria(List<Criteria> criteriaList, List<Condition> conditionList) {
@@ -226,7 +261,7 @@ public class ConditionWrapper<T> {
 //                    criteriaList.add(Criteria.where(condition.getColumn()).type((Collection<JsonSchemaObject.Type>) condition.getValue()));
                     break;
                 case SAMPLE_RATE:
-                    criteriaList.add(Criteria.where(condition.getColumn()).sampleRate((Double) condition.getValue()));
+//                    criteriaList.add(Criteria.where(condition.getColumn()).sampleRate((Double) condition.getValue()));
                     break;
             }
         }
@@ -247,4 +282,44 @@ public class ConditionWrapper<T> {
                 .replace(".", "\\.").replace("&", "\\&");
     }
 
+
+    public boolean isOrType() {
+        return orType;
+    }
+
+    public void setOrType(boolean orType) {
+        this.orType = orType;
+    }
+
+    public List<Condition> getAndConditions() {
+        return andConditions;
+    }
+
+    public void setAndConditions(List<Condition> andConditions) {
+        this.andConditions = andConditions;
+    }
+
+    public List<Condition> getOrConditions() {
+        return orConditions;
+    }
+
+    public void setOrConditions(List<Condition> orConditions) {
+        this.orConditions = orConditions;
+    }
+
+    public T getModal() {
+        return modal;
+    }
+
+    public void setModal(T modal) {
+        this.modal = modal;
+    }
+
+    public Condition getCondition() {
+        return condition;
+    }
+
+    public void setCondition(Condition condition) {
+        this.condition = condition;
+    }
 }

@@ -1,20 +1,13 @@
 package com.example.mongo.condition;
 
-import lombok.Data;
-
-import java.util.List;
-
 /**
  * @Description 查询Condition
  * @Author wangshuo
  * @Date 2022-08-08 16:42
  * @Version V1.0
  */
-@Data
 public class Condition {
 
-
-    // column   type---enum  value
 
     private String column;
 
@@ -30,5 +23,38 @@ public class Condition {
         this.column = column;
         this.conditionType = conditionType;
         this.value = value;
+    }
+
+    public String getColumn() {
+        return column;
+    }
+
+    public void setColumn(String column) {
+        this.column = column;
+    }
+
+    public ConditionType getConditionType() {
+        return conditionType;
+    }
+
+    public void setConditionType(ConditionType conditionType) {
+        this.conditionType = conditionType;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "Condition{" +
+                "column='" + column + '\'' +
+                ", conditionType=" + conditionType +
+                ", value=" + value +
+                '}';
     }
 }

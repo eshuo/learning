@@ -1,12 +1,16 @@
 package com.example.mongo.utils;
 
 import com.example.mongo.rest.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
@@ -18,8 +22,11 @@ import java.util.Map;
  * @Date 2022-08-04 10:12
  * @Version V1.0
  */
-public class MongoUtils {
+public class MongoUtils implements Serializable {
 
+    private final static Logger logger = LoggerFactory.getLogger(MongoUtils.class);
+
+    private static final long serialVersionUID = 2427942411914844609L;
 
     private final MongoTemplate mongoTemplate;
 
@@ -151,6 +158,7 @@ public class MongoUtils {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> Page<T> findPage(T t, Page<T> page) {
 
 
@@ -225,20 +233,47 @@ public class MongoUtils {
 
     public static <T> Update createUpdate(T t) {
         Update update = new Update();
-        Field[] fields = t.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            try {
-                Object value = field.get(t);
-                if (ReflectUtil.isNullOrEmpty(value)) {
-                    continue;
-                }
-                update.set(field.getName(), value);
-            } catch (Exception e) {
-                throw new RuntimeException("createUpdate error", e);
+        if (null != t) {
+            Field[] fields = t.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                convertUpdate(t, update, field, null);
             }
         }
         return update;
+    }
+
+    private static <T> void convertUpdate(T t, Update update, Field field, String parentName) {
+        field.setAccessible(true);
+        try {
+            Object value = field.get(t);
+            if (ReflectUtil.isNullOrEmpty(value)) {
+                return;
+            }
+
+            String fieIdName = getFieIdName(field, parentName);
+            final ClassLoader classLoader = value.getClass().getClassLoader();
+            if (null != classLoader) {
+                try {
+                    final Field[] declaredFields = value.getClass().getDeclaredFields();
+                    if (declaredFields.length > 0) {
+                        for (Field declaredField : declaredFields) {
+                            convertUpdate(value, update, declaredField, fieIdName);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("convertUpdate ClassLoader error", e);
+                    update.set(fieIdName, value);
+                }
+            } else {
+                if (value instanceof Map) {
+                    ((Map<?, ?>) value).forEach((k, v) -> update.set(fieIdName + "." + k, v));
+                } else {
+                    update.set(fieIdName, value);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("convertUpdate error", e);
+        }
     }
 
 
@@ -249,43 +284,80 @@ public class MongoUtils {
      * @return
      */
     public static <T> Query createQuery(T t) {
-        return createQuery(t, null);
+        return createQuery(t, (Pageable) null);
     }
 
     public static <T> Query createQuery(T t, Page<T> page) {
+        if (null == page) {
+            return createQuery(t, (Pageable) null);
+        } else {
+            return createQuery(t, page.toPageRequest());
+        }
+    }
+
+    public static <T> Query createQuery(T t, Pageable pageable) {
         Query query = new Query();
         if (t == null) {
             return query;
         }
         for (Field field : t.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                Object value = field.get(t);
-                if (ReflectUtil.isNullOrEmpty(value)) {
-                    continue;
-                }
-                final org.springframework.data.mongodb.core.mapping.Field annotation = field.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
-                String fieIdName = field.getName();
+            convertQuery(t, query, field, null);
+        }
+        if (null != pageable) {
+            query.with(pageable);
+        }
+        return query;
+    }
 
-                if (null != annotation) {
-                    if (StringUtils.hasText(annotation.value())) {
-                        fieIdName = annotation.value();
+
+    private static <T> void convertQuery(T t, Query query, Field field, String parentName) {
+        field.setAccessible(true);
+        try {
+            Object value = field.get(t);
+            if (ReflectUtil.isNullOrEmpty(value)) {
+                return;
+            }
+
+            String fieIdName = getFieIdName(field, parentName);
+            final ClassLoader classLoader = value.getClass().getClassLoader();
+            if (null != classLoader) {
+                try {
+                    final Field[] declaredFields = value.getClass().getDeclaredFields();
+                    if (declaredFields.length > 0) {
+                        for (Field declaredField : declaredFields) {
+                            convertQuery(value, query, declaredField, fieIdName);
+                        }
                     }
+                } catch (Exception e) {
+                    logger.error("convertUpdate ClassLoader error", e);
+                    query.addCriteria(Criteria.where(fieIdName).is(value));
                 }
+            } else {
                 if (value instanceof Map) {
-                    String finalFieIdName = fieIdName;
-                    ((Map<?, ?>) value).forEach((k, v) -> query.addCriteria(Criteria.where(finalFieIdName + "." + k).is(v)));
+                    ((Map<?, ?>) value).forEach((k, v) -> query.addCriteria(Criteria.where(fieIdName + "." + k).is(v)));
                 } else {
                     query.addCriteria(Criteria.where(fieIdName).is(value));
                 }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("createQuery error", e);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("convertUpdate error", e);
+        }
+    }
+
+    private static String getFieIdName(Field field, String parentName) {
+        final org.springframework.data.mongodb.core.mapping.Field annotation = field.getAnnotation(org.springframework.data.mongodb.core.mapping.Field.class);
+        String fieIdName = field.getName();
+
+        if (null != annotation) {
+            if (StringUtils.hasText(annotation.value())) {
+                fieIdName = annotation.value();
             }
         }
-        if (null != page) {
-            query.with(page.toPageRequest());
+        //x.xx
+        if (StringUtils.hasText(parentName)) {
+            fieIdName = parentName.concat(".").concat(fieIdName);
         }
-        return query;
+        return fieIdName;
     }
 
 
