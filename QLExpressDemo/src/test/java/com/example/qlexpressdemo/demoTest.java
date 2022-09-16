@@ -6,8 +6,11 @@ import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.util.CollectionUtils;
+import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +28,17 @@ import static com.example.qlexpressdemo.utils.QlRunnerUtils.ExpressToFunction;
 
 public class demoTest {
 
+    private static Unsafe unsafe;
+
+    private static Unsafe getUnsafe() throws IllegalAccessException, NoSuchFieldException {
+        if (null == unsafe) {
+            Field f = Unsafe.class.getDeclaredField("theUnsafe");
+            f.setAccessible(true);
+            unsafe = (Unsafe) f.get(null);
+        }
+        return unsafe;
+    }
+
 
     public static void main(String[] args) throws Exception {
 
@@ -38,12 +52,33 @@ public class demoTest {
 //        test();
 //        test1();
 
-        likeTest();
+//        likeTest();
 
+        dateDemo();
+//        final Object o = getUnsafe().allocateInstance(String.class);
+//        System.out.println(o);
 
 //        check1();
 
         //三分钟之内错误次数大于3
+
+
+    }
+
+
+    public static void dateDemo() throws Exception {
+
+        String str = "new Date().getTime() - lastTime >1";
+
+
+        ExpressRunner runner = new ExpressRunner();
+
+        final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
+        defaultContext.put("lastTime",System.currentTimeMillis());
+        final Object execute = runner.execute(str, defaultContext, null, false, false);
+
+
+        System.out.println(execute);
 
 
     }
@@ -98,7 +133,7 @@ public class demoTest {
         List<String> execute = (List<String>) runner.execute(str, expressContext, null, false, false);
 
         for (String s : execute) {
-            System.err.println("s==>"+s);
+            System.err.println("s==>" + s);
         }
 
 
@@ -333,16 +368,18 @@ public class demoTest {
 //       import  java.lang.String;
 //        String express = "return abc.acb.size() == 1 ";
 //        String express = "return ! (aaa in bbb) ";
-        String express = "then {return 33}";
+        String express = "a1 in a2";
 
         ExpressRunner runner = new ExpressRunner();
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
 
-        HashMap<String,Object> aaa = new HashMap<>();
+        HashMap<String, Object> aaa = new HashMap<>();
         aaa.put("acb", Collections.singletonList("a"));
         expressContext.put("abc", aaa);
-        expressContext.put("aaa","a");
-        expressContext.put("bbb",Arrays.asList("a","b"));
+        expressContext.put("aaa", "a");
+        expressContext.put("a2", Arrays.asList("a", "b"));
+        expressContext.put("a1", getUnsafe().allocateInstance(String.class));
+        expressContext.put("a2", getUnsafe().allocateInstance(ArrayList.class));
 
         final Object execute = runner.execute(express, expressContext, null, false, false);
 
