@@ -11,6 +11,9 @@ import org.springframework.util.CollectionUtils;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,7 +57,7 @@ public class demoTest {
 
 //        likeTest();
 
-        dateDemo();
+//        dateDemo();
 //        final Object o = getUnsafe().allocateInstance(String.class);
 //        System.out.println(o);
 
@@ -62,19 +65,25 @@ public class demoTest {
 
         //三分钟之内错误次数大于3
 
+//        获取当前时间是周几
+        DayOfWeek day = DayOfWeek.of(LocalDate.now().get(ChronoField.DAY_OF_WEEK));
+
+        System.out.println(day.getValue());
+
 
     }
 
 
     public static void dateDemo() throws Exception {
 
-        String str = "new Date().getTime() - lastTime >1";
+//        String str = "new Date().getTime() - lastTime >1";
 
+        String str = " LocalDate.now()";
 
         ExpressRunner runner = new ExpressRunner();
 
         final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
-        defaultContext.put("lastTime",System.currentTimeMillis());
+        defaultContext.put("lastTime", System.currentTimeMillis());
         final Object execute = runner.execute(str, defaultContext, null, false, false);
 
 
