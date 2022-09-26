@@ -214,9 +214,12 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
                     final String s = userMap.get(i1);
                     final Map<String, Object> map = userDataMap.get(s);
                     final Object o = map.get(time1);
-                    if (null == o) {
-                        data.put(s,0);
-                    } else {
+//                    if (null == o) {
+//                        data.put(s,0);
+//                    } else {
+//                        data.put(s,o);
+//                    }
+                    if (null != o) {
                         data.put(s,o);
                     }
                 }
@@ -228,7 +231,7 @@ public class LoginServiceImpl extends ServiceImpl<LoginMapper, Login> implements
 
         Gson gson = new Gson();
 
-        String filePath = "F:/" + "data2.txt";
+        String filePath = "F:/" + "data4.txt";
         FileWriter fw = null;
         try {
             File file = new File(filePath);

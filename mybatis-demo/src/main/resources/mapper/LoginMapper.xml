@@ -2,9 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mybatisdemo.mapper.LoginMapper">
 
+
+
     <select id="getUserName" resultType="java.lang.String">
-        select t.user_name from login t group by t.user_name desc ;
+        select t.user_name from login t  group by t.user_name order by t.user_name desc ;
     </select>
+
+
     <select id="getJson" resultType="java.util.Map" parameterType="java.lang.String">
 
         select substr(time,1,11) as time, count(user_name) as 'c1'
@@ -23,10 +27,31 @@
         select *  from login t
         where t.user_name = #{userName}
     </select>
+
+
     <select id="getAllTime" resultType="java.lang.String">
         select substr(time,1,11) as ntime from login group by ntime order by ntime;
     </select>
     <select id="getCsv" resultType="java.util.Map">
         SELECT * from csv c;
     </select>
+
+
+    <!--    <select id="getUserName" resultType="java.lang.String">-->
+    <!--        select t.user_name from login t where t.time >= '2022-07-01 00:00:00' group by t.user_name order by t.user_name desc ;-->
+    <!--    </select>-->
+
+    <!--    <select id="getJson" resultType="java.util.Map" parameterType="java.lang.String">-->
+
+    <!--        select time, count(user_name) as 'c1'-->
+    <!--        from login t-->
+    <!--        where  t.time >= '2022-07-01 00:00:00' and t.user_name = #{userName}-->
+    <!--        group by time, user_name-->
+    <!--        order by time;-->
+
+    <!--    </select>-->
+
+    <!--    <select id="getAllTime" resultType="java.lang.String">-->
+    <!--        select time from login where time >= '2022-07-01 00:00:00' group by  time order by time;-->
+    <!--    </select>-->
 </mapper>
