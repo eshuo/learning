@@ -66,9 +66,35 @@ public class demoTest {
         //三分钟之内错误次数大于3
 
 //        获取当前时间是周几
-        DayOfWeek day = DayOfWeek.of(LocalDate.now().get(ChronoField.DAY_OF_WEEK));
+//        DayOfWeek day = DayOfWeek.of(LocalDate.now().get(ChronoField.DAY_OF_WEEK));
+//
+//        System.out.println(day.getValue());
 
-        System.out.println(day.getValue());
+
+        List<String> list = new ArrayList<>(5);
+
+        for (int i = 0; i < 5; i++) {
+            list.add(String.valueOf(i));
+        }
+
+
+        System.out.println(list);
+
+        list.add("1");
+
+        System.out.println(list);
+        System.out.println(list.size());
+
+        if(list.size()>5){
+            list.remove(0);
+        }
+        System.out.println(list);
+        System.out.println(list.size());
+
+
+
+
+
 
 
     }
