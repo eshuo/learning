@@ -1,13 +1,17 @@
 package com.example.mongo.utils;
 
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.CollectionUtils;
 import sun.misc.Unsafe;
 
+import java.beans.FeatureDescriptor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @Description
@@ -76,6 +80,7 @@ public class ReflectUtil {
 
     /**
      * 给定数据为空初始化
+     *
      * @param t
      * @param <T>
      */
@@ -146,6 +151,21 @@ public class ReflectUtil {
             return empty;
         }
         return false;
+    }
+
+
+    /**
+     * 获取null字段
+     *
+     * @param source 传入的对象
+     * @return null字段
+     */
+    public static String[] getNullPropertyNames(Object source) {
+        final BeanWrapper wrappedSource = new BeanWrapperImpl(source);
+        return Stream.of(wrappedSource.getPropertyDescriptors())
+                .map(FeatureDescriptor::getName)
+                .filter(propertyName -> null == wrappedSource.getPropertyValue(propertyName))
+                .toArray(String[]::new);
     }
 
 }

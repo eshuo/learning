@@ -57,7 +57,7 @@ public class demoTest {
 
 //        likeTest();
 
-//        dateDemo();
+        dateDemo();
 //        final Object o = getUnsafe().allocateInstance(String.class);
 //        System.out.println(o);
 
@@ -71,25 +71,25 @@ public class demoTest {
 //        System.out.println(day.getValue());
 
 
-        List<String> list = new ArrayList<>(5);
-
-        for (int i = 0; i < 5; i++) {
-            list.add(String.valueOf(i));
-        }
-
-
-        System.out.println(list);
-
-        list.add("1");
-
-        System.out.println(list);
-        System.out.println(list.size());
-
-        if(list.size()>5){
-            list.remove(0);
-        }
-        System.out.println(list);
-        System.out.println(list.size());
+//        List<String> list = new ArrayList<>(5);
+//
+//        for (int i = 0; i < 5; i++) {
+//            list.add(String.valueOf(i));
+//        }
+//
+//
+//        System.out.println(list);
+//
+//        list.add("1");
+//
+//        System.out.println(list);
+//        System.out.println(list.size());
+//
+//        if(list.size()>5){
+//            list.remove(0);
+//        }
+//        System.out.println(list);
+//        System.out.println(list.size());
 
 
 
@@ -104,11 +104,16 @@ public class demoTest {
 
 //        String str = "new Date().getTime() - lastTime >1";
 
-        String str = " LocalDate.now()";
+        String str = "if ( 'WeChat.exe' in blacklist || 'QQ.exe' in blacklist  ) { return \"VERIFY_FAIL\" } ";
 
+        List<String> blacklist = new ArrayList<>();
+        blacklist.add("QQ.exe");
+        blacklist.add("1.exe");
+        blacklist.add("2.exe");
         ExpressRunner runner = new ExpressRunner();
 
         final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
+        defaultContext.put("blacklist",blacklist);
         defaultContext.put("lastTime", System.currentTimeMillis());
         final Object execute = runner.execute(str, defaultContext, null, false, false);
 
