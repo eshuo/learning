@@ -57,7 +57,9 @@ public class demoTest {
 
 //        likeTest();
 
-        dateDemo();
+//        dateDemo();
+
+        inDemo();
 //        final Object o = getUnsafe().allocateInstance(String.class);
 //        System.out.println(o);
 
@@ -97,6 +99,33 @@ public class demoTest {
 
 
 
+    }
+
+    private static void inDemo() throws Exception {
+
+//        String str = "data1 in data2";
+
+
+        final List<String> list = Arrays.asList("\"aaaaaa\"", "\"bbbbbb\"");
+
+
+        final String[] toArray = list.toArray(new String[]{});
+
+        System.out.println("array => "+Arrays.toString(toArray));
+
+        String str = "data1 in data2";
+        str=str.replaceAll("data2",Arrays.toString(toArray));
+
+
+        ExpressRunner runner = new ExpressRunner();
+
+        final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
+        defaultContext.put("data1","aaaaaa");
+//        defaultContext.put("data2", list);
+        defaultContext.put("data2", toArray);
+        System.out.println("str => "+str);
+        final Object execute = runner.execute(str, defaultContext, null, false, false);
+        System.out.println(execute);
     }
 
 
