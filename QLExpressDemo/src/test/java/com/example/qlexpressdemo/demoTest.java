@@ -1,19 +1,13 @@
 package com.example.qlexpressdemo;
 
-import com.example.qlexpressdemo.entity.ConditionInfo;
-import com.example.qlexpressdemo.entity.ParamInfo;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.springframework.util.CollectionUtils;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,8 +53,12 @@ public class demoTest {
 
 //        dateDemo();
 
-        inDemo();
+//        inDemo();
+//        listDemo();
 //        final Object o = getUnsafe().allocateInstance(String.class);
+
+        setdemo();
+
 //        System.out.println(o);
 
 //        check1();
@@ -94,9 +92,52 @@ public class demoTest {
 //        System.out.println(list.size());
 
 
+    }
+
+    private static void setdemo() {
+
+//        Set<String> hashSet = new HashSet<>();
+//        hashSet.add("1");
+//        hashSet.add("12");
+//        hashSet.add("123");
+//        hashSet.add("1234");
+//        hashSet.add("12345");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "1");
+        map.put("12", "12");
+        map.put("123", "13");
+        map.put("1234", "14");
+        map.put("12345", "15");
 
 
+        final List<String> list = Arrays.asList("1", "12", "123", "12345", "12345", "12345");
 
+        System.out.println(list.stream().anyMatch(map::containsKey));
+
+        System.out.println(map.keySet().containsAll(list));
+
+        System.out.println(list.size());
+        System.out.println(list.subList(list.size() - 3, list.size()));
+
+
+    }
+
+    private static void listDemo() throws Exception {
+
+        String str = "(1==1) && (aaac)";
+
+        ExpressRunner runner = new ExpressRunner();
+
+        final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
+        defaultContext.put("clientIp", "");
+        defaultContext.put("oftenIp", new ArrayList<>());
+        defaultContext.put("aaac", 2 == 2);
+//        defaultContext.put("data2", list);
+        System.out.println("str => " + str);
+        final Object execute = runner.execute(str, defaultContext, null, false, false);
+
+        System.out.println(execute);
 
 
     }
@@ -111,19 +152,19 @@ public class demoTest {
 
         final String[] toArray = list.toArray(new String[]{});
 
-        System.out.println("array => "+Arrays.toString(toArray));
+        System.out.println("array => " + Arrays.toString(toArray));
 
-        String str = "data1 in data2";
-        str=str.replaceAll("data2",Arrays.toString(toArray));
+        String str = "data1 in  [\"key\", \"zhiwen\"]";
+//        str = str.replaceAll("data2", Arrays.toString(toArray));
 
 
         ExpressRunner runner = new ExpressRunner();
 
         final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
-        defaultContext.put("data1","aaaaaa");
+        defaultContext.put("data1", "key");
 //        defaultContext.put("data2", list);
         defaultContext.put("data2", toArray);
-        System.out.println("str => "+str);
+        System.out.println("str => " + str);
         final Object execute = runner.execute(str, defaultContext, null, false, false);
         System.out.println(execute);
     }
@@ -142,7 +183,7 @@ public class demoTest {
         ExpressRunner runner = new ExpressRunner();
 
         final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
-        defaultContext.put("blacklist",blacklist);
+        defaultContext.put("blacklist", blacklist);
         defaultContext.put("lastTime", System.currentTimeMillis());
         final Object execute = runner.execute(str, defaultContext, null, false, false);
 

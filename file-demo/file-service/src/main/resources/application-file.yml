@@ -1,0 +1,10 @@
+res:
+  file:
+    linuxRootPath: /opt/EETRUST/res/file/
+    winRootPath: D:\upload\file\
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 200MB #单个文件上传大小
+      max-request-size: 600MB #连续上传文件大小
