@@ -1,15 +1,10 @@
 package com.example.qlexpressdemo.operator;
 
-import com.eetrust.res.manage.utils.QlRunnerUtils;
 import com.ql.util.express.Operator;
-import org.apache.commons.collections.ListUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Description 是否有交集操作
@@ -35,7 +30,7 @@ public class IntersectionOperator extends Operator {
             if (CollectionUtils.isEmpty(objects) || CollectionUtils.isEmpty(objects2)) {
                 return false;
             }
-            final List intersection = ListUtils.intersection(objects, objects2);
+            final List intersection = intersection(objects, objects2);
             return intersection.size() > 0;
         } catch (Exception e) {
             return false;
@@ -56,6 +51,23 @@ public class IntersectionOperator extends Operator {
     }
 
 
+
+    public static List intersection(final List list1, final List list2) {
+        final ArrayList result = new ArrayList();
+        final Iterator iterator = list2.iterator();
+
+        while (iterator.hasNext()) {
+            final Object o = iterator.next();
+
+            if (list1.contains(o)) {
+                result.add(o);
+            }
+        }
+
+        return result;
+    }
+
+
     public static void main(String[] args) {
         String str = "obj1 intersection [\"a\",\"b\"]";
 
@@ -68,9 +80,9 @@ public class IntersectionOperator extends Operator {
 //        String[] s1 = new String[]{"d","e","f"};
 //        objectHashMap.put("obj1",s);
 //        objectHashMap.put("obj2",s1);
-        final Object o = QlRunnerUtils.cacheExecute(str, objectHashMap);
-
-        System.out.println(o);
+//        final Object o = QlRunnerUtils.cacheExecute(str, objectHashMap);
+//
+//        System.out.println(o);
     }
 
 
