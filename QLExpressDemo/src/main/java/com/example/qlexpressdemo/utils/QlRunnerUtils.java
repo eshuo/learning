@@ -1,5 +1,6 @@
 package com.example.qlexpressdemo.utils;
 
+import com.example.qlexpressdemo.bean.rest.QLDemo;
 import com.example.qlexpressdemo.function.DateFunction;
 import com.example.qlexpressdemo.operator.IntersectionOperator;
 import com.ql.util.express.DefaultContext;
@@ -7,13 +8,11 @@ import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description
@@ -23,8 +22,11 @@ import java.util.Map;
  */
 public class QlRunnerUtils {
 
+
+
     private final static Logger logger = LoggerFactory.getLogger(QlRunnerUtils.class);
 
+    private static final String SPACE = " ";
 
     private static ExpressRunner runner;
 
@@ -234,5 +236,89 @@ public class QlRunnerUtils {
         str.append("return dataList;");
         return str.toString();
     }
+
+
+
+    public static String ConditionsInfoToExpress(QLDemo.ConditionsInfo conditionsInfo) {
+        StringBuilder express = new StringBuilder();
+//        逻辑   规则   逻辑  结果  逻辑  结果
+
+        if (QLDemo.ConditionsInfoEnum.RULE.name().equals(conditionsInfo.getType())) {
+
+        }
+        final List<QLDemo.Expressions> policyInfos = conditionsInfo.getPolicyInfos();
+
+        if (!CollectionUtils.isEmpty(policyInfos)) {
+            //括号
+            boolean addBrackets = false;
+            for (QLDemo.Expressions expressions : policyInfos) {
+                final QLDemo.ExpressionsEnum expressionsEnum = QLDemo.ExpressionsEnum.judgeValue(expressions.getNodeType());
+                if (expressionsEnum != null) {
+                    final QLDemo.RuleInfoData ruleInfoData = expressions.getData();
+                    //        如果  规则1 && 规则2 && 规则3 返回 结果1 否则 返回 结果2
+                    switch (expressionsEnum) {
+                        case SEPARATOR:
+                            final QLDemo.SeparatorEnum separatorEnum = QLDemo.SeparatorEnum.judgeValue(ruleInfoData.getValue());
+                            if (separatorEnum != null) {
+                                switch (separatorEnum) {
+                                    case _IF:
+                                        express.append(QLDemo.SeparatorEnum._IF.getValue()).append("( ");
+                                        addBrackets = true;
+                                        break;
+                                    case _RETURN:
+                                        //                                    规则体加入
+                                        if (addBrackets) {
+                                            express.append(" ) ");
+                                            addBrackets = false;
+                                        }
+                                        express.append(" { ").append(QLDemo.SeparatorEnum._RETURN.getValue()).append(SPACE);
+                                        break;
+                                    case _ELSE:
+                                        express.append(QLDemo.SeparatorEnum._ELSE.getValue()).append(SPACE);
+                                        break;
+                                    case _AND:
+                                        express.append(QLDemo.SeparatorEnum._AND.getValue()).append(SPACE);
+                                        break;
+                                    case _OR:
+                                        express.append(QLDemo.SeparatorEnum._OR.getValue()).append(SPACE);
+                                        break;
+                                    case _NO:
+                                        express.append(QLDemo.SeparatorEnum._NO.getValue()).append(SPACE);
+                                        break;
+                                    case OTHER:
+                                        break;
+                                    default:
+                                        express.append(ruleInfoData.getKey()).append(SPACE);
+                                        break;
+                                }
+                            }else{
+                                express.append(ruleInfoData.getValue()).append(SPACE);
+                            }
+                            break;
+                        case INDEX:
+//                            express.append(ruleInfoData.getKey()).append(SPACE);
+//                            break;
+                        case RESULT:
+                            express.append(ruleInfoData.getKey()).append(SPACE);
+                            break;
+                        case NODE_RESULT:
+                            express.append(ruleInfoData.getKey()).append(SPACE).append(" } ");
+                            break;
+                        case RULE:
+                            express.append(ruleInfoData.getKey()).append(SPACE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+
+        }
+
+
+        return express.toString();
+    }
+
 
 }
