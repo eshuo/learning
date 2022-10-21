@@ -1,11 +1,14 @@
 package com.example.qlexpressdemo.operator;
 
+import com.eetrust.res.manage.utils.QlRunnerUtils;
 import com.ql.util.express.Operator;
+import org.apache.commons.collections.ListUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -32,26 +35,11 @@ public class IntersectionOperator extends Operator {
             if (CollectionUtils.isEmpty(objects) || CollectionUtils.isEmpty(objects2)) {
                 return false;
             }
-            final List intersection = intersection(objects, objects2);
+            final List intersection = ListUtils.intersection(objects, objects2);
             return intersection.size() > 0;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public static List intersection(final List list1, final List list2) {
-        final ArrayList result = new ArrayList();
-        final Iterator iterator = list2.iterator();
-
-        while (iterator.hasNext()) {
-            final Object o = iterator.next();
-
-            if (list1.contains(o)) {
-                result.add(o);
-            }
-        }
-
-        return result;
     }
 
     private List<Object> convertArray(Object o) {
@@ -65,27 +53,25 @@ public class IntersectionOperator extends Operator {
             return (List<Object>) o;
         }
         return list;
-
-
     }
 
 
-//    public static void main(String[] args) {
-////        String str = "obj1 intersection [\"a\",\"b\"]";
-////
-////        final HashMap<String, Object> objectHashMap = new HashMap<>();
-////
-////        objectHashMap.put("obj1", Arrays.asList("a", "b"));
-////        objectHashMap.put("obj2", Arrays.asList("c", "d", "a"));
-//
-////        String[] s = new String[]{"a","b","c"};
-////        String[] s1 = new String[]{"d","e","f"};
-////        objectHashMap.put("obj1",s);
-////        objectHashMap.put("obj2",s1);
-////        final Object o = QlRunnerUtils.cacheExecute(str, objectHashMap);
-//
-////        System.out.println(o);
-//    }
+    public static void main(String[] args) {
+        String str = "obj1 intersection [\"a\",\"b\"]";
+
+        final HashMap<String, Object> objectHashMap = new HashMap<>();
+
+        objectHashMap.put("obj1", Arrays.asList("a", "b"));
+//        objectHashMap.put("obj2", Arrays.asList("c", "d", "a"));
+
+//        String[] s = new String[]{"a","b","c"};
+//        String[] s1 = new String[]{"d","e","f"};
+//        objectHashMap.put("obj1",s);
+//        objectHashMap.put("obj2",s1);
+        final Object o = QlRunnerUtils.cacheExecute(str, objectHashMap);
+
+        System.out.println(o);
+    }
 
 
 }

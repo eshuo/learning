@@ -54,10 +54,10 @@ public class demoTest {
 //        dateDemo();
 
 //        inDemo();
-//        listDemo();
+        listDemo();
 //        final Object o = getUnsafe().allocateInstance(String.class);
 
-        setdemo();
+//        setdemo();
 
 //        System.out.println(o);
 
@@ -125,14 +125,14 @@ public class demoTest {
 
     private static void listDemo() throws Exception {
 
-        String str = "(1==1) && (aaac)";
+        String str = "if ( ssoApp in [\"bmpx\"] && userUuid in [\"chenn\"]  ) { return \"DEFAULT_REFUSE\" } ";
 
         ExpressRunner runner = new ExpressRunner();
 
         final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
-        defaultContext.put("clientIp", "");
-        defaultContext.put("oftenIp", new ArrayList<>());
-        defaultContext.put("aaac", 2 == 2);
+        defaultContext.put("ssoApp", "bmpx");
+//        defaultContext.put("clientIp", new ArrayList<>());
+        defaultContext.put("userUuid", "chenn");
 //        defaultContext.put("data2", list);
         System.out.println("str => " + str);
         final Object execute = runner.execute(str, defaultContext, null, false, false);
