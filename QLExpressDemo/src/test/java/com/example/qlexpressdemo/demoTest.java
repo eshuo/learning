@@ -43,6 +43,7 @@ public class demoTest {
 
         // findByAction(actionId,appId);
 
+        System.out.println((System.currentTimeMillis() - 1643012279000L) / 86400000L);
 
 //        verify();
 //        demo();
@@ -54,7 +55,7 @@ public class demoTest {
 //        dateDemo();
 
 //        inDemo();
-        listDemo();
+//        listDemo();
 //        final Object o = getUnsafe().allocateInstance(String.class);
 
 //        setdemo();

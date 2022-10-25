@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: eureka-client-1
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true #是否注册eureka
+    fetch-registry: true #是否拉去应用列表到本地
+    registry-fetch-interval-seconds: 10 #拉去应用时间间隔
+  instance:
+    hostname: localhost
+    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10 #心跳
+
+
+

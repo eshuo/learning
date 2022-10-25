@@ -1,0 +1,18 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server-1
+eureka:
+  server:
+    eviction-interval-timer-in-ms: 10000 #自动剔除时间间隔
+    renewal-percent-threshold: 0.85 # 超过配置占比(85%) 程序不会剔除任何一个服务
+  instance: #实例配置
+    hostname: server-host #
+    instance-id: ${eureka.instance.hostname}:${spring.application.name}:${server.port} #实例ID
+    prefer-ip-address: true #展示IP
+    lease-renewal-interval-in-seconds: 5 #心跳 小于${eviction-interval-timer-in-ms}}
+
+
+
