@@ -10,6 +10,7 @@
 
     <modules>
         <module>eureka-server</module>
+        <module>eureka-server-1</module>
         <module>eureka-client-1</module>
         <module>eureka-client-2</module>
     </modules>
