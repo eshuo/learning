@@ -1,6 +1,6 @@
 res:
   file:
-    linuxRootPath: /opt/EETRUST/res/file/
+    linuxRootPath: /opt/eshuo/res/file/
     winRootPath: D:\upload\file\
 
 spring:

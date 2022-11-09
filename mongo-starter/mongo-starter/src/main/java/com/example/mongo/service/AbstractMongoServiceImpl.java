@@ -54,7 +54,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     /**
      * 打印日志开关
      */
-    @Value("${eetrust.mongodb.print:true}")
+    @Value("${eshuo.mongodb.print:true}")
     private boolean print;
 
 

@@ -1,6 +1,9 @@
 package com.example.oauth2.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serializable;
@@ -13,32 +16,47 @@ import java.util.Set;
  * @Version V1.0
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class User implements Serializable {
-
 
     private String id;
 
-
     private String password;
 
-    private final String username;
+    private String username;
 
-    private final Set<GrantedAuthority> authorities;
+    private Set<GrantedAuthority> authorities;
 
-    private final boolean accountNonExpired;
+    /**
+     * 账户不过期
+     */
+    private boolean accountNonExpired;
 
-    private final boolean accountNonLocked;
+    /**
+     * 非锁定账户
+     */
+    private boolean accountNonLocked;
 
-    private final boolean credentialsNonExpired;
+    /**
+     * 凭证不过期
+     */
+    private boolean credentialsNonExpired;
 
-    private final boolean enabled;
+    /**
+     * 启用
+     */
+    private boolean enabled;
 
     /**
      * 手机号
      */
     private String mobile;
 
-    /** 信息 */
+    /**
+     * 信息
+     */
     private String msg;
 
 
