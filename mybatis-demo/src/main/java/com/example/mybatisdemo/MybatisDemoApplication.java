@@ -23,6 +23,7 @@ public class MybatisDemoApplication {
     /**
      * com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration#sqlSessionFactory类中的bean里面说明了创建SqlSessionFactory bean时
      * ，自定义多数据源使用 MybatisSqlSessionFactoryBean 而不是 SqlSessionFactoryBean，否则无法调用mybatis的api，会如下错误
+     * org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): XXXX
      *
      * @param dataSource
      *
