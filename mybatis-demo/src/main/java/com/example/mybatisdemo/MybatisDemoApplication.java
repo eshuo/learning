@@ -40,7 +40,8 @@ public class MybatisDemoApplication {
         MybatisSqlSessionFactoryBean b1 = new MybatisSqlSessionFactoryBean();
 //        System.out.println("dataSourceLyz"+dataSource.toString());
         b1.setDataSource(dataSource);
-        b1.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/**/*.xml"));
+//        查看配置文件 mybatis.mapper-locations
+        b1.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*"));
         return b1.getObject();
     }
 }
