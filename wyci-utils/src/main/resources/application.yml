@@ -5,4 +5,7 @@ logging:
 
 # logback??
 logback:
-  path: ..//logs
+  path: ..//logs/${spring.application.name}
+spring:
+  application:
+    name: log-demo

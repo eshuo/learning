@@ -8,6 +8,7 @@ import org.springframework.util.CollectionUtils;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +44,10 @@ public class demoTest {
 
         // findByAction(actionId,appId);
 
-        System.out.println((System.currentTimeMillis() - 1643012279000L) / 86400000L);
+//        System.out.println((System.currentTimeMillis() - 1643012279000L) / 86400000L);
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println(sdf.format(date));
 
 //        verify();
 //        demo();
@@ -354,6 +358,7 @@ public class demoTest {
      * @param userId
      * @param type
      * @param time   几分钟
+     *
      * @return
      */
     public static long checkUserLogType(String userId, String type, Long time) {
