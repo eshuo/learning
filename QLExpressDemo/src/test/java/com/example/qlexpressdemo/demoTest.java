@@ -45,9 +45,9 @@ public class demoTest {
         // findByAction(actionId,appId);
 
 //        System.out.println((System.currentTimeMillis() - 1643012279000L) / 86400000L);
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(sdf.format(date));
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println(sdf.format(date));
 
 //        verify();
 //        demo();
@@ -60,6 +60,20 @@ public class demoTest {
 
 //        inDemo();
 //        listDemo();
+
+//        List<String> list = new ArrayList<>();
+//        list.add("1");
+//        list.add("2");
+//        list.add("3");
+//        list.add("4");
+//        list.add("5");
+//
+//
+//
+//        final String format = list.stream().map(" null != "::concat).collect(Collectors.joining(" && "));
+//        System.out.println(format);
+
+
 //        final Object o = getUnsafe().allocateInstance(String.class);
 
 //        setdemo();
@@ -97,6 +111,45 @@ public class demoTest {
 //        System.out.println(list.size());
 
 
+        String str = "if (  ( ! ( clientUuid in oftenClient )  )  && authType in [\"0\"]  ) { return \"DEFAULT_CONTINUE\" } if (  ( ! ( clientUuid in oftenClient )  )  && authType in [\"5\", \"2\", \"1\", \"4\"]  ) { return \"DEFAULT_WARNING\" } ";
+//        String reg = "(return\\s+?\")(\\S+)(\")";
+//
+//
+//        Pattern patten = Pattern.compile("(return\\s+?\")(\\S+)(\")");//编译正则表达式
+//        Matcher matcher = patten.matcher(str);// 指定要匹配的字符串
+//
+//        List<String> matchStrs = new ArrayList<>();
+//
+//        while (matcher.find()) { //此处find（）每次被调用后，会偏移到下一个匹配
+//            matchStrs.add(matcher.group(2));//获取当前匹配的值
+//        }
+//
+//        for (int i = 0; i < matchStrs.size(); i++) {
+//            System.out.println(matchStrs.get(i));
+//        }
+
+
+        Matcher matcher = Pattern.compile("(return\\s+?\")(\\S+)(\")").matcher(str);// 指定要匹配的字符串
+
+        List<String> levelList = new ArrayList<>();
+        while (matcher.find()) {
+            final String group = matcher.group(2);
+            if (StringUtils.isNotBlank(group)) {
+                levelList.add(group);
+            }
+        }
+        if (!CollectionUtils.isEmpty(levelList)) {
+            final Integer integer = levelList.stream().distinct().map(l -> {
+                if (l.equals("DEFAULT_CONTINUE")) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }).min(Comparator.comparingInt(o -> o)).orElse(0);
+
+            System.out.println(integer);
+        }
+
     }
 
     private static void setdemo() {
@@ -130,14 +183,14 @@ public class demoTest {
 
     private static void listDemo() throws Exception {
 
-        String str = "if ( ssoApp in [\"bmpx\"] && userUuid in [\"chenn\"]  ) { return \"DEFAULT_REFUSE\" } ";
+        String str = "if ( (  null != clientUuid &&  null != oftenClient &&  null != authType ) && ( ! ( clientUuid in oftenClient )  )  && authType in [\"key\", \"zhiwen\"]  ) { return \"DEFAULT_WARNING\" }  ";
 
         ExpressRunner runner = new ExpressRunner();
 
         final DefaultContext<String, Object> defaultContext = new DefaultContext<>();
-        defaultContext.put("ssoApp", "bmpx");
-//        defaultContext.put("clientIp", new ArrayList<>());
-        defaultContext.put("userUuid", "chenn");
+//        defaultContext.put("ssoApp", "bmpx");
+////        defaultContext.put("clientIp", new ArrayList<>());
+//        defaultContext.put("userUuid", "chenn");
 //        defaultContext.put("data2", list);
         System.out.println("str => " + str);
         final Object execute = runner.execute(str, defaultContext, null, false, false);
