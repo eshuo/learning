@@ -23,7 +23,7 @@ server:
 
 logging:
   level:
-    root: INFO
+    root: debug
     org.springframework.web: INFO
     org.springframework.security: INFO
 #    org.springframework.boot.autoconfigure: DEBUG
