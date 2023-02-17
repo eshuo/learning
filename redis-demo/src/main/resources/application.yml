@@ -1,0 +1,5 @@
+redis:
+  enabled: true
+  ip: 10.3.47.127
+  port: 6379
+  password: eetrust
