@@ -13,6 +13,8 @@ openai:
     key:  xxxxxx
 server:
   port: 8080
+#  ????
+#http://localhost:8080/chat/web
 spring:
   application:
     name: wyci-open
