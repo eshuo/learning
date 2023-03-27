@@ -1,0 +1,22 @@
+forest:
+  connect-timeout: 30000
+  max-connections: 1000
+  read-timeout: 30000
+
+## chat-gpt proxy host
+## https://openai.geekr.cool
+## https://open.aiproxy.xyz
+#openai.chat.host=https://openai.geekr.cool
+openai:
+  chat:
+    host: https://api.openai.com
+    key:  xxxxxx
+server:
+  port: 8080
+spring:
+  application:
+    name: wyci-open
+  mvc:
+    pathmatch:
+      # swagger ??
+      matching-strategy: ant_path_matcher
