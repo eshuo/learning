@@ -1,0 +1,8 @@
+# 应用服务 WEB 访问端口
+server:
+  port: 8080
+
+#IAM服务地址
+iam:
+  token:
+    path: http://117.107.197.43:8091/auth/api/v1/function/getUserInfo
