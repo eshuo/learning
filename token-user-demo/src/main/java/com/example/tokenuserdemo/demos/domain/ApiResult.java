@@ -1,4 +1,4 @@
-package com.example.tokenuserdemo.demos.domanin;
+package com.example.tokenuserdemo.demos.domain;
 
 import lombok.Data;
 /**

@@ -1,4 +1,4 @@
-package com.example.tokenuserdemo.demos.domanin;
+package com.example.tokenuserdemo.demos.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;

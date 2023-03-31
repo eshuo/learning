@@ -1,0 +1,53 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--    <meta charset=utf-8>-->
+<!--    <meta name=viewport content="width=device-width,initial-scale=1">-->
+<!--    <link rel=stylesheet href=./static/layui/css/layui.css media=all>-->
+<!--    <script type=text/javascript src=./static/js/jquery.min.js></script>-->
+<!--    <script type=text/javascript src=./static/layui/layui.js></script>-->
+<!--    <script type=text/javascript src=./static/assembly/jqarticle/jparticle.min.js></script>-->
+<!--    <script type=text/javascript src=./static/assembly/zylVerificationCode/zylVerificationCode.js></script>-->
+<!--    <title>license</title>-->
+<!--    <link href=/static/css/app.b2ee86f01cfb0223eb4b69c8cd0f1290.css rel=stylesheet>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div id=app></div>-->
+<!--<script src=./static/js/config.js></script>-->
+<!--<script type=text/javascript src=/static/js/manifest.2ae2e69a05c33dfc65f8.js></script>-->
+<!--<script type=text/javascript src=/static/js/vendor.f9588b655057bcc39bc4.js></script>-->
+<!--<script type=text/javascript src=/static/js/app.a59ca41224a5b3a312ae.js></script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!--<!DOCTYPE html>-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>IAM二维码DEMO</title>
+    <meta charset=utf-8>
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel=stylesheet href=./static/layui/css/layui.css media=all>
+    <script type=text/javascript src=./static/js/jquery.min.js></script>
+    <script type=text/javascript src=./static/layui/layui.js></script>
+    <script type=text/javascript src=./static/assembly/jqarticle/jparticle.min.js></script>
+    <script type=text/javascript src=./static/assembly/zylVerificationCode/zylVerificationCode.js></script>
+    <title>license</title>
+    <link href=/static/css/app.b2ee86f01cfb0223eb4b69c8cd0f1290.css rel=stylesheet>
+
+</head>
+<body>
+<div id=app></div>
+
+<script th:inline="javascript">
+    var serverConfig = {
+        dirServicePath:  [[${iamPath}]]
+    };
+</script>
+<script src=./static/js/config.js></script>
+<script type=text/javascript src=/static/js/manifest.2ae2e69a05c33dfc65f8.js></script>
+<script type=text/javascript src=/static/js/vendor.f9588b655057bcc39bc4.js></script>
+<script type=text/javascript src=/static/js/app.a59ca41224a5b3a312ae.js></script>
+</body>
+</html>
+

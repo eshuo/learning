@@ -1,0 +1,317 @@
+// html,body{
+//   background-image: url("~static/img/login/login_bg.png");
+//   background-size: 100% 100%;
+// }
+
+.loginContent {
+  height: 100%;
+
+  .tablebox {
+    width: 80%;
+    margin: 0 auto;
+    height: 100px;
+    display: table;
+    #imgbox {
+      display: table-cell;
+      vertical-align: middle;
+      span {
+        font-size: 35px;
+        font-weight: bold;
+        color: #003893;
+      }
+    }
+  }
+
+  .bgImg {
+    height: 60%;
+    width: 100%;
+    .bgLogin {
+      // height: 60%;position: relative;width: 100%;
+      // background:red ;
+      width: 100%;
+      height: 0px;
+      padding-top: 33%;
+      background: url("../../static/img/uap6.0/login/loginBg.png") no-repeat;
+      background-size: 100% auto;
+      position: relative;
+
+      .login {
+        position: absolute;
+        right: 20%;
+        top: 5%;
+        border-radius: 12px;
+        background: #fff;
+        width: 22%;
+        height: 90%;
+        .logoLeft {
+          position: absolute;
+          left: -23%;
+          bottom: 10px;
+          width: 23%;
+        }
+        .logoRight {
+          position: absolute;
+          right: -35%;
+          bottom: 30px;
+          width: 35%;
+        }
+
+        //position: relative;
+
+        .panleCls {
+          padding: 5% 11% 0;
+          h6 {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 10%;
+          }
+          .el-row {
+            border-bottom: 1px solid #d7d8d9;
+            padding: 8% 0 2%;
+            margin: 0 !important;
+            .el-col {
+              padding: 0 !important;
+
+              .formIcon {
+                width: 20px;
+                margin-top: 10px;
+              }
+              .el-form-item {
+                margin-bottom: 0;
+                /deep/ .el-form-item__content {
+                  line-height: 40px;
+                  .el-input {
+                    .el-input__inner {
+                      border: none;
+                      padding: 0;
+                      font-size: 16px;
+                      color: #909399;
+                    }
+                  }
+                  .el-form-item__error {
+                    line-height: 1;
+                    padding-top: 15px;
+                  }
+                }
+              }
+            }
+          }
+          .first-login {
+            .el-button {
+              background-color: #005bc0;
+              border-color: #005bc0;
+              width: 100%;
+              margin-top: 10%;
+              height: 50px;
+              font-size: 18px;
+              border-radius: 10px;
+            }
+          }
+          .second-login {
+            .el-button {
+              background-color: #005bc0;
+              border-color: #005bc0;
+              width: 100%;
+              margin-top: 25%;
+              height: 50px;
+              font-size: 18px;
+              border-radius: 10px;
+            }
+          }
+          .third-login {
+            .el-button {
+              background-color: #005bc0;
+              border-color: #005bc0;
+              width: 100%;
+              margin-top: 30%;
+              height: 50px;
+              font-size: 18px;
+              border-radius: 10px;
+            }
+          }
+        }
+
+        .bule_Text {
+          margin-top: 6%;
+          div {
+            cursor: pointer;
+            display: inline;
+          }
+
+          // .el-button{
+          //   background-color: #005bc0;border-color: #005bc0;
+          //   width: 100%;margin-top: 12%;height: 50px;font-size: 18px;border-radius: 10px;
+          // }
+
+          .codeCls {
+            cursor: pointer;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 50px;
+            height: 50px;
+            //background: url("~static/img/uap6.0/login/loginMaIcon.png") no-repeat;
+            img {
+              width: 100%;
+            }
+          }
+          // .codeCls:hover{
+          //   background: url("~static/img/uap6.0/login/loginPcIcon.png") no-repeat;
+          // }
+        }
+      }
+      .login1 {
+        position: absolute;
+        right: 20%;
+        top: 9%;
+        border-radius: 12px;
+        background: #fff;
+        width: 28%;
+        height: 88%;
+        .logoLeft {
+          position: absolute;
+          left: -23%;
+          bottom: 10px;
+          width: 23%;
+        }
+        .logoRight {
+          position: absolute;
+          right: -35%;
+          bottom: 30px;
+          width: 35%;
+        }
+        .login_main {
+          //position: relative;
+
+          .panleCls1 {
+            position: relative;
+            padding: 5% 11% 0;
+            height: 300px;
+            width: 100%;
+            h6 {
+              font-size: 20px;
+              text-align: center;
+              margin-bottom: 10%;
+            }
+            .el-row {
+              border-bottom: 1px solid #d7d8d9;
+              padding: 8% 0 2%;
+              margin: 0 !important;
+              .el-col {
+                padding: 0 !important;
+
+                .formIcon {
+                  width: 20px;
+                  margin-top: 10px;
+                }
+                .el-form-item {
+                  margin-bottom: 0;
+                  /deep/ .el-form-item__content {
+                    line-height: 40px;
+                    .el-input {
+                      .el-input__inner {
+                        border: none;
+                        padding: 0;
+                        font-size: 16px;
+                        color: #909399;
+                      }
+                    }
+                    .el-form-item__error {
+                      line-height: 1;
+                      padding-top: 15px;
+                    }
+                  }
+                }
+              }
+            }
+            .receive {
+              background-color: #005bc0;
+              border-color: #005bc0;
+              margin-top: 12%;
+              height: 36px;
+              line-height: 10px;
+              font-size: 18px;
+              border-radius: 10px;
+            }
+            .cancel {
+              color: #409eff;
+              margin-top: 12%;
+              height: 36px;
+              line-height: 10px;
+              font-size: 18px;
+              border-radius: 10px;
+            }
+          }
+
+          .bule_Text {
+            margin-top: 6%;
+            div {
+              cursor: pointer;
+              display: inline;
+            }
+          }
+          // .el-button{
+          //   background-color: #005bc0;border-color: #005bc0;
+          //   width: 100%;margin-top: 12%;height: 50px;font-size: 18px;border-radius: 10px;
+          // }
+
+          .codeCls {
+            cursor: pointer;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 50px;
+            height: 50px;
+            //background: url("~static/img/uap6.0/login/loginMaIcon.png") no-repeat;
+            img {
+              width: 100%;
+            }
+          }
+          // .codeCls:hover{
+          //   background: url("~static/img/uap6.0/login/loginPcIcon.png") no-repeat;
+          // }
+        }
+      }
+      .login2 {
+        position: absolute;
+        right: 20%;
+        top: 30%;
+        height: 60%;
+        border-radius: 12px;
+        background: #fff;
+        width: 28%;
+        .panleCls1[data-v-377c2d7e] {
+          position: relative;
+          padding: 5% 11% 0;
+          // height: 250px;
+          width: 100%;
+        }
+        .alert1[data-v-377c2d7e] {
+          width: 76%;
+          position: absolute;
+          top: 150px;
+          text-align: center;
+        }
+      }
+
+      .footer {
+        text-align: center;
+        font-size: 20px;
+        color: #333;
+        margin-top: 50px;
+      }
+    }
+  }
+
+  .down {
+    position: fixed;
+    cursor: pointer;
+    bottom: 4%;
+    left: 4%;
+    width: 80px;
+    height: 80px;
+    img {
+      width: 100%;
+    }
+  }
+}

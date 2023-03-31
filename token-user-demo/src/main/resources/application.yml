@@ -1,8 +1,19 @@
 # 应用服务 WEB 访问端口
 server:
-  port: 8080
+  port: 8081
+  resources:
+    static-locations: classpath:/resources/,classpath:/static/
 
-#IAM服务地址
+
+#IAM服务地址  需要替换ip+port为已知IAM服务地址
 iam:
   token:
-    path: http://117.107.197.43:8091/auth/api/v1/function/getUserInfo
+    path: http://ip:port
+
+
+#访问静态资源
+spring:
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+

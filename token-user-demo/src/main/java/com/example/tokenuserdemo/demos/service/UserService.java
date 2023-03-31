@@ -1,8 +1,8 @@
 package com.example.tokenuserdemo.demos.service;
 
-import com.example.tokenuserdemo.demos.domanin.ApiResult;
+import com.example.tokenuserdemo.demos.domain.ApiResult;
 import java.io.Serializable;
-import com.example.tokenuserdemo.demos.domanin.UserInfo;
+import com.example.tokenuserdemo.demos.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,13 +34,14 @@ public class UserService implements Serializable {
         if (null == token || token.length() <= 0) {
             throw new RuntimeException("无效token");
         }
+        // 设置请求头信息
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=utf8");
         headers.add("AuthToken-Authorization", token);
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>( new LinkedMultiValueMap<>(3), headers);
 
-        ResponseEntity<ApiResult> responseEntity = restTemplate.postForEntity(iamTokenPath, requestEntity,ApiResult.class);
+        ResponseEntity<ApiResult> responseEntity = restTemplate.postForEntity(iamTokenPath+"/auth/api/v1/function/getUserInfo", requestEntity,ApiResult.class);
 
         if (responseEntity.hasBody() && !HttpStatus.OK.equals(responseEntity.getStatusCode())) {
             throw new RuntimeException("请求IAM失败");
