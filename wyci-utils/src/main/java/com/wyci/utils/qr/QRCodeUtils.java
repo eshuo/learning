@@ -5,19 +5,19 @@ import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.google.zxing.qrcode.encoder.ByteMatrix;import com.google.zxing.qrcode.encoder.Encoder;import com.google.zxing.qrcode.encoder.QRCode;import com.wyci.resp.GenerateQrCodeReq;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.util.FastByteArrayOutputStream;
+import com.google.zxing.qrcode.encoder.ByteMatrix;
+import com.google.zxing.qrcode.encoder.Encoder;
+import com.google.zxing.qrcode.encoder.QRCode;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.Base64;
-import java.util.Hashtable;import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * @Description
@@ -36,30 +36,73 @@ public class QRCodeUtils {
      */
     private static final int QRCODE_SIZE = 430;
 
-    /**
-     * LOGO宽度
-     */
-    private static final int WIDTH = 60;
 
     /**
-     * LOGO高度
+     * 生成带Logo的二维码
+     *
+     * @param content  二维码内容
+     * @param logoPath Logo
+     * @param destPath 二维码输出路径
+     * @param isFillet 圆角LOGO
+     *
+     * @throws Exception void
      */
-    private static final int HEIGHT = 60;
+    public static void create(String content, String logoPath, String destPath, boolean isFillet) throws Exception {
+        BufferedImage image = QRCodeUtils.createImage(content, logoPath, isFillet);
+        mkdirs(destPath);
+        ImageIO.write(image, FORMAT_NAME, new File(destPath));
+    }
+
+    /**
+     * 生成不带Logo的二维码
+     *
+     * @param content  二维码内容
+     * @param destPath 二维码输出路径
+     */
+    public static void create(String content, String destPath) throws Exception {
+        QRCodeUtils.create(content, null, destPath, false);
+    }
+
+    /**
+     * 生成带Logo的二维码，并输出到指定的输出流
+     *
+     * @param content  二维码内容
+     * @param logoPath Logo
+     * @param output   输出流
+     * @param isFillet 圆角LOGO
+     */
+    public static void create(String content, String logoPath, OutputStream output, boolean isFillet) throws Exception {
+        BufferedImage image = QRCodeUtils.createImage(content, logoPath, isFillet);
+        ImageIO.write(image, FORMAT_NAME, output);
+    }
+
+    /**
+     * 生成不带Logo的二维码，并输出到指定的输出流
+     *
+     * @param content 二维码内容
+     * @param output  输出流
+     *
+     * @throws Exception void
+     */
+    public static void create(String content, OutputStream output) throws Exception {
+        QRCodeUtils.create(content, null, output, false);
+    }
+
 
     /**
      * 创建二维码图片
      *
-     * @param content    内容
-     * @param logoPath   logo
-     * @param isCompress 是否压缩Logo
+     * @param content  内容
+     * @param logoPath logo
+     * @param isFillet 圆角LOGO
      *
      * @return 返回二维码图片
      *
      * @throws WriterException e
      * @throws IOException     BufferedImage
      */
-    public static BufferedImage createImage(String content, String logoPath, boolean isCompress) throws WriterException, IOException {
-        return createImage(content, logoPath, isCompress, QRCODE_SIZE, QRCODE_SIZE);
+    public static BufferedImage createImage(String content, String logoPath, boolean isFillet) throws WriterException, IOException {
+        return createImage(content, logoPath, isFillet, QRCODE_SIZE, QRCODE_SIZE);
     }
 
     /**
@@ -79,18 +122,18 @@ public class QRCodeUtils {
     /**
      * 创建二维码图片
      *
-     * @param content    内容
-     * @param logoPath   logo
-     * @param isCompress 是否压缩Logo
-     * @param width      宽
-     * @param height     高
+     * @param content  内容
+     * @param logoPath logo
+     * @param isFillet 圆角LOGO
+     * @param width    宽
+     * @param height   高
      *
      * @return 返回二维码图片
      *
      * @throws WriterException e
      * @throws IOException     BufferedImage
      */
-    public static BufferedImage createImage(String content, String logoPath, boolean isCompress, Integer width, Integer height) throws WriterException, IOException {
+    public static BufferedImage createImage(String content, String logoPath, boolean isFillet, Integer width, Integer height) throws WriterException, IOException {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
         // 指定纠错等级,纠错级别（L 7%、M 15%、Q 25%、H 30%）
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
@@ -120,7 +163,7 @@ public class QRCodeUtils {
         }
 
         // 插入图片
-        QRCodeUtils.insertImage(image, logoPath, isCompress, bitMatrixWidth, bitMatrixHeight);
+        QRCodeUtils.insertImage(image, logoPath, isFillet);
         return image;
     }
 
@@ -226,8 +269,8 @@ public class QRCodeUtils {
 
 
     /**
-     * 如果留白超过15% , 则需要缩放
-     * (15% 可以根据实际需要进行修改)
+     * 如果留白超过10% , 则需要缩放
+     * (10% 可以根据实际需要进行修改)
      *
      * @param qrCodeSize 二维码大小
      * @param expectSize 期望输出大小
@@ -240,7 +283,7 @@ public class QRCodeUtils {
         }
         int scale = expectSize / qrCodeSize;
         int abs = expectSize - scale * qrCodeSize;
-        if (abs < expectSize * 0.15) {
+        if (abs < expectSize * 0.1) {
             return 0;
         }
 
@@ -251,102 +294,122 @@ public class QRCodeUtils {
     /**
      * 添加Logo
      *
-     * @param source     二维码图片
-     * @param logoPath   Logo
-     * @param isCompress 是否压缩Logo
-     * @param width
-     * @param height
+     * @param qrCode   二维码图片
+     * @param logoPath Logo
+     * @param isFillet 圆角
      *
      * @throws IOException void
      */
-    private static void insertImage(BufferedImage source, String logoPath, boolean isCompress, int width, int height) throws IOException {
+    private static void insertImage(BufferedImage qrCode, String logoPath, boolean isFillet) throws IOException {
         File file = new File(logoPath);
         if (!file.exists()) {
             return;
         }
+        int QRCODE_WIDTH = qrCode.getWidth();
+        int QRCODE_HEIGHT = qrCode.getHeight();
 
-        Image src = ImageIO.read(new File(logoPath));
-        int srcWidth = src.getWidth(null);
-        int srcHeight = src.getHeight(null);
-        // 压缩LOGO
-        if (isCompress) {
-            if (srcWidth > WIDTH) {
-                srcWidth = WIDTH;
-            }
-
-            if (srcHeight > HEIGHT) {
-                srcHeight = HEIGHT;
-            }
-
-            Image image = src.getScaledInstance(srcWidth, srcHeight, Image.SCALE_SMOOTH);
-            BufferedImage tag = new BufferedImage(srcWidth, srcHeight, BufferedImage.TYPE_INT_RGB);
-            Graphics g = tag.getGraphics();
-            // 绘制缩小后的图
-            g.drawImage(image, 0, 0, null);
-            g.dispose();
-            src = image;
+        // 获取logo图片
+        BufferedImage bf = ImageIO.read(new File(logoPath));
+        if (isFillet) {
+            int boderSize = bf.getWidth() / 15;
+            // 生成圆角边框logo
+            bf = makeRoundBorder(bf, boderSize, null); // 边距为二维码图片的1/15
         }
 
+        // logo的宽高
+        int w = Math.min(bf.getWidth(), QRCODE_WIDTH * 2 / 10);
+        int h = Math.min(bf.getHeight(), QRCODE_HEIGHT * 2 / 10);
+
         // 插入LOGO
-        Graphics2D graph = source.createGraphics();
-        int x = (width - srcWidth) / 2;
-        int y = (height - srcHeight) / 2;
-        graph.drawImage(src, x, y, srcWidth, srcHeight, null);
-        Shape shape = new RoundRectangle2D.Float(x, y, srcWidth, srcWidth, 6, 6);
-        graph.setStroke(new BasicStroke(3f));
-        graph.draw(shape);
+        Graphics2D graph = qrCode.createGraphics();
+
+        int x = (QRCODE_WIDTH - w) >> 1;
+        int y = (QRCODE_HEIGHT - h) >> 1;
+
+        graph.drawImage(bf, x, y, w, h, null);
         graph.dispose();
+        bf.flush();
     }
 
     /**
-     * 生成带Logo的二维码
+     * fixme 边框的计算需要根据最终生成logo图片的大小来定义，这样才不会出现不同的logo原图，导致边框不一致的问题
+     * <p>
+     * 生成圆角图片 & 圆角边框
      *
-     * @param content    二维码内容
-     * @param logoPath   Logo
-     * @param destPath   二维码输出路径
-     * @param isCompress 是否压缩Logo
+     * @param image 原图
+     * @param size  边框的边距
+     * @param color 边框的颜色
      *
-     * @throws Exception void
+     * @return 返回带边框的圆角图
      */
-    public static void create(String content, String logoPath, String destPath, boolean isCompress) throws Exception {
-        BufferedImage image = QRCodeUtils.createImage(content, logoPath, isCompress);
-        mkdirs(destPath);
-        ImageIO.write(image, FORMAT_NAME, new File(destPath));
+    public static BufferedImage makeRoundBorder(BufferedImage image, int size, Color color) {
+        // 将图片变成圆角
+        int cornerRadius = 30;
+//        if (logoStyle == QrCodeOptions.LogoStyle.ROUND) {
+//            cornerRadius = 30;
+        image = makeRoundedCorner(image, cornerRadius);
+//        }
+
+        int borderSize = size;
+        int w = image.getWidth() + borderSize;
+        int h = image.getHeight() + borderSize;
+        BufferedImage output = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2 = output.createGraphics();
+        g2.setComposite(AlphaComposite.Src);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(color == null ? Color.WHITE : color);
+        g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius,
+                cornerRadius));
+
+        // ... then compositing the image on top,
+        // using the white shape from above as alpha source
+        g2.setComposite(AlphaComposite.SrcAtop);
+        g2.drawImage(image, size, size, null);
+        g2.dispose();
+
+        return output;
     }
 
     /**
-     * 生成不带Logo的二维码
+     * 生成圆角图片
      *
-     * @param content  二维码内容
-     * @param destPath 二维码输出路径
+     * @param image        原始图片
+     * @param cornerRadius 圆角的弧度
+     *
+     * @return 返回圆角图
      */
-    public static void create(String content, String destPath) throws Exception {
-        QRCodeUtils.create(content, null, destPath, false);
-    }
+    public static BufferedImage makeRoundedCorner(BufferedImage image,
+                                                  int cornerRadius) {
+        int w = image.getWidth();
+        int h = image.getHeight();
+        BufferedImage output = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
 
-    /**
-     * 生成带Logo的二维码，并输出到指定的输出流
-     *
-     * @param content    二维码内容
-     * @param logoPath   Logo
-     * @param output     输出流
-     * @param isCompress 是否压缩Logo
-     */
-    public static void create(String content, String logoPath, OutputStream output, boolean isCompress) throws Exception {
-        BufferedImage image = QRCodeUtils.createImage(content, logoPath, isCompress);
-        ImageIO.write(image, FORMAT_NAME, output);
-    }
+        Graphics2D g2 = output.createGraphics();
 
-    /**
-     * 生成不带Logo的二维码，并输出到指定的输出流
-     *
-     * @param content 二维码内容
-     * @param output  输出流
-     *
-     * @throws Exception void
-     */
-    public static void create(String content, OutputStream output) throws Exception {
-        QRCodeUtils.create(content, null, output, false);
+        // This is what we want, but it only does hard-clipping, i.e. aliasing
+        // g2.setClip(new RoundRectangle2D ...)
+
+        // so instead fake soft-clipping by first drawing the desired clip shape
+        // in fully opaque white with antialiasing enabled...
+        g2.setComposite(AlphaComposite.Src);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(Color.WHITE);
+        g2.fill(new RoundRectangle2D.Float(0, 0, w, h, cornerRadius,
+                cornerRadius));
+
+        // ... then compositing the image on top,
+        // using the white shape from above as alpha source
+        g2.setComposite(AlphaComposite.SrcAtop);
+        g2.drawImage(image, 0, 0, null);
+
+        g2.dispose();
+
+        return output;
     }
 
     /**
