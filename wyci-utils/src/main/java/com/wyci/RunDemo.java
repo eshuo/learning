@@ -1,5 +1,9 @@
 package com.wyci;
 
+import com.eetrust.etcommon.Common;
+import com.eetrust.etcommon.Crypt;
+import org.springframework.util.CollectionUtils;
+
 import java.util.ArrayList;import java.util.HashMap;
 import java.util.List;import java.util.TreeMap;
 /**
@@ -7,7 +11,55 @@ import java.util.List;import java.util.TreeMap;
  */
 public class RunDemo {
 
-  public static void main(String[] args) {
+
+
+    private static final String NAME_REGEX = "^[a-zA-Z0-9\\u4e00-\\u9fa5]+$";
+
+
+
+
+  public static void main(String[] args) throws Exception {
+
+      final List<String> roleLevelCodes =new ArrayList<>();
+      roleLevelCodes.add("张三");
+      roleLevelCodes.add("张三.1");
+      roleLevelCodes.add("张三.1.2");
+      roleLevelCodes.add("张三.2");
+
+
+      final  List<String> deptLeveCodeList = new ArrayList<>();
+      deptLeveCodeList.add("张三.1.2.3");
+      deptLeveCodeList.add("张三.2.3");
+
+
+
+          if (roleLevelCodes.stream().anyMatch(leve -> deptLeveCodeList.stream().anyMatch(code -> code.startsWith(leve)))) {
+              System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          }
+
+
+
+//      String inputString = "张三";
+//      if (inputString.matches(NAME_REGEX)) {
+//          System.out.println("匹配");
+//      } else {
+//          System.out.println("不匹配");
+//      }
+//
+//
+//      String ssss= "山东省";
+//
+//
+//      System.err.println(ssss.indexOf("省"));
+//      System.err.println(ssss.length());
+//      System.err.println(ssss.indexOf("省")==(ssss.length()-1));
+//      String str = "山东省";
+//      String toRemove = "省";
+//      int lastIndex = str.lastIndexOf(toRemove);
+//      if (lastIndex != -1) {
+//          str = str.substring(0, lastIndex) + str.substring(lastIndex + toRemove.length());
+//      }
+//      System.out.println(str);
 
 //    String s = "123456|654321|222222";
 //
@@ -21,23 +73,23 @@ public class RunDemo {
 //    System.out.println(hash.hashCode());
 //    System.out.println(hash.hashCode());
 //    System.out.println(hash.hashCode());
-
-    TreeMap<Integer, String> map = new TreeMap();
-
-    map.put(1, "一");
-    map.put(6, "六");
-    map.put(2, "二");
-    map.put(3, "三");
-    map.put(4, "四");
-    map.put(1, "重复一");
-
-
-    map.forEach((k,v)->{
-        System.out.println("key = "+k+",value="+v);
-    });
-
-    final List<String> arrayList = new ArrayList<>(map.values());
-
-    arrayList.forEach(aa -> System.out.println("====>" + aa));
+//
+//    TreeMap<Integer, String> map = new TreeMap();
+//
+//    map.put(1, "一");
+//    map.put(6, "六");
+//    map.put(2, "二");
+//    map.put(3, "三");
+//    map.put(4, "四");
+//    map.put(1, "重复一");
+//
+//
+//    map.forEach((k,v)->{
+//        System.out.println("key = "+k+",value="+v);
+//    });
+//
+//    final List<String> arrayList = new ArrayList<>(map.values());
+//
+//    arrayList.forEach(aa -> System.out.println("====>" + aa));
   }
 }
