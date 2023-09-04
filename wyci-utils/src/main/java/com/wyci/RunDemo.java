@@ -1,11 +1,5 @@
 package com.wyci;
 
-import com.eetrust.etcommon.Common;
-import com.eetrust.etcommon.Crypt;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;import java.util.HashMap;
-import java.util.List;import java.util.TreeMap;
 /**
  * @Description @Author wangshuo @Date 2023-02-28 15:50 @Version V1.0
  */
@@ -20,22 +14,27 @@ public class RunDemo {
 
   public static void main(String[] args) throws Exception {
 
-      final List<String> roleLevelCodes =new ArrayList<>();
-      roleLevelCodes.add("张三");
-      roleLevelCodes.add("张三.1");
-      roleLevelCodes.add("张三.1.2");
-      roleLevelCodes.add("张三.2");
 
 
-      final  List<String> deptLeveCodeList = new ArrayList<>();
-      deptLeveCodeList.add("张三.1.2.3");
-      deptLeveCodeList.add("张三.2.3");
+      System.err.println("/auth1/pong".endsWith("/pong"));
+      System.err.println("/auth1/token_pong".endsWith("/token_pong"));
 
-
-
-          if (roleLevelCodes.stream().anyMatch(leve -> deptLeveCodeList.stream().anyMatch(code -> code.startsWith(leve)))) {
-              System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-          }
+//      final List<String> roleLevelCodes =new ArrayList<>();
+//      roleLevelCodes.add("张三");
+//      roleLevelCodes.add("张三.1");
+//      roleLevelCodes.add("张三.1.2");
+//      roleLevelCodes.add("张三.2");
+//
+//
+//      final  List<String> deptLeveCodeList = new ArrayList<>();
+//      deptLeveCodeList.add("张三.1.2.3");
+//      deptLeveCodeList.add("张三.2.3");
+//
+//
+//
+//          if (roleLevelCodes.stream().anyMatch(leve -> deptLeveCodeList.stream().anyMatch(code -> code.startsWith(leve)))) {
+//              System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//          }
 
 
 

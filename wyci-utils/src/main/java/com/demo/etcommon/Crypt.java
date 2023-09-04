@@ -1,4 +1,4 @@
-package com.eetrust.etcommon;
+package com.demo.etcommon;
 
 /**
  * @Description

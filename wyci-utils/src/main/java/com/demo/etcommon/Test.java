@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.eetrust.etcommon;
+package com.demo.etcommon;
 
 public class Test {
     public Test() {

@@ -3,13 +3,13 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.eetrust.etcommon;
+package com.demo.etcommon;
 
-public class ResultBytes {
+public class ResultLong {
     public int result;
-    public byte[] data;
+    public long data;
 
-    public ResultBytes(int result) {
+    public ResultLong(int result) {
         this.result = result;
     }
 }
