@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -95,8 +96,8 @@ public class MockApi {
 
   /** 根据模块名称和表单ID将待办改为已办 */
   @Parameters({
-    @Parameter(name = "modularname", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "orderId", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "modularname", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "orderId", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "根据模块名称和表单ID将待办改为已办", description = "根据模块名称和表单ID将待办改为已办")
   @ResponseBody
@@ -132,8 +133,8 @@ public class MockApi {
 
   /** 批量将待办改为已办 */
   @Parameters({
-    @Parameter(name = "modularname", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "orderIds", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "modularname", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "orderIds", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "批量将待办改为已办", description = "批量将待办改为已办")
   @ResponseBody
@@ -169,8 +170,8 @@ public class MockApi {
 
   /** 批量物理删除待办消息 */
   @Parameters({
-    @Parameter(name = "modularname", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "orderIds", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "modularname", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "orderIds", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "批量物理删除待办消息", description = "批量物理删除待办消息")
   @ResponseBody
@@ -206,8 +207,8 @@ public class MockApi {
 
   /** 根据业务主键批量修改未读消息状态（置为已读） */
   @Parameters({
-    @Parameter(name = "appcode", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "orderIds", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "appcode", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "orderIds", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "根据业务主键批量修改未读消息状态（置为已读）", description = "根据业务主键批量修改未读消息状态（置为已读）")
   @ResponseBody
@@ -243,8 +244,8 @@ public class MockApi {
 
   /** 根据消息主键批量修改未读消息状态（置为已读） */
   @Parameters({
-    @Parameter(name = "appcode", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "messageIds", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "appcode", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "messageIds", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "根据消息主键批量修改未读消息状态（置为已读）", description = "根据消息主键批量修改未读消息状态（置为已读）")
   @ResponseBody
@@ -280,8 +281,8 @@ public class MockApi {
 
   /** 根据业务主键查询消息详情 */
   @Parameters({
-    @Parameter(name = "modularName", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "orderId", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "modularName", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "orderId", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "根据业务主键查询消息详情", description = "根据业务主键查询消息详情")
   @ResponseBody
@@ -328,8 +329,8 @@ public class MockApi {
 
   /** 查询最近一个月消息 */
   @Parameters({
-    @Parameter(name = "receiveUserId", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "type", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "receiveUserId", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "type", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "查询最近一个月消息", description = "查询最近一个月消息")
   @ResponseBody
@@ -342,8 +343,8 @@ public class MockApi {
 
   /** 获取各个模块及待办和未读消息数量 */
   @Parameters({
-    @Parameter(name = "appCodes", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "receiveUserId", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "appCodes", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "receiveUserId", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "获取各个模块及待办和未读消息数量", description = "获取各个模块及待办和未读消息数量")
   @ResponseBody
@@ -356,8 +357,8 @@ public class MockApi {
 
   /** 获取OA各个模块及待办和未读消息数量 */
   @Parameters({
-    @Parameter(name = "appCodes", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "receiveUserId", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "appCodes", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "receiveUserId", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "获取OA各个模块及待办和未读消息数量", description = "获取OA各个模块及待办和未读消息数量")
   @ResponseBody
@@ -373,7 +374,7 @@ public class MockApi {
     List<MockResponse.GroupInfoNum> list = new ArrayList<>();
     for (int i = 0; i < 5; i++) {
       MockResponse.GroupInfoNum groupInfoNum = new MockResponse.GroupInfoNum();
-      groupInfoNum.setMessageCount(String.valueOf(Integer.valueOf(String.valueOf(Math.random()))));
+      groupInfoNum.setMessageCount(String.valueOf(new Random().nextInt(100)));
       groupInfoNum.setModularName("模块名称" + i);
       groupInfoNum.setSort(String.valueOf(i));
       list.add(groupInfoNum);
@@ -382,7 +383,7 @@ public class MockApi {
   }
 
   /** 获取用户所属模块名称列表 */
-  @Parameter(name = "receiveUserId", description = "", in = ParameterIn.QUERY, required = true)
+  @Parameter(name = "receiveUserId", description = "1", in = ParameterIn.QUERY, required = true)
   @Operation(summary = "获取用户所属模块名称列表", description = "获取用户所属模块名称列表")
   @ResponseBody
   @RequestMapping(method = RequestMethod.GET, value = "/modularnames")
@@ -401,8 +402,8 @@ public class MockApi {
 
   /** 获取各个系统待办和未读消息数量 */
   @Parameters({
-    @Parameter(name = "appCodes", description = "", in = ParameterIn.QUERY),
-    @Parameter(name = "receiveUserId", description = "", in = ParameterIn.QUERY, required = true)
+    @Parameter(name = "appCodes", description = "1", in = ParameterIn.QUERY),
+    @Parameter(name = "receiveUserId", description = "1", in = ParameterIn.QUERY, required = true)
   })
   @Operation(summary = "获取各个系统待办和未读消息数量", description = "获取各个系统待办和未读消息数量")
   @ResponseBody
