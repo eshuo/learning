@@ -420,4 +420,24 @@ public class MockApi {
     }
     return new MockResponse.BaseResponse<>(list);
   }
+
+
+    /**
+     * Recursively flattens a list.
+     *
+     * @param list the list to be flattened
+     * @param <T> the type of elements in the list
+     * @return a new flattened list
+     */
+    public static <T> List<T> flattenList(List<T> list) {
+        List<T> flattenedList = new ArrayList<>();
+        for (T t : list) {
+            if (t instanceof List) {
+                flattenedList.addAll(flattenList((List<T>) t));
+            } else {
+                flattenedList.add(t);
+            }
+        }
+        return flattenedList;
+    }
 }
