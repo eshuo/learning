@@ -3,7 +3,7 @@ server:
 
 # logback??
 logback:
-  path: ..//logs/${spring.application.name}
+  path: ./logs/${spring.application.name}
 spring:
   application:
     name: mock-demo
