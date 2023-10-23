@@ -1,9 +1,8 @@
 package com.wyci.gabapidemo.demos.gab.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 /**
  * @Description 响应 @Author wangshuo @Date 2023-09-08 14:34 @Version V1.0
@@ -45,18 +44,36 @@ public interface MockResponse {
     @Schema(description = "200 成功 500 失败")
     private int code = 200;
 
-    @Schema(description = "总数")
-    private int total;
-
     /** 返回信息 */
     @Schema(description = "返回信息")
     private String message = "测试返回信息";
+
+    private BaseDataResponse<T> data;
+
+    @Schema(description = "总数")
+    private int total;
 
     /** 响应数据 */
     @Schema(description = "响应数据")
     private List<T> rows;
 
     public BasePageResponse(List<T> rows) {
+      setData(new BaseDataResponse<T>(rows));
+    }
+  }
+
+  @Schema(description = "基本data响应")
+  @Data
+  class BaseDataResponse<T> {
+
+    @Schema(description = "总数")
+    private int total;
+
+    /** 响应数据 */
+    @Schema(description = "响应数据")
+    private List<T> rows;
+
+    public BaseDataResponse(List<T> rows) {
       this.rows = rows;
       this.total = rows.size();
     }
