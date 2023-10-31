@@ -17,6 +17,7 @@ class RedisDemoApplicationTests {
   @Test
   void contextLoads() {
     redisTestService.test();
+    redisTestService.test();
     redisTestService.cacheable();
     redisTestService.demo();
     redisTestService.cacheableKey("demo");
@@ -28,7 +29,7 @@ class RedisDemoApplicationTests {
     redisTestService.updateCacheableKey("demo2");
 
     redisTestService.deleteCacheableKey("demo");
-    redisTestService.deleteCacheableKey("demo1");
+    redisTestService.deleteCacheableKeyAll("demo1");
 
     redisTestService.updateCacheableKey("demo");
     redisTestService.cacheableKey("demo1");

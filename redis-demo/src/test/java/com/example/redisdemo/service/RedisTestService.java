@@ -52,8 +52,18 @@ public class RedisTestService {
   public void deleteCacheable() {
   }
 
-  @CacheEvict(value = "cacheable", key = "#key", allEntries = true)
+  @CacheEvict(value = "cacheable", key = "#key")
   public void deleteCacheableKey(String key) {
+  }
+
+
+  /**
+   * 删除缓存操作 @CacheEvict
+   * 如果声明  allEntries = true  传入的key就不生效了,直接删除缓存前缀等于value的全部缓存   如果想删除单个 建议不声明 allEntries = true  ,单独提供删除指定前缀全部key的方法
+   * @param key
+   */
+  @CacheEvict(value = "cacheable", key = "#key", allEntries = true)
+  public void deleteCacheableKeyAll(String key) {
   }
 
 //  @Caching
