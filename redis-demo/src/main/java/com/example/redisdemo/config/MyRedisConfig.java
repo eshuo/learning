@@ -174,13 +174,7 @@ public class MyRedisConfig {
             // 设置value为json序列化
             .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(getGenericJackson2JsonRedisSerializer()))
             //变双冒号为单冒号
-            .computePrefixWith(name -> {
-                if (name.endsWith(":")) {
-                    return name;
-                } else {
-                    return name + ":";
-                }
-            })
+            .computePrefixWith(name -> name.endsWith(":") ? name : name + ":")
             // 不缓存空值
             .disableCachingNullValues();
 
