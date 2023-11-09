@@ -8,8 +8,8 @@ demo:
     soTimeout: 2000
     defaultTime: 1800
     cacheInfoList:
-      - key: cacheable
-        time: -1
+#      - key: cacheable
+#        time: -1
       - key: test
         time: 200
 

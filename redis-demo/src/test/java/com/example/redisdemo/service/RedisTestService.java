@@ -39,6 +39,11 @@ public class RedisTestService {
     return "key == cacheableKey" + key;
   }
 
+  @Cacheable( value = "cacheableKeyValue",key = "#key", unless = "#key == null && #result ==null")
+  public String cacheableKeyValue(String key) {
+    return "key == cacheableKeyValue" + key;
+  }
+
   //  @CachePut
 //方法永远会被执行，并把结果放入缓存
   @CachePut(value = "cacheable", condition = "#key.length()>1", key = "#key", unless = "#key == null && #result ==null")
