@@ -1,0 +1,38 @@
+#mybatis:
+##  ??MyBatis?Mapper XML??????
+#  mapper-locations: classpath:mapper/*.xml
+##  ??MyBatis?????????????????????xml????????????????
+#  type-aliases-package: com.eshuo.domain
+
+server:
+    port: 8080
+
+#spring:
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/test?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.jdbc.Driver
+
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 123456
+#    driver-class-name: com.mysql.jdbc.Driver
+
+logging:
+  level:
+    root: DEBUG
+
+
+# ?? MyBatis
+mybatis:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.eshuo.domain
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

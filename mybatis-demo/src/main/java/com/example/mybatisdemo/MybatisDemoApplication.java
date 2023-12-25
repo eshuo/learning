@@ -6,6 +6,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -31,17 +32,17 @@ public class MybatisDemoApplication {
      *
      * @throws Exception
      */
-    @Primary
-    @Bean("masterSqlSessionFactory")
-    public SqlSessionFactory masterSqlSessionFactory(DataSource dataSource) throws Exception {
-        /**
-         * 使用 mybatis plus 配置
-         */
-        MybatisSqlSessionFactoryBean b1 = new MybatisSqlSessionFactoryBean();
-//        System.out.println("dataSourceLyz"+dataSource.toString());
-        b1.setDataSource(dataSource);
-//        查看配置文件 mybatis.mapper-locations
-        b1.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*"));
-        return b1.getObject();
-    }
+//    @Primary
+//    @Bean("masterSqlSessionFactory")
+//    public SqlSessionFactory masterSqlSessionFactory(DataSource dataSource) throws Exception {
+//        /**
+//         * 使用 mybatis plus 配置
+//         */
+//        MybatisSqlSessionFactoryBean b1 = new MybatisSqlSessionFactoryBean();
+////        System.out.println("dataSourceLyz"+dataSource.toString());
+//        b1.setDataSource(dataSource);
+////        查看配置文件 mybatis.mapper-locations
+//        b1.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*"));
+//        return b1.getObject();
+//    }
 }
