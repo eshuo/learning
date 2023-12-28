@@ -135,15 +135,23 @@ public class Demo {
 //        }
 
 
-        String json = "{\"code\":58400,\"message\":\"请联系管理员\",\"status\":500,\"success\":false,\"timestamp\":17032342655\n"
-            + "64}";
-        final String encodeToString = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
-        System.out.println(encodeToString);
-        System.out.println(Base64.getDecoder().decode(encodeToString));
-        System.out.println(Base64.getDecoder().decode(encodeToString).toString());
-        System.out.println(new String(Base64.getDecoder().decode(encodeToString), StandardCharsets.UTF_8));
+//        String json = "{\"code\":58400,\"message\":\"请联系管理员\",\"status\":500,\"success\":false,\"timestamp\":17032342655\n"
+//            + "64}";
+//        final String encodeToString = Base64.getEncoder().encodeToString(json.getBytes(StandardCharsets.UTF_8));
+//        System.out.println(encodeToString);
+//        System.out.println(Base64.getDecoder().decode(encodeToString));
+//        System.out.println(Base64.getDecoder().decode(encodeToString).toString());
+//        System.out.println(new String(Base64.getDecoder().decode(encodeToString), StandardCharsets.UTF_8));
 
 
+        System.out.println(Clock.systemDefaultZone().millis());
+    }
+
+
+    public enum SecurityType {
+        AES,
+        RSA,
+        ;
     }
 
 

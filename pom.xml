@@ -7,10 +7,47 @@
     <groupId>org.example</groupId>
     <artifactId>learning</artifactId>
     <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>DeferredResultDemo</module>
+    <module>docker-spring-demo</module>
+    <module>file-demo</module>
+    <module>gab-api-demo</module>
+    <module>micro-services</module>
+    <module>mogodb-demo</module>
+    <module>mongo-starter</module>
+    <module>mybatis-demo</module>
+    <module>mybatis-test</module>
+    <module>open-demo</module>
+    <module>QLExpressDemo</module>
+    <module>redis-demo</module>
+    <module>security-demo</module>
+    <module>spring-boot-security-demo</module>
+    <module>spring-cloud-secutity-demo</module>
+    <module>spring-spark-demo</module>
+    <module>token-user-demo</module>
+    <module>WebSocketDemo</module>
+    <module>wyci-utils</module>
+  </modules>
 
-    <properties>
+  <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <spring-boot.version>2.7.2</spring-boot.version>
+
     </properties>
 
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
