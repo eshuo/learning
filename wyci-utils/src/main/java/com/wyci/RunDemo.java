@@ -1,5 +1,20 @@
 package com.wyci;
 
+import java.io.File;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.URLDecoder;
+import java.net.UnknownHostException;
+import java.security.SecureRandom;
+import java.util.Enumeration;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.util.Assert;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 /**
  * @Description @Author wangshuo @Date 2023-02-28 15:50 @Version V1.0
  */
@@ -15,9 +30,39 @@ public class RunDemo {
   public static void main(String[] args) throws Exception {
 
 
+//      SecureRandom sr = new SecureRandom();
+//
+//      for (int i = 0; i < 100; i++) {
+//          System.out.println(new SecureRandom().nextDouble());
+//          System.err.println(Math.random());
+//      }
+      String str
+          = "zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL";
 
-      System.err.println("/auth1/pong".endsWith("/pong"));
-      System.err.println("/auth1/token_pong".endsWith("/token_pong"));
+      final String decode = URLDecoder.decode("zLG5rKdrEBX+iCefQrUgEI4yEtvtGTKL", "UTF-8");
+
+      System.err.println(str.contains("%"));
+      System.err.println(decode);
+      System.err.println(decode.equals("zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL"));
+      System.err.println(File.separator);
+      System.out.println(getLocalIpByNetcard());
+      System.err.println(InetAddress.getLocalHost().getHostAddress());
+
+
+      ServletRequestAttributes servletRequestAttributes =
+          (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+      if(null != servletRequestAttributes){
+          HttpServletRequest request = servletRequestAttributes.getRequest();
+          System.err.println(request.getRemoteAddr());
+          System.err.println( InetAddress.getByName(request.getRemoteAddr()));
+          System.err.println( InetAddress.getByName(request.getRemoteAddr()).getHostName());
+      }
+
+
+
+//      System.err.println("/auth1/pong".endsWith("/pong"));
+//      System.err.println("/auth1/token_pong".endsWith("/token_pong"));
 
 //      final List<String> roleLevelCodes =new ArrayList<>();
 //      roleLevelCodes.add("张三");
@@ -91,4 +136,29 @@ public class RunDemo {
 //
 //    arrayList.forEach(aa -> System.out.println("====>" + aa));
   }
+
+    /**
+     * 直接根据第一个网卡地址作为其内网ipv4地址，避免返回 127.0.0.1
+     *
+     * @return
+     */
+    public static String getLocalIpByNetcard() {
+        try {
+            for (Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces(); e.hasMoreElements(); ) {
+                NetworkInterface item = e.nextElement();
+                for (InterfaceAddress address : item.getInterfaceAddresses()) {
+                    if (item.isLoopback() || !item.isUp()) {
+                        continue;
+                    }
+                    if (address.getAddress() instanceof Inet4Address) {
+                        Inet4Address inet4Address = (Inet4Address) address.getAddress();
+                        return inet4Address.getHostAddress();
+                    }
+                }
+            }
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (SocketException | UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

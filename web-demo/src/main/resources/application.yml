@@ -1,0 +1,11 @@
+
+
+spring:
+  application:
+    name: web-demo
+  profiles:
+    active: common
+
+# 此处会被common覆盖
+server:
+  port: 8088
