@@ -8,10 +8,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.security.SecureRandom;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -26,6 +26,51 @@ public class RunDemo {
 
 
 
+//
+//    /**
+//     * 获取调用的类名
+//     *
+//     * @return String
+//     */
+//    public static String getClassName() {
+//        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+//        StackTraceElement e = stacktrace[2];
+//        String className = e.getClassName();
+//        return className;
+//    }
+//
+//    /**
+//     * 获取调用的方法名
+//     *
+//     * @return String
+//     */
+//    public static String getMethodName() {
+//        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+//        StackTraceElement e = stacktrace[2];
+//        String methodName = e.getMethodName();
+//        return methodName;
+//    }
+//
+//    public static String getFileName() {
+//        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+//        StackTraceElement e = stacktrace[2];
+//        String methodName = e.getFileName();
+//        return methodName;
+//    }
+//
+//    public static int getLineNumber() {
+//        StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+//        StackTraceElement e = stacktrace[2];
+//        int line = e.getLineNumber();
+//        return line;
+//    }
+//
+//    public static void main(String[] args) {
+//        System.out.println("当前运行的类："+getClassName());
+//        System.out.println("当前执行的方法："+getMethodName());
+//        System.out.println("当前文件名："+getFileName());
+//        System.out.println("当前执行的行数："+getLineNumber());
+//    }
 
   public static void main(String[] args) throws Exception {
 
@@ -40,6 +85,12 @@ public class RunDemo {
           = "zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL";
 
       final String decode = URLDecoder.decode("zLG5rKdrEBX+iCefQrUgEI4yEtvtGTKL", "UTF-8");
+
+      final String encodeToString = Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+      System.err.println(encodeToString);
+      System.err.println(new String(Base64.getDecoder().decode(encodeToString.getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8));
+
+
 
       System.err.println(str.contains("%"));
       System.err.println(decode);
