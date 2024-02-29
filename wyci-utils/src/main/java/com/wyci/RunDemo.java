@@ -1,5 +1,11 @@
 package com.wyci;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.wyci.resp.ApiResult;
+import com.wyci.resp.ResRiskRequest;
+import com.wyci.resp.ResRiskResponse;
+import com.wyci.resp.ResRiskResponse.DictResponse;
 import java.io.File;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -11,7 +17,12 @@ import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Enumeration;
+import javax.security.auth.message.AuthException;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -74,6 +85,7 @@ public class RunDemo {
 
   public static void main(String[] args) throws Exception {
 
+      final DictResponse dictResponse = queryDict();
 
 //      SecureRandom sr = new SecureRandom();
 //
@@ -81,34 +93,34 @@ public class RunDemo {
 //          System.out.println(new SecureRandom().nextDouble());
 //          System.err.println(Math.random());
 //      }
-      String str
-          = "zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL";
-
-      final String decode = URLDecoder.decode("zLG5rKdrEBX+iCefQrUgEI4yEtvtGTKL", "UTF-8");
-
-      final String encodeToString = Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
-      System.err.println(encodeToString);
-      System.err.println(new String(Base64.getDecoder().decode(encodeToString.getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8));
-
-
-
-      System.err.println(str.contains("%"));
-      System.err.println(decode);
-      System.err.println(decode.equals("zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL"));
-      System.err.println(File.separator);
-      System.out.println(getLocalIpByNetcard());
-      System.err.println(InetAddress.getLocalHost().getHostAddress());
-
-
-      ServletRequestAttributes servletRequestAttributes =
-          (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-
-      if(null != servletRequestAttributes){
-          HttpServletRequest request = servletRequestAttributes.getRequest();
-          System.err.println(request.getRemoteAddr());
-          System.err.println( InetAddress.getByName(request.getRemoteAddr()));
-          System.err.println( InetAddress.getByName(request.getRemoteAddr()).getHostName());
-      }
+//      String str
+//          = "zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL";
+//
+//      final String decode = URLDecoder.decode("zLG5rKdrEBX+iCefQrUgEI4yEtvtGTKL", "UTF-8");
+//
+//      final String encodeToString = Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+//      System.err.println(encodeToString);
+//      System.err.println(new String(Base64.getDecoder().decode(encodeToString.getBytes(StandardCharsets.UTF_8)),StandardCharsets.UTF_8));
+//
+//
+//
+//      System.err.println(str.contains("%"));
+//      System.err.println(decode);
+//      System.err.println(decode.equals("zLG5rKdrEBX%2BiCefQrUgEI4yEtvtGTKL"));
+//      System.err.println(File.separator);
+//      System.out.println(getLocalIpByNetcard());
+//      System.err.println(InetAddress.getLocalHost().getHostAddress());
+//
+//
+//      ServletRequestAttributes servletRequestAttributes =
+//          (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//
+//      if(null != servletRequestAttributes){
+//          HttpServletRequest request = servletRequestAttributes.getRequest();
+//          System.err.println(request.getRemoteAddr());
+//          System.err.println( InetAddress.getByName(request.getRemoteAddr()));
+//          System.err.println( InetAddress.getByName(request.getRemoteAddr()).getHostName());
+//      }
 
 
 
@@ -187,6 +199,22 @@ public class RunDemo {
 //
 //    arrayList.forEach(aa -> System.out.println("====>" + aa));
   }
+
+    public static ResRiskResponse.DictResponse queryDict() {
+
+        final ResRiskRequest.QueryDict queryDict = new ResRiskRequest.QueryDict();
+        queryDict.setSize(500);
+        queryDict.setType("client_process");
+        HttpEntity<ResRiskRequest.QueryDict> requestEntity = new HttpEntity<>(queryDict, null);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity( "http://10.3.43.160:19100/manage/api/v1.0/dict/query", requestEntity, String.class);
+        if (responseEntity.hasBody() && HttpStatus.OK.equals(responseEntity.getStatusCode())) {
+            JSONObject result = JSONObject.parseObject(responseEntity.getBody());
+            JSONObject policyData = result.getJSONObject("data");
+            return policyData.toJavaObject(DictResponse.class);
+        }
+        return null;
+    }
 
     /**
      * 直接根据第一个网卡地址作为其内网ipv4地址，避免返回 127.0.0.1
