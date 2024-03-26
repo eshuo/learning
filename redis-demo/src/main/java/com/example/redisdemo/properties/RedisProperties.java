@@ -11,49 +11,75 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "demo.redis")
 public class RedisProperties {
 
-  private boolean enabled = true;
+    private int database = 0;
 
-  private int database = 0;
+    private String type = "redisCluster";
 
-  private String password;
+    private boolean enabled = true;
 
-  /**
-   * 集群
-   */
-  private List<String> clusterNodes;
+    private String password;
 
-  private int connectionTimeout = 2000;
+    private int connectionTimeout = 2000;
 
-  private int soTimeout = 2000;
+    private int soTimeout = 2000;
 
-  private String ip = "127.0.0.1";
+    private int maxAttempts = 2;
 
-  private Integer port = 6379;
-
-  /**
-   * cache 默认缓存时间 (s)
-   */
-  private Integer defaultTime = 7200;
-
-  /**
-   * 自定义缓存列表
-   */
-  private List<CacheInfo> cacheInfoList;
-
-  /**
-   * spring cache配置
-   */
-  @Data
-  public static class CacheInfo {
 
     /**
-     * 缓存key
+     * 池中“空闲”连接的最大数量。使用负值表示空闲连接的数量不受限制。
      */
-    private String key;
+    private int maxIdle = 8;
 
     /**
-     * 缓存时间
+     * 池中要维护的最小空闲连接数的目标。只有当它和驱逐运行之间的时间都为正时，此设置才会生效。
      */
-    private Integer time;
-  }
+    private int minIdle = 0;
+    /**
+     * 池在给定时间可以分配的最大连接数。使用负值表示没有限制。
+     */
+    private int maxActive = 8;
+
+
+    private List<String> clusterNodes;
+
+    private String ip = "127.0.0.1";
+
+    private Integer port = 6379;
+
+
+    /**
+     * cache 默认缓存时间 (s)
+     */
+    private Integer defaultTime = 7200;
+
+    /**
+     * 自定义缓存列表
+     */
+    private List<CacheInfo> cacheInfoList;
+
+
+    /**
+     * 命名前缀
+     */
+    private String prefix;
+
+    /**
+     * spring cache配置
+     */
+    @Data
+    public static class CacheInfo {
+
+        /**
+         * 缓存key
+         */
+        private String key;
+
+        /**
+         * 缓存时间
+         */
+        private Integer time;
+
+    }
+
 }

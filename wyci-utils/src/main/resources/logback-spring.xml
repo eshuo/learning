@@ -1,145 +1,155 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
-    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
-    <!-- 日志存放路径 -->
-    <springProperty name="logPath" source="logback.path"></springProperty>
-    <property name="log.path" value="${logPath}"/>
-    <!-- 日志输出格式 -->
-    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{LOG-THREAD-ID}] [%level] %-40logger{20} - [%method,%line] - %msg%n"/>
+  <!-- 日志存放路径 -->
+  <springProperty name="logbackConfig" source="logback"></springProperty>
+  <property name="log.path" value="${logbackConfig.path}"/>
+  <!--    日志大小-->
+  <property name="maxFileSize" value="${logbackConfig.maxFileSize:128MB}"/>
+  <!--    存储天数 120-->
+  <property name="maxHistory" value="${logbackConfig.maxHistory:120}"/>
+  <!--    归档文件总的大小-->
+  <property name="totalSizeCap" value="${logbackConfig.totalSizeCap:10GB}"/>
+  <!-- 日志输出格式 -->
+  <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{LOG-THREAD-ID}] [%level] %-40logger{20} - [%method,%line] - %msg%n"/>
 
-    <!-- 控制台输出 -->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-
-    <!-- debug-->
-    <appender name="file_debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/sys-debug.log</file>
-        <!--        HTTP日志级别 TRACE-->
-        <!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
-        <!--            <level>DEBUG</level>-->
-        <!--        </filter>-->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 按天回滚 daily -->
-            <fileNamePattern>${log.path}/sys-debug-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
-            <maxHistory>120</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!--文件达到 最大64MB时会被压缩和切割 -->
-                <maxFileSize>64 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- 系统日志输出 -->
-    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/sys-info.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
-            <fileNamePattern>${log.path}/sys-info.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
-            <maxHistory>60</maxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <!-- 过滤的级别 -->
-            <level>INFO</level>
-            <!-- 匹配时的操作：接收（记录） -->
-            <onMatch>ACCEPT</onMatch>
-            <!-- 不匹配时的操作：拒绝（不记录） -->
-            <onMismatch>DENY</onMismatch>
-        </filter>
-    </appender>
-
-    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/sys-error.log</file>
-        <!-- 循环政策：基于时间创建日志文件 -->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 日志文件名格式 -->
-            <fileNamePattern>${log.path}/sys-error.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
-            <maxHistory>60</maxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <!-- 过滤的级别 -->
-            <level>ERROR</level>
-            <!-- 匹配时的操作：接收（记录） -->
-            <onMatch>ACCEPT</onMatch>
-            <!-- 不匹配时的操作：拒绝（不记录） -->
-            <onMismatch>DENY</onMismatch>
-        </filter>
-    </appender>
-
-    <!-- 切面日志文件 -->
-    <appender name="log-aspect" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/log-aspect.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 按天回滚 daily -->
-            <fileNamePattern>${log.path}/log-aspect-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
-            <!-- 日志最大的历史 60天 -->
-            <maxHistory>120</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy
-                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!--文件达到 最大128MB时会被压缩和切割 -->
-                <maxFileSize>128 MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
-
-    <!-- 系统模块日志级别控制  -->
-    <logger name="com.wyci" level="info"/>
-    <!-- Spring日志级别控制  -->
-    <logger name="org.springframework" level="warn"/>
-
-    <!--HTTP监控-->
-    <logger name="org.zalando.logbook" level="TRACE" additivity="false">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file_debug"/>
-    </logger>
+  <!-- 控制台输出 -->
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${log.pattern}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
 
 
-    <!--系统操作日志-->
-    <root level="ERROR">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file_debug"/>
-        <appender-ref ref="file_error"/>
-        <appender-ref ref="file_info"/>
-    </root>
+  <!-- debug-->
+  <appender name="file_debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/sys-debug.log</file>
+    <!--        HTTP日志级别 TRACE-->
+    <!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+    <!--            <level>DEBUG</level>-->
+    <!--        </filter>-->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- 按天回滚 daily -->
+      <fileNamePattern>${log.path}/sys-debug-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+      <!-- 日志最大的历史 60天 -->
+      <maxHistory>${maxHistory}</maxHistory>
+      <totalSizeCap>${totalSizeCap}</totalSizeCap>
+      <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+      <!--文件达到 最大64MB时会被压缩和切割 -->
+      <maxFileSize>${maxFileSize}</maxFileSize>
+      <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+    </rollingPolicy>
+    <encoder>
+      <pattern>${com.eetrust.log.pattern}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
 
-    <!--修改自行包名-->
-    <logger name="com.wyci" level="DEBUG" additivity="false">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file_error"/>
-        <appender-ref ref="file_debug"/>
-        <appender-ref ref="file_info"/>
-    </logger>
+  <!-- 系统日志输出 -->
+  <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/sys-info.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <!-- 循环政策：基于时间创建日志文件 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- 日志文件名格式 -->
+      <fileNamePattern>${log.path}/sys-info.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+      <!-- 日志最大的历史 60天 -->
+      <maxHistory>${maxHistory}</maxHistory>
+      <totalSizeCap>${totalSizeCap}</totalSizeCap>
 
-    <!--    切面-->
-    <logger name="com.wyci.utils.aop.IncrementalLogAspect" level="debug">
-        <appender-ref ref="log-aspect"/>
-    </logger>
+      <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+      <!--文件达到 最大64MB时会被压缩和切割 -->
+      <maxFileSize>${maxFileSize}</maxFileSize>
+      <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+    </rollingPolicy>
+    <encoder>
+      <pattern>${com.eetrust.log.pattern}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/sys-error.log</file>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+    <!-- 循环政策：基于时间创建日志文件 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- 日志文件名格式 -->
+      <fileNamePattern>${log.path}/sys-error.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+      <!-- 日志最大的历史 60天 -->
+      <maxHistory>${maxHistory}</maxHistory>
+      <totalSizeCap>${totalSizeCap}</totalSizeCap>
+
+      <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+      <!--文件达到 最大64MB时会被压缩和切割 -->
+      <maxFileSize>${maxFileSize}</maxFileSize>
+      <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+    </rollingPolicy>
+    <encoder>
+      <pattern>${com.eetrust.log.pattern}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <!-- 切面日志文件 -->
+  <appender name="log-aspect" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${log.path}/log-aspect.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <!-- 按天回滚 daily -->
+      <fileNamePattern>${log.path}/log-aspect-%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+      <!-- 日志最大的历史 60天 -->
+      <maxHistory>${maxHistory}</maxHistory>
+      <totalSizeCap>${totalSizeCap}</totalSizeCap>
+      <!--            <timeBasedFileNamingAndTriggeringPolicy-->
+      <!--                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
+      <!--文件达到 最大128MB时会被压缩和切割 -->
+      <maxFileSize>${maxFileSize}</maxFileSize>
+      <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${log.pattern}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+
+  <!-- 系统模块日志级别控制  -->
+  <logger name="com.wyci" level="info"/>
+  <!-- Spring日志级别控制  -->
+  <logger name="org.springframework" level="warn"/>
+
+  <!--HTTP监控-->
+  <logger name="org.zalando.logbook" level="TRACE" additivity="false">
+    <appender-ref ref="console"/>
+    <appender-ref ref="file_debug"/>
+  </logger>
+
+
+  <!--系统操作日志-->
+  <root level="ERROR">
+    <appender-ref ref="console"/>
+    <appender-ref ref="file_debug"/>
+    <appender-ref ref="file_error"/>
+    <appender-ref ref="file_info"/>
+  </root>
+
+  <!--修改自行包名-->
+  <logger name="com.wyci" level="DEBUG" additivity="false">
+    <appender-ref ref="console"/>
+    <appender-ref ref="file_error"/>
+    <appender-ref ref="file_debug"/>
+    <appender-ref ref="file_info"/>
+  </logger>
+
+  <!--    切面-->
+  <logger name="com.wyci.utils.aop.IncrementalLogAspect" level="debug">
+    <appender-ref ref="log-aspect"/>
+  </logger>
 
 
 </configuration>

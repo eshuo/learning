@@ -1,30 +1,24 @@
 package com.wyci;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.wyci.resp.ApiResult;
 import com.wyci.resp.ResRiskRequest;
 import com.wyci.resp.ResRiskResponse;
 import com.wyci.resp.ResRiskResponse.DictResponse;
-import java.io.File;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import javax.security.auth.message.AuthException;
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import sun.nio.cs.ext.GBK;
 
 /**
  * @Description @Author wangshuo @Date 2023-02-28 15:50 @Version V1.0
@@ -32,13 +26,51 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class RunDemo {
 
 
-
+    private static List<String> whites = new ArrayList<>();
     private static final String NAME_REGEX = "^[a-zA-Z0-9\\u4e00-\\u9fa5]+$";
 
 
+    static {
+        whites.add("/v2/api-docs");
+        whites.add("/doc");
+        whites.add("/webjars");
+        whites.add("/swagger-resources");
+
+
+        whites.add("/actuator");
+
+        whites.add("/auth/api/login");
+        whites.add("/auth/api/v1.0/login");
+        whites.add("/auth/api/genLoginPage");
+        whites.add("/eim/api/v1.0/user/api/account/*");
+        whites.add("/eim/api/v1.0/user/api/*");
+        whites.add("/eim/api/v1.0/department/checkDeptDisabled/*");
+        whites.add("/ubsp/index.html");
+        whites.add("/tyml/v1.0/sync/recon/.*");
+        whites.add("/eim/dept/api/v1.0/department/*");
+        whites.add("/eim/user/api/v1.0/user/*");
+        whites.add("/tyml/v1.0/sync/incre/*");
+        whites.add("/tyml/v1.0/sync/init/*");
+        whites.add("/register/api/v1.0/app/api/queryApp/eim");
+        whites.add("/register/api/v1.0/app/.*");
+        whites.add("/tyml/v1.0/sync/init/.*");
+        whites.add("/data/api/v1.0/.*");
+        whites.add("sync/api/v1.0/insertSyncConfig");
+        whites.add("/sync/cert/config/v1.0/.*");
+        whites.add("/sync/api/v1.0/sysLevel/*");
+        whites.add("/sync/api/v1.0/.*");
+        whites.add("eim/api/v1.0/.*");
+        whites.add("/iam/sync/data/recon/.*");
+        whites.add("/address/v1/login");
+        whites.add("/address/v1/SSOLogin");
+        whites.add("/iam/attrConfig/manage/.*");
+        whites.add("/sso/.*");
+        whites.add("/src/sync/data/iam/eim");
+        whites.add("/src/sync/data/iam/.*");
+    }
 
 //
-//    /**
+//    /.*
 //     * 获取调用的类名
 //     *
 //     * @return String
@@ -50,7 +82,7 @@ public class RunDemo {
 //        return className;
 //    }
 //
-//    /**
+//    /.*
 //     * 获取调用的方法名
 //     *
 //     * @return String
@@ -83,9 +115,25 @@ public class RunDemo {
 //        System.out.println("当前执行的行数："+getLineNumber());
 //    }
 
-  public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-      final DictResponse dictResponse = queryDict();
+        //秒转分钟
+
+        long minute = 288 / 60;
+        long second = 288 % 60;
+
+        System.out.println(minute);
+        System.out.println(second);
+//        String url ="/auth/api/v1/function/login";
+//
+//
+//        System.out.println(whites.stream().noneMatch(url::matches));
+//
+//
+//        String s =new String("wangs".getBytes(), Charset.forName("GBK"));
+//        System.out.println(s);
+
+//      final DictResponse dictResponse = queryDict();
 
 //      SecureRandom sr = new SecureRandom();
 //
@@ -122,8 +170,6 @@ public class RunDemo {
 //          System.err.println( InetAddress.getByName(request.getRemoteAddr()).getHostName());
 //      }
 
-
-
 //      System.err.println("/auth1/pong".endsWith("/pong"));
 //      System.err.println("/auth1/token_pong".endsWith("/token_pong"));
 
@@ -143,8 +189,6 @@ public class RunDemo {
 //          if (roleLevelCodes.stream().anyMatch(leve -> deptLeveCodeList.stream().anyMatch(code -> code.startsWith(leve)))) {
 //              System.err.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //          }
-
-
 
 //      String inputString = "张三";
 //      if (inputString.matches(NAME_REGEX)) {
@@ -174,7 +218,8 @@ public class RunDemo {
 //
 //    String hash =
 //        "eyJhbGciOiJIUzUxMiJ9"
-//            + ".eyJqdGkiOiI4MjU4MTQwMDg4MjgyNjQ0NDgiLCJzdWIiOiJ7XCJhdXRoZWRTZXRcIjowLFwiYXV0aGVudGljYXRlZFwiOnRydWUsXCJnbG9iYWxQb2xpY3lWZXJpZmllZFwiOmZhbHNlLFwiaW5zdGFuY2VDb2RlXCI6XCJDZXJ0QXV0aFwiLFwibGFzdEF1dGhFcnJcIjpcIlwiLFwibG9naW5TdGF0ZVwiOjEsXCJwcmluY2lwYWxcIjp7XCJjZXJ0U25cIjpcIjAzMjBGNkU3RDBCN0FBQzk3NTJGQTEyMDk4MjdCN0MyXCIsXCJlbmFibGVDYXB0Y2hhXCI6XCIxXCIsXCJyZXN1bHRDb2RlXCI6XCIxXCIsXCJyZXN1bHRNZXNzYWdlXCI6XCLorqTor4HpgJrov4dcIixcInRlbXBvcmFyeUF1dGhcIjpmYWxzZSxcInVzZXJJZFwiOlwiNzE5NTE5NjA4NjM1MTM1OTk4NFwiLFwidXNlckluZm9cIjp7XCJhdXRob3JpemVcIjpmYWxzZSxcImNyeXB0ZWRQYXNzd29yZFwiOlwiXCIsXCJkYXRhVHlwZVwiOjEsXCJlbWFpbFwiOlwiXCIsXCJnZW5kZXJcIjpcIlowM1wiLFwiaWRcIjpcIjcxOTUxOTYwODYzNTEzNTk5ODRcIixcImlkQ2FyZE51bWJlclwiOlwiXCIsXCJpc0RlbGV0ZVwiOjAsXCJsb2dpbk5hbWVcIjpcImxlaWNcIixcIm1vYmlsZVwiOlwiXCIsXCJwYXNzd29yZFwiOlwidE1GVEVIOWNUWW89XCIsXCJzZWNMZXZlbFwiOlwiXCIsXCJzaG93TnVtYmVyXCI6NzUzLFwic3RhdHVzXCI6MSxcInVzZXJOYW1lXCI6XCLpm7fmiJBcIn19LFwidXNlclwiOntcIiRyZWZcIjpcIiQucHJpbmNpcGFsLnVzZXJJbmZvXCJ9fSIsImlzcyI6InVzZXIiLCJpYXQiOjE2NzcwNTU4NjgsImV4cCI6MTY3NzA1NzY2OH0.JqgQv8YiPkigW1Vt4gkiRLZ_C6ykwDeJV9-xDQ65AEr9jbFn1QJStFSgA2d6A8reyAhxevtW9J6_moiwXnhDqQ";
+//            + "
+//            .eyJqdGkiOiI4MjU4MTQwMDg4MjgyNjQ0NDgiLCJzdWIiOiJ7XCJhdXRoZWRTZXRcIjowLFwiYXV0aGVudGljYXRlZFwiOnRydWUsXCJnbG9iYWxQb2xpY3lWZXJpZmllZFwiOmZhbHNlLFwiaW5zdGFuY2VDb2RlXCI6XCJDZXJ0QXV0aFwiLFwibGFzdEF1dGhFcnJcIjpcIlwiLFwibG9naW5TdGF0ZVwiOjEsXCJwcmluY2lwYWxcIjp7XCJjZXJ0U25cIjpcIjAzMjBGNkU3RDBCN0FBQzk3NTJGQTEyMDk4MjdCN0MyXCIsXCJlbmFibGVDYXB0Y2hhXCI6XCIxXCIsXCJyZXN1bHRDb2RlXCI6XCIxXCIsXCJyZXN1bHRNZXNzYWdlXCI6XCLorqTor4HpgJrov4dcIixcInRlbXBvcmFyeUF1dGhcIjpmYWxzZSxcInVzZXJJZFwiOlwiNzE5NTE5NjA4NjM1MTM1OTk4NFwiLFwidXNlckluZm9cIjp7XCJhdXRob3JpemVcIjpmYWxzZSxcImNyeXB0ZWRQYXNzd29yZFwiOlwiXCIsXCJkYXRhVHlwZVwiOjEsXCJlbWFpbFwiOlwiXCIsXCJnZW5kZXJcIjpcIlowM1wiLFwiaWRcIjpcIjcxOTUxOTYwODYzNTEzNTk5ODRcIixcImlkQ2FyZE51bWJlclwiOlwiXCIsXCJpc0RlbGV0ZVwiOjAsXCJsb2dpbk5hbWVcIjpcImxlaWNcIixcIm1vYmlsZVwiOlwiXCIsXCJwYXNzd29yZFwiOlwidE1GVEVIOWNUWW89XCIsXCJzZWNMZXZlbFwiOlwiXCIsXCJzaG93TnVtYmVyXCI6NzUzLFwic3RhdHVzXCI6MSxcInVzZXJOYW1lXCI6XCLpm7fmiJBcIn19LFwidXNlclwiOntcIiRyZWZcIjpcIiQucHJpbmNpcGFsLnVzZXJJbmZvXCJ9fSIsImlzcyI6InVzZXIiLCJpYXQiOjE2NzcwNTU4NjgsImV4cCI6MTY3NzA1NzY2OH0.JqgQv8YiPkigW1Vt4gkiRLZ_C6ykwDeJV9-xDQ65AEr9jbFn1QJStFSgA2d6A8reyAhxevtW9J6_moiwXnhDqQ";
 //
 //    System.out.println(hash.hashCode());
 //    System.out.println(hash.hashCode());
@@ -198,7 +243,7 @@ public class RunDemo {
 //    final List<String> arrayList = new ArrayList<>(map.values());
 //
 //    arrayList.forEach(aa -> System.out.println("====>" + aa));
-  }
+    }
 
     public static ResRiskResponse.DictResponse queryDict() {
 
@@ -207,7 +252,7 @@ public class RunDemo {
         queryDict.setType("client_process");
         HttpEntity<ResRiskRequest.QueryDict> requestEntity = new HttpEntity<>(queryDict, null);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity( "http://10.3.43.160:19100/manage/api/v1.0/dict/query", requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://10.3.43.160:19100/manage/api/v1.0/dict/query", requestEntity, String.class);
         if (responseEntity.hasBody() && HttpStatus.OK.equals(responseEntity.getStatusCode())) {
             JSONObject result = JSONObject.parseObject(responseEntity.getBody());
             JSONObject policyData = result.getJSONObject("data");
