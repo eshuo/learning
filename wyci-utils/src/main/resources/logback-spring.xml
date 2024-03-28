@@ -4,8 +4,9 @@
   <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
 
   <!-- 日志存放路径 -->
-  <springProperty name="logbackConfig" source="logback"></springProperty>
-  <property name="log.path" value="${logbackConfig.path}"/>
+  <!-- 日志存放路径 -->
+  <springProperty scope="context" name="logPath" source="logback.path"/>
+  <property name="log.path" value="${logPath}"/>
   <!--    日志大小-->
   <property name="maxFileSize" value="128MB"/>
   <!--    存储天数 120-->
