@@ -7,11 +7,11 @@
   <springProperty name="logbackConfig" source="logback"></springProperty>
   <property name="log.path" value="${logbackConfig.path}"/>
   <!--    日志大小-->
-  <property name="maxFileSize" value="${logbackConfig.maxFileSize:128MB}"/>
+  <property name="maxFileSize" value="128MB"/>
   <!--    存储天数 120-->
-  <property name="maxHistory" value="${logbackConfig.maxHistory:120}"/>
+  <property name="maxHistory" value="120"/>
   <!--    归档文件总的大小-->
-  <property name="totalSizeCap" value="${logbackConfig.totalSizeCap:10GB}"/>
+  <property name="totalSizeCap" value="10GB"/>
   <!-- 日志输出格式 -->
   <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{LOG-THREAD-ID}] [%level] %-40logger{20} - [%method,%line] - %msg%n"/>
 
