@@ -28,6 +28,7 @@
     <module>token-user-demo</module>
     <module>WebSocketDemo</module>
     <module>wyci-utils</module>
+    <module>LeetCode</module>
   </modules>
 
   <properties>

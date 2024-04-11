@@ -3,7 +3,10 @@ package com.example.qlexpressdemo;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.IExpressContext;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.util.Base64Utils;
 import org.springframework.util.CollectionUtils;
 import sun.misc.Unsafe;
 
@@ -38,7 +41,111 @@ public class demoTest {
     }
 
 
+    public static final String json = "{\n"
+        + "  \"@class\": \"com.eetrust.common.security.Subject\",\n"
+        + "  \"isGlobalPolicyVerified\": false,\n"
+        + "  \"isAuthenticated\": true,\n"
+        + "  \"lastAuthErr\": \"\",\n"
+        + "  \"authedSet\": 0,\n"
+        + "  \"user\": {\n"
+        + "    \"@class\": \"com.eetrust.common.security.CurrentUser\",\n"
+        + "    \"id\": \"8055372310851198986\",\n"
+        + "    \"loginName\": \"tanggd\",\n"
+        + "    \"userName\": \"唐国栋\",\n"
+        + "    \"gender\": \"\",\n"
+        + "    \"email\": \"tanggd@eetrust.com\",\n"
+        + "    \"mobile\": \"13980979875\",\n"
+        + "    \"idCardNumber\": \"\",\n"
+        + "    \"secLevel\": \"4\",\n"
+        + "    \"showNumber\": \"992\",\n"
+        + "    \"status\": 1,\n"
+        + "    \"isDelete\": 0,\n"
+        + "    \"parentName\": \"公共服务部\",\n"
+        + "    \"parentId\": \"7802884102777847885\",\n"
+        + "    \"dataType\": 1,\n"
+        + "    \"authorize\": false,\n"
+        + "    \"createTime\": 1698384527210,\n"
+        + "    \"isGuest\": false\n"
+        + "  },\n"
+        + "  \"instanceCode\": \"SMSCodeAuth\",\n"
+        + "  \"loginState\": 1,\n"
+        + "  \"principal\": {\n"
+        + "    \"@class\": \"com.eetrust.common.security.Principal\",\n"
+        + "    \"userId\": \"8055372310851198986\",\n"
+        + "    \"loginName\": \"tanggd\",\n"
+        + "    \"resultCode\": \"1\",\n"
+        + "    \"resultMessage\": \"认证通过\",\n"
+        + "    \"enableCaptcha\": \"1\",\n"
+        + "    \"userInfo\": {\n"
+        + "      \"@class\": \"com.eetrust.common.security.CurrentUser\",\n"
+        + "      \"id\": \"8055372310851198986\",\n"
+        + "      \"loginName\": \"tanggd\",\n"
+        + "      \"userName\": \"唐国栋\",\n"
+        + "      \"gender\": \"\",\n"
+        + "      \"email\": \"tanggd@eetrust.com\",\n"
+        + "      \"mobile\": \"13980979875\",\n"
+        + "      \"idCardNumber\": \"\",\n"
+        + "      \"secLevel\": \"4\",\n"
+        + "      \"showNumber\": \"992\",\n"
+        + "      \"status\": 1,\n"
+        + "      \"isDelete\": 0,\n"
+        + "      \"parentName\": \"公共服务部\",\n"
+        + "      \"parentId\": \"7802884102777847885\",\n"
+        + "      \"dataType\": 1,\n"
+        + "      \"authorize\": false,\n"
+        + "      \"createTime\": 1698384527210,\n"
+        + "      \"isGuest\": false\n"
+        + "    },\n"
+        + "    \"user\": {\n"
+        + "      \"@class\": \"com.eetrust.common.security.CurrentUser\",\n"
+        + "      \"id\": \"8055372310851198986\",\n"
+        + "      \"loginName\": \"tanggd\",\n"
+        + "      \"userName\": \"唐国栋\",\n"
+        + "      \"gender\": \"\",\n"
+        + "      \"email\": \"tanggd@eetrust.com\",\n"
+        + "      \"mobile\": \"13980979875\",\n"
+        + "      \"idCardNumber\": \"\",\n"
+        + "      \"secLevel\": \"4\",\n"
+        + "      \"showNumber\": \"992\",\n"
+        + "      \"status\": 1,\n"
+        + "      \"isDelete\": 0,\n"
+        + "      \"parentName\": \"公共服务部\",\n"
+        + "      \"parentId\": \"7802884102777847885\",\n"
+        + "      \"dataType\": 1,\n"
+        + "      \"authorize\": false,\n"
+        + "      \"createTime\": 1698384527210,\n"
+        + "      \"isGuest\": false\n"
+        + "    },\n"
+        + "    \"clientContent\": {\n"
+        + "      \"@class\": \"com.eetrust.common.security.credential.AuthCredential$ClientContent\",\n"
+        + "      \"clientMac\": \"06:49:7B:31:47:32\",\n"
+        + "      \"clientUuid\": \"625D2EF765D9C903A71158BFF2D31925\",\n"
+        + "      \"clientIp\": \"192.168.110.133\",\n"
+        + "      \"clientTime\": \"1711361669532\",\n"
+        + "      \"clientType\": \"Name Microsoft Windows 10 家庭中文版\",\n"
+        + "      \"clientCpu\": \"Intel Corporation\",\n"
+        + "      \"userAgent\": \"\",\n"
+        + "      \"isAk\": \"0\"\n"
+        + "    },\n"
+        + "    \"enhanceCertification\": false,\n"
+        + "    \"temporaryAuth\": false\n"
+        + "  },\n"
+        + "  \"loginName\": \"tanggd\",\n"
+        + "  \"instanceName\": \"短信口令认证实例编码\",\n"
+        + "  \"authenticated\": true,\n"
+        + "  \"temporaryAuth\": false,\n"
+        + "  \"globalPolicyVerified\": false\n"
+        + "}";
+
     public static void main(String[] args) throws Exception {
+
+        final String encodeToString = Base64Utils.encodeToString(json.getBytes(StandardCharsets.UTF_8));
+
+        System.out.println(encodeToString);
+        System.out.println(json.length());
+        System.out.println(encodeToString.length());
+
+        System.err.println(new String(Base64Utils.decodeFromString(encodeToString), Charset.defaultCharset()));
 
         //行为节点条件进行筛选 得到运行规则语句
 
@@ -73,7 +180,6 @@ public class demoTest {
 //        final String format = list.stream().map(" null != "::concat).collect(Collectors.joining(" && "));
 //        System.out.println(format);
 
-
 //        final Object o = getUnsafe().allocateInstance(String.class);
 
 //        setdemo();
@@ -88,7 +194,6 @@ public class demoTest {
 //        DayOfWeek day = DayOfWeek.of(LocalDate.now().get(ChronoField.DAY_OF_WEEK));
 //
 //        System.out.println(day.getValue());
-
 
 //        List<String> list = new ArrayList<>(5);
 //
@@ -110,45 +215,44 @@ public class demoTest {
 //        System.out.println(list);
 //        System.out.println(list.size());
 
-
-        String str = "if (  ( ! ( clientUuid in oftenClient )  )  && authType in [\"0\"]  ) { return \"DEFAULT_CONTINUE\" } if (  ( ! ( clientUuid in oftenClient )  )  && authType in [\"5\", \"2\", \"1\", \"4\"]  ) { return \"DEFAULT_WARNING\" } ";
-//        String reg = "(return\\s+?\")(\\S+)(\")";
+//        String str = "if (  ( ! ( clientUuid in oftenClient )  )  && authType in [\"0\"]  ) { return \"DEFAULT_CONTINUE\" } if (  ( ! ( clientUuid in oftenClient )  )  && authType in [\"5\", \"2\","
+//            + " \"1\", \"4\"]  ) { return \"DEFAULT_WARNING\" } ";
+////        String reg = "(return\\s+?\")(\\S+)(\")";
+////
+////
+////        Pattern patten = Pattern.compile("(return\\s+?\")(\\S+)(\")");//编译正则表达式
+////        Matcher matcher = patten.matcher(str);// 指定要匹配的字符串
+////
+////        List<String> matchStrs = new ArrayList<>();
+////
+////        while (matcher.find()) { //此处find（）每次被调用后，会偏移到下一个匹配
+////            matchStrs.add(matcher.group(2));//获取当前匹配的值
+////        }
+////
+////        for (int i = 0; i < matchStrs.size(); i++) {
+////            System.out.println(matchStrs.get(i));
+////        }
 //
+//        Matcher matcher = Pattern.compile("(return\\s+?\")(\\S+)(\")").matcher(str);// 指定要匹配的字符串
 //
-//        Pattern patten = Pattern.compile("(return\\s+?\")(\\S+)(\")");//编译正则表达式
-//        Matcher matcher = patten.matcher(str);// 指定要匹配的字符串
-//
-//        List<String> matchStrs = new ArrayList<>();
-//
-//        while (matcher.find()) { //此处find（）每次被调用后，会偏移到下一个匹配
-//            matchStrs.add(matcher.group(2));//获取当前匹配的值
+//        List<String> levelList = new ArrayList<>();
+//        while (matcher.find()) {
+//            final String group = matcher.group(2);
+//            if (StringUtils.isNotBlank(group)) {
+//                levelList.add(group);
+//            }
 //        }
+//        if (!CollectionUtils.isEmpty(levelList)) {
+//            final Integer integer = levelList.stream().distinct().map(l -> {
+//                if (l.equals("DEFAULT_CONTINUE")) {
+//                    return -1;
+//                } else {
+//                    return 1;
+//                }
+//            }).min(Comparator.comparingInt(o -> o)).orElse(0);
 //
-//        for (int i = 0; i < matchStrs.size(); i++) {
-//            System.out.println(matchStrs.get(i));
+//            System.out.println(integer);
 //        }
-
-
-        Matcher matcher = Pattern.compile("(return\\s+?\")(\\S+)(\")").matcher(str);// 指定要匹配的字符串
-
-        List<String> levelList = new ArrayList<>();
-        while (matcher.find()) {
-            final String group = matcher.group(2);
-            if (StringUtils.isNotBlank(group)) {
-                levelList.add(group);
-            }
-        }
-        if (!CollectionUtils.isEmpty(levelList)) {
-            final Integer integer = levelList.stream().distinct().map(l -> {
-                if (l.equals("DEFAULT_CONTINUE")) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            }).min(Comparator.comparingInt(o -> o)).orElse(0);
-
-            System.out.println(integer);
-        }
 
     }
 
@@ -168,7 +272,6 @@ public class demoTest {
         map.put("1234", "14");
         map.put("12345", "15");
 
-
         final List<String> list = Arrays.asList("1", "12", "123", "12345", "12345", "12345");
 
         System.out.println(list.stream().anyMatch(map::containsKey));
@@ -183,7 +286,8 @@ public class demoTest {
 
     private static void listDemo() throws Exception {
 
-        String str = "if ( (  null != clientUuid &&  null != oftenClient &&  null != authType ) && ( ! ( clientUuid in oftenClient )  )  && authType in [\"key\", \"zhiwen\"]  ) { return \"DEFAULT_WARNING\" }  ";
+        String str = "if ( (  null != clientUuid &&  null != oftenClient &&  null != authType ) && ( ! ( clientUuid in oftenClient )  )  && authType in [\"key\", \"zhiwen\"]  ) { return "
+            + "\"DEFAULT_WARNING\" }  ";
 
         ExpressRunner runner = new ExpressRunner();
 
@@ -204,9 +308,7 @@ public class demoTest {
 
 //        String str = "data1 in data2";
 
-
         final List<String> list = Arrays.asList("\"aaaaaa\"", "\"bbbbbb\"");
-
 
         final String[] toArray = list.toArray(new String[]{});
 
@@ -214,7 +316,6 @@ public class demoTest {
 
         String str = "data1 in  [\"key\", \"zhiwen\"]";
 //        str = str.replaceAll("data2", Arrays.toString(toArray));
-
 
         ExpressRunner runner = new ExpressRunner();
 
@@ -245,7 +346,6 @@ public class demoTest {
         defaultContext.put("lastTime", System.currentTimeMillis());
         final Object execute = runner.execute(str, defaultContext, null, false, false);
 
-
         System.out.println(execute);
 
 
@@ -265,23 +365,23 @@ public class demoTest {
         IExpressContext<String, Object> expressContext = new DefaultContext<>();
 
         String s1 = "if( xinyong != '高'   ){" +
-                "if (xinyong == '中'){" +
-                "return '低风险1'" +
-                "} else{" +
-                "return '高风险1'" +
-                "}" +
-                "" +
-                "}else{" +
-                "return '低风险2'" +
-                "}";
+            "if (xinyong == '中'){" +
+            "return '低风险1'" +
+            "} else{" +
+            "return '高风险1'" +
+            "}" +
+            "" +
+            "}else{" +
+            "return '低风险2'" +
+            "}";
 
         expressContext.put("xinyong", "低");
 
         String s2 = "if(mima < 3){" +
-                "return '低风险3'" +
-                "}else{" +
-                "return '中风险'" +
-                "}";
+            "return '低风险3'" +
+            "}else{" +
+            "return '中风险'" +
+            "}";
 
         expressContext.put("mima", 2);
 
@@ -291,9 +391,7 @@ public class demoTest {
 //        express+=" dataList.add(s1());dataList.add(s2()); return dataList;";
         String str = ExpressToFunction(s1, s2);
 
-
         System.out.println("str = " + str);
-
 
         final boolean b = runner.checkSyntax(s1);
         System.err.println(b);
@@ -304,12 +402,10 @@ public class demoTest {
             System.err.println("s==>" + s);
         }
 
-
         System.err.println(execute);
 
 
     }
-
 
 //    @Autowired
 //    private QlExpressBeanRunner qlExpressBeanRunner;
@@ -329,7 +425,6 @@ public class demoTest {
         cMap.put("003", new ConditionInfo("003", "指标.设备 = 000001", "123", ""));
         cMap.put("004", new ConditionInfo("004", "指标.访问时间==null or 指标.访问时间 < new Date()", "123", ""));
         cMap.put("005", new ConditionInfo("005", "指标.认证方式 = 1", "", "1,2,3"));
-
 
         cMap.put("011", new ConditionInfo("011", "认证方式 == 1", "", "2"));
         cMap.put("012", new ConditionInfo("012", "安全信用 == 高", "", "1"));
@@ -352,7 +447,6 @@ public class demoTest {
         pMap.put("3", new ParamInfo("3", "lock_num", "锁定次数"));
         pMap.put("4", new ParamInfo("4", "used_ip", "常用IP"));
         pMap.put("5", new ParamInfo("5", "used_node", "行为节点"));
-
 
         userLogList.add(new UserLog("3", "1", System.currentTimeMillis() - 1 * 60 * 1000));
         userLogList.add(new UserLog("3", "1", System.currentTimeMillis() - 2 * 60 * 1000));
@@ -384,7 +478,6 @@ public class demoTest {
     static void test() throws Exception {
         //五分钟之内错误次数大于3
 
-
         String express = " 用户时间段锁定(uId,lockType,5)>3";
 //        String express = " 用户时间段锁定(\"3\",\"1\",5)>3";
 
@@ -400,7 +493,6 @@ public class demoTest {
         System.err.println(execute);
 //        new Date().getTime()-5 * 60 *1000
 
-
     }
 
     public static long checkUserLogType(String userId, String type) {
@@ -411,7 +503,6 @@ public class demoTest {
      * @param userId
      * @param type
      * @param time   几分钟
-     *
      * @return
      */
     public static long checkUserLogType(String userId, String type, Long time) {
@@ -466,9 +557,7 @@ public class demoTest {
 //            }
         }
 
-
 //        express[0]
-
 
         //定义操作符别名
         runner.addOperatorWithAlias("如果", "if", null);
@@ -507,7 +596,6 @@ public class demoTest {
 
 
     }
-
 
 //    void beanDemo() throws Exception {
 //
@@ -560,17 +648,15 @@ public class demoTest {
 
     static void demo() throws Exception {
 
-
         String[] express = {"如果 ( ruleId:088 ){" +
-                "    如果(ruleId:011 and ruleId:012 ){" +
-                "        返回 'true'" +
-                "    }否则{" +
-                "       如果(ruleId:013 or ruleId:014 ){" +
-                "        返回 '第二条规则'" +
-                "       }" +
-                "    }" +
-                "} 返回 '默认'"};
-
+            "    如果(ruleId:011 and ruleId:012 ){" +
+            "        返回 'true'" +
+            "    }否则{" +
+            "       如果(ruleId:013 or ruleId:014 ){" +
+            "        返回 '第二条规则'" +
+            "       }" +
+            "    }" +
+            "} 返回 '默认'"};
 
         final Matcher matcher = R_REGEX.matcher(express[0]);
 
@@ -608,13 +694,11 @@ public class demoTest {
         runner.addOperatorWithAlias("返回", "return", null);
         //方法
 
-
         //上下文
         final UIndex uIndex = new UIndex();
         uIndex.setId("3");
         uIndex.setIndexIds("1,2,3,4,5");
         uIndex.setUserName("wangwu");
-
 
         final Map<String, String> objectObjectHashMap = new HashMap<>();
 
@@ -642,7 +726,6 @@ public class demoTest {
 
         //运行
 
-
         System.err.println("express = " + express[0]);
         /**
          如果 ( used_node == 'xingwei' ){
@@ -666,15 +749,14 @@ public class demoTest {
     public static void test1() throws Exception {
 
         String demo = "if ( used_node == 'xingwei' ){" +
-                "    if(verification == 1 and safe_credit == 高 ){" +
-                "        return true;" +
-                "    }else{" +
-                "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){" +
-                "        return '第二条规则';" +
-                "       }" +
-                "    }" +
-                "}";
-
+            "    if(verification == 1 and safe_credit == 高 ){" +
+            "        return true;" +
+            "    }else{" +
+            "       if(lock_num >= 3 or used_ip in ['127.0.0.1','192.168.1.1'] ){" +
+            "        return '第二条规则';" +
+            "       }" +
+            "    }" +
+            "}";
 
 //        String demo = "         如果 ( used_node == 'xingwei' ){" +
 //                "         如果(verification == 1 and safe_credit == 高 ){" +
@@ -699,7 +781,6 @@ public class demoTest {
         ExpressRunner runner = new ExpressRunner();
 
         final boolean b = runner.checkSyntax(demo);
-
 
         runner.addOperatorWithAlias("如果", "if", null);
         runner.addOperatorWithAlias("否则", "else", null);
@@ -823,6 +904,7 @@ public class demoTest {
 
 
     public static class ParamInfo {
+
         private String id;
 
         private String field;
@@ -862,6 +944,7 @@ public class demoTest {
 
 
     public static class UIndex {
+
         private String id;
 
         private String userName;

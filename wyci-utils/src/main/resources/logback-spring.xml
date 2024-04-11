@@ -38,6 +38,7 @@
       <!-- 日志最大的历史 60天 -->
       <maxHistory>${maxHistory}</maxHistory>
       <totalSizeCap>${totalSizeCap}</totalSizeCap>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
       <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
       <!--文件达到 最大64MB时会被压缩和切割 -->
       <maxFileSize>${maxFileSize}</maxFileSize>
@@ -62,6 +63,7 @@
       <!-- 日志最大的历史 60天 -->
       <maxHistory>${maxHistory}</maxHistory>
       <totalSizeCap>${totalSizeCap}</totalSizeCap>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
 
       <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
       <!--文件达到 最大64MB时会被压缩和切割 -->
@@ -86,6 +88,7 @@
       <!-- 日志最大的历史 60天 -->
       <maxHistory>${maxHistory}</maxHistory>
       <totalSizeCap>${totalSizeCap}</totalSizeCap>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
 
       <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
       <!--文件达到 最大64MB时会被压缩和切割 -->
@@ -107,6 +110,7 @@
       <!-- 日志最大的历史 60天 -->
       <maxHistory>${maxHistory}</maxHistory>
       <totalSizeCap>${totalSizeCap}</totalSizeCap>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
       <!--            <timeBasedFileNamingAndTriggeringPolicy-->
       <!--                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
       <!--文件达到 最大128MB时会被压缩和切割 -->
