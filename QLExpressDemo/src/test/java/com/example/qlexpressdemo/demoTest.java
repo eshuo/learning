@@ -41,111 +41,34 @@ public class demoTest {
     }
 
 
-    public static final String json = "{\n"
-        + "  \"@class\": \"com.eetrust.common.security.Subject\",\n"
-        + "  \"isGlobalPolicyVerified\": false,\n"
-        + "  \"isAuthenticated\": true,\n"
-        + "  \"lastAuthErr\": \"\",\n"
-        + "  \"authedSet\": 0,\n"
-        + "  \"user\": {\n"
-        + "    \"@class\": \"com.eetrust.common.security.CurrentUser\",\n"
-        + "    \"id\": \"8055372310851198986\",\n"
-        + "    \"loginName\": \"tanggd\",\n"
-        + "    \"userName\": \"唐国栋\",\n"
-        + "    \"gender\": \"\",\n"
-        + "    \"email\": \"tanggd@eetrust.com\",\n"
-        + "    \"mobile\": \"13980979875\",\n"
-        + "    \"idCardNumber\": \"\",\n"
-        + "    \"secLevel\": \"4\",\n"
-        + "    \"showNumber\": \"992\",\n"
-        + "    \"status\": 1,\n"
-        + "    \"isDelete\": 0,\n"
-        + "    \"parentName\": \"公共服务部\",\n"
-        + "    \"parentId\": \"7802884102777847885\",\n"
-        + "    \"dataType\": 1,\n"
-        + "    \"authorize\": false,\n"
-        + "    \"createTime\": 1698384527210,\n"
-        + "    \"isGuest\": false\n"
-        + "  },\n"
-        + "  \"instanceCode\": \"SMSCodeAuth\",\n"
-        + "  \"loginState\": 1,\n"
-        + "  \"principal\": {\n"
-        + "    \"@class\": \"com.eetrust.common.security.Principal\",\n"
-        + "    \"userId\": \"8055372310851198986\",\n"
-        + "    \"loginName\": \"tanggd\",\n"
-        + "    \"resultCode\": \"1\",\n"
-        + "    \"resultMessage\": \"认证通过\",\n"
-        + "    \"enableCaptcha\": \"1\",\n"
-        + "    \"userInfo\": {\n"
-        + "      \"@class\": \"com.eetrust.common.security.CurrentUser\",\n"
-        + "      \"id\": \"8055372310851198986\",\n"
-        + "      \"loginName\": \"tanggd\",\n"
-        + "      \"userName\": \"唐国栋\",\n"
-        + "      \"gender\": \"\",\n"
-        + "      \"email\": \"tanggd@eetrust.com\",\n"
-        + "      \"mobile\": \"13980979875\",\n"
-        + "      \"idCardNumber\": \"\",\n"
-        + "      \"secLevel\": \"4\",\n"
-        + "      \"showNumber\": \"992\",\n"
-        + "      \"status\": 1,\n"
-        + "      \"isDelete\": 0,\n"
-        + "      \"parentName\": \"公共服务部\",\n"
-        + "      \"parentId\": \"7802884102777847885\",\n"
-        + "      \"dataType\": 1,\n"
-        + "      \"authorize\": false,\n"
-        + "      \"createTime\": 1698384527210,\n"
-        + "      \"isGuest\": false\n"
-        + "    },\n"
-        + "    \"user\": {\n"
-        + "      \"@class\": \"com.eetrust.common.security.CurrentUser\",\n"
-        + "      \"id\": \"8055372310851198986\",\n"
-        + "      \"loginName\": \"tanggd\",\n"
-        + "      \"userName\": \"唐国栋\",\n"
-        + "      \"gender\": \"\",\n"
-        + "      \"email\": \"tanggd@eetrust.com\",\n"
-        + "      \"mobile\": \"13980979875\",\n"
-        + "      \"idCardNumber\": \"\",\n"
-        + "      \"secLevel\": \"4\",\n"
-        + "      \"showNumber\": \"992\",\n"
-        + "      \"status\": 1,\n"
-        + "      \"isDelete\": 0,\n"
-        + "      \"parentName\": \"公共服务部\",\n"
-        + "      \"parentId\": \"7802884102777847885\",\n"
-        + "      \"dataType\": 1,\n"
-        + "      \"authorize\": false,\n"
-        + "      \"createTime\": 1698384527210,\n"
-        + "      \"isGuest\": false\n"
-        + "    },\n"
-        + "    \"clientContent\": {\n"
-        + "      \"@class\": \"com.eetrust.common.security.credential.AuthCredential$ClientContent\",\n"
-        + "      \"clientMac\": \"06:49:7B:31:47:32\",\n"
-        + "      \"clientUuid\": \"625D2EF765D9C903A71158BFF2D31925\",\n"
-        + "      \"clientIp\": \"192.168.110.133\",\n"
-        + "      \"clientTime\": \"1711361669532\",\n"
-        + "      \"clientType\": \"Name Microsoft Windows 10 家庭中文版\",\n"
-        + "      \"clientCpu\": \"Intel Corporation\",\n"
-        + "      \"userAgent\": \"\",\n"
-        + "      \"isAk\": \"0\"\n"
-        + "    },\n"
-        + "    \"enhanceCertification\": false,\n"
-        + "    \"temporaryAuth\": false\n"
-        + "  },\n"
-        + "  \"loginName\": \"tanggd\",\n"
-        + "  \"instanceName\": \"短信口令认证实例编码\",\n"
-        + "  \"authenticated\": true,\n"
-        + "  \"temporaryAuth\": false,\n"
-        + "  \"globalPolicyVerified\": false\n"
-        + "}";
 
     public static void main(String[] args) throws Exception {
+//
+//        List<String> selectUserDeptIdLeveCode = new ArrayList<>();
+//        selectUserDeptIdLeveCode.add("29G.35D.44D");
+//        selectUserDeptIdLeveCode.add("29G.35D.44D.87D");
+//        selectUserDeptIdLeveCode.add("29G.35D.44D.89D");
+//
+//        Set<String> deptLeveCodeList = new HashSet<>();
+//        if (null != selectUserDeptIdLeveCode) {
+//            selectUserDeptIdLeveCode.forEach(s -> {
+//                final String[] strings = s.replaceAll("D", "").replaceAll("G", "").replaceAll("\\.", ",").split(",");
+//                deptLeveCodeList.addAll(Arrays.asList(strings));
+//            });
+//        }
+//
+//        System.out.println(deptLeveCodeList.toString());
 
-        final String encodeToString = Base64Utils.encodeToString(json.getBytes(StandardCharsets.UTF_8));
+        System.out.println(UUID.fromString(UUID.nameUUIDFromBytes(UUID.randomUUID().toString().getBytes()).toString()).toString());
 
-        System.out.println(encodeToString);
-        System.out.println(json.length());
-        System.out.println(encodeToString.length());
 
-        System.err.println(new String(Base64Utils.decodeFromString(encodeToString), Charset.defaultCharset()));
+//        final String encodeToString = Base64Utils.encodeToString(json.getBytes(StandardCharsets.UTF_8));
+//
+//        System.out.println(encodeToString);
+//        System.out.println(json.length());
+//        System.out.println(encodeToString.length());
+//
+//        System.err.println(new String(Base64Utils.decodeFromString(encodeToString), Charset.defaultCharset()));
 
         //行为节点条件进行筛选 得到运行规则语句
 

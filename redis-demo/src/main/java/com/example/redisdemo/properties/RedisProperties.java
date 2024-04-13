@@ -13,7 +13,7 @@ public class RedisProperties {
 
     private int database = 0;
 
-    private String type = "redisCluster";
+    private String type = RedisConstant.LETTUCE;
 
     private boolean enabled = true;
 

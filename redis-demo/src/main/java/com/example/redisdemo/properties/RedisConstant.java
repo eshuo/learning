@@ -14,6 +14,13 @@ public class RedisConstant {
 
     public static final String CTG_CACHE = "ctgcache";
 
+    /**
+     * 单机
+     */
     public static final String LETTUCE = "lettuce";
+
+    /**
+     * 集群
+     */
     public static final String LETTUCE_CLUSTER = "lettuceCluster";
 }

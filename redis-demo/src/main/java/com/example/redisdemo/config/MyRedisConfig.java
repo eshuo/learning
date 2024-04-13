@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -44,10 +45,11 @@ import org.springframework.util.CollectionUtils;
 /**
  * @Description @Author wangshuo @Date 2023-02-17 14:42 @Version V1.0
  */
-@ConditionalOnProperty(prefix = "demo.redis", name = "enabled", havingValue = "true")
 @Configuration
 @EnableConfigurationProperties({RedisProperties.class})
+@ConditionalOnProperty(prefix = "demo.redis", name = "enabled", havingValue = "true")
 @EnableCaching
+@EnableAutoConfiguration
 public class MyRedisConfig {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
@@ -58,7 +60,7 @@ public class MyRedisConfig {
 
     private RedisProperties redisProperties;
 
-//    @Autowired
+//    @Resource
 //    private LettuceConnectionFactory lettuceConnectionFactory;
 
     public MyRedisConfig(RedisProperties redisProperties) {
@@ -70,26 +72,27 @@ public class MyRedisConfig {
      *
      * @return
      */
-    @ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE)
-    @ConditionalOnMissingBean
+//    @ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE)
+//    @ConditionalOnMissingBean
+//    @ConditionalOnBean(name = "lettuceConnectionFactory")
     @Bean("redisUtils")
     @Primary
-    public RedisUtils redisUtils() {
-        return new RedisUtils(createRedisTemplate(lettuceClusterConnectionFactoryBean()), redisProperties);
+    public RedisUtils redisUtils(LettuceConnectionFactory lettuceConnectionFactory) {
+        return new RedisUtils(createRedisTemplate(lettuceConnectionFactory), redisProperties);
     }
-
-    /**
-     * 集群
-     *
-     * @return
-     */
-    @ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE_CLUSTER)
-    @ConditionalOnMissingBean
-    @Bean("redisUtils")
-    @Primary
-    public RedisUtils redisUtilsCluster() {
-        return new RedisUtils(createRedisTemplate(lettuceClusterConnectionFactoryBean()), redisProperties);
-    }
+//
+//    /**
+//     * 集群
+//     *
+//     * @return
+//     */
+//    @ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE_CLUSTER)
+//    @ConditionalOnMissingBean
+//    @Bean("redisUtils")
+//    @Primary
+//    public RedisUtils redisUtilsCluster( LettuceConnectionFactory lettuceConnectionFactory) {
+//        return new RedisUtils(createRedisTemplate(lettuceConnectionFactory), redisProperties);
+//    }
 
     /*@ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE)
     @ConditionalOnMissingBean
@@ -113,7 +116,7 @@ public class MyRedisConfig {
     @ConditionalOnBean(name = "redisUtils")
     @ConditionalOnMissingBean
     @Bean
-    public CacheManager cacheManager() {
+    public CacheManager cacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig();
         // 设置缓存管理器管理的缓存的默认过期时间
         defaultCacheConfig =
@@ -131,7 +134,7 @@ public class MyRedisConfig {
                 .computePrefixWith(
                     name -> {
                         String newName = name.endsWith(":") ? name : name + ":";
-                        newName = newName.startsWith("IAM:") ? newName : "IAM:".concat(newName);
+                        newName = newName.startsWith("WYCI:") ? newName : "WYCI:".concat(newName);
                         return newName;
                     })
                 // 不缓存空值
@@ -142,16 +145,16 @@ public class MyRedisConfig {
             getStringRedisCacheConfigurationMap(redisProperties, defaultCacheConfig, cacheNames);
 
 //        bean注入
-        return RedisCacheManager.builder(lettuceClusterConnectionFactoryBean())
+        return RedisCacheManager.builder(lettuceConnectionFactory)
             .cacheDefaults(defaultCacheConfig)
             .initialCacheNames(cacheNames)
             .withInitialCacheConfigurations(configMap)
             .build();
     }
 
-    //    @Bean
-//    @Primary
-//    @ConditionalOnMissingBean
+    @Bean
+    @Primary
+    @ConditionalOnMissingBean
     public LettuceConnectionFactory lettuceClusterConnectionFactoryBean() {
         final LettuceConnectionFactory lettuceClusterConnectionFactory;
         if (RedisConstant.LETTUCE_CLUSTER.equals(redisProperties.getType())) {
