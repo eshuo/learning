@@ -61,10 +61,11 @@ public class MyRedisConfig {
     private RedisProperties redisProperties;
 
 //    @Resource
-//    private LettuceConnectionFactory lettuceConnectionFactory;
+    private final LettuceConnectionFactory lettuceConnectionFactory;
 
     public MyRedisConfig(RedisProperties redisProperties) {
         this.redisProperties = redisProperties;
+        lettuceConnectionFactory = lettuceClusterConnectionFactoryBean();
     }
 
     /**
@@ -77,7 +78,7 @@ public class MyRedisConfig {
 //    @ConditionalOnBean(name = "lettuceConnectionFactory")
     @Bean("redisUtils")
     @Primary
-    public RedisUtils redisUtils(LettuceConnectionFactory lettuceConnectionFactory) {
+    public RedisUtils redisUtils() {
         return new RedisUtils(createRedisTemplate(lettuceConnectionFactory), redisProperties);
     }
 //
@@ -116,7 +117,7 @@ public class MyRedisConfig {
     @ConditionalOnBean(name = "redisUtils")
     @ConditionalOnMissingBean
     @Bean
-    public CacheManager cacheManager(LettuceConnectionFactory lettuceConnectionFactory) {
+    public CacheManager cacheManager() {
         RedisCacheConfiguration defaultCacheConfig = RedisCacheConfiguration.defaultCacheConfig();
         // 设置缓存管理器管理的缓存的默认过期时间
         defaultCacheConfig =
@@ -152,9 +153,9 @@ public class MyRedisConfig {
             .build();
     }
 
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean
+//    @Bean
+//    @Primary
+//    @ConditionalOnMissingBean
     public LettuceConnectionFactory lettuceClusterConnectionFactoryBean() {
         final LettuceConnectionFactory lettuceClusterConnectionFactory;
         if (RedisConstant.LETTUCE_CLUSTER.equals(redisProperties.getType())) {
