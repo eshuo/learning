@@ -49,6 +49,7 @@ public class Demo3 {
         for (int i = 0; i < s.length(); i++) {
             String indexStr = String.valueOf(s.charAt(i));
             if (resStr.indexOf(indexStr) >= 0) {
+                //存在就移动一位下标  indesStr = a  resStr=> abc -> bc
                 resStr.delete(0, resStr.indexOf(indexStr) + 1);
             }
             resStr.append(indexStr);
