@@ -1,9 +1,11 @@
 package com.wyci.utils.http;
 
 
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 /**
@@ -17,6 +19,7 @@ public class HttpLogFormatterUtils {
 
     /**
      * 生成关于HTTP请求的信息摘要。
+     *
      * @param request 代表客户端请求的ServerHttpRequest对象。
      * @return 包含远程地址、HTTP方法、请求路径以及请求头信息的字符串。
      */
@@ -38,6 +41,24 @@ public class HttpLogFormatterUtils {
         return result.toString();
     }
 
+    //
+    public static String requestInfo(final HttpServletRequest request) {
+        final StringBuilder result = new StringBuilder();
+        result.append('\n');
+        // 添加远程地址信息
+        result.append("Remote: ");
+        result.append(request.getRemoteAddr());
+        result.append('\n');
+        // 添加HTTP方法和请求路径信息
+        result.append("HttpMethod: ");
+        result.append(request.getMethod());
+        result.append(" path: ");
+        result.append(request.getPathInfo());
+        result.append('\n');
+        // 添加请求头信息
+        writeHeaders(request.getHeaderNames(), result, request);
+        return result.toString();
+    }
 
     private static void writeHeaders(final Map<String, List<String>> headers, final StringBuilder output) {
         if (headers.isEmpty()) {
@@ -55,6 +76,28 @@ public class HttpLogFormatterUtils {
                 }
                 output.setLength(output.length() - 2);
             }
+            output.append('\n');
+        }
+    }
+
+//            Enumeration<String> enumeration = request.getHeaderNames();
+//        if(enumeration!=null){
+//            while (enumeration.hasMoreElements()) {
+//                String key = enumeration.nextElement();
+//                String value = request.getHeader(key);
+//                map.put(key, value);
+//            }
+//        }
+
+    private static void writeHeaders(final Enumeration<String> headers, final StringBuilder output, HttpServletRequest request) {
+        while (headers.hasMoreElements()) {
+            String key = headers.nextElement();
+            String value = request.getHeader(key);
+            output.append(key);
+            output.append(": ");
+            output.append(value);
+            output.append(", ");
+            output.setLength(output.length() - 2);
             output.append('\n');
         }
     }
