@@ -1,9 +1,9 @@
 demo:
   redis:
     enabled: true
-    ip: 127.0.0.1
+    ip: 10.3.44.15
     port: 6379
-    password:
+    password: eetrust
     connectionTimeout: 2000
     soTimeout: 2000
     defaultTime: 1800

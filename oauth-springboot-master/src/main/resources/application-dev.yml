@@ -1,0 +1,29 @@
+server:
+  port: 18068
+  servlet:
+    session:
+      cookie:
+        name: DEMO_APP
+
+spring:
+  thymeleaf:
+    cache: false
+  security:
+    oauth2:
+      client:
+        registration:
+          custom-client:
+            client-id: 2bhY6q1vX0P9Xj2KrREnNdwI1HC8hWAb  #应用id
+            client-secret: mMXzoxXgp3GCtMNkLuh6OcVFXfMl72CXOdU7vcv3O0oOcu1ZNAHZkCwIdaXyJJh3  #应用秘钥
+            client-name: test  #应用名称
+            scope: get_user_info
+            provider: custom-provider
+            redirect-uri-template: http://clientdemo.bccastle.com:18068/login/oauth2/code/ #配置本地host，将域名指向本地ip
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+        provider:
+          custom-provider: #配置认证服务器参数
+            token-uri: https://test.bccastle.com/api/v1/oauth2/token
+            authorization-uri: https://test.bccastle.com/api/v1/oauth2/authorize
+            user-info-uri: https://test.bccastle.com/api/v1/oauth2/userinfo
+            user-name-attribute: userName

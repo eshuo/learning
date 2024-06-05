@@ -2,6 +2,10 @@
 logging:
   #????????
   config: classpath:logback-spring.xml
+  level:
+    root: info
+    com.wyci: debug
+    org.zalando.logbook: TRACE
 
 # logback??
 logback:

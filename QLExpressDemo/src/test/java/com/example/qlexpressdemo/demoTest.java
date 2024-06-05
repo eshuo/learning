@@ -41,8 +41,39 @@ public class demoTest {
     }
 
 
+    /* 指数阶（递归实现） */
+    static int expRecur(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        System.err.println("==========》" + n);
+        return expRecur(n - 1) + expRecur(n - 1) + 1;
+    }
 
+    private static boolean isBase64(String str) {
+        String base64Pattern = "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$";
+        return Pattern.matches(base64Pattern, str);
+    }
     public static void main(String[] args) throws Exception {
+
+        System.err.println(isBase64("ba0d4ee3d586b0c8c71942b647aa67354a60133ccea68d3b33eda9a748a3b177d0ab0bb220e9b54cd10de14e9807b9b3"));
+
+
+        System.err.println(Base64Utils.decodeFromString("ba0d4ee3d586b0c8c71942b647aa67354a60133ccea68d3b33eda9a748a3b177d0ab0bb220e9b54cd10de14e9807b9b3"));
+
+//        long b2 = Long.parseLong("0");
+//        System.out.println(b2);
+
+//        System.out.println(expRecur(8));
+//        String s = "8222164926241234973G.0b5a3f4e298d46ce50e170e4a59c5d4dG";
+//        final String[] strings = s.split("\\.");
+//        for (String string : strings) {
+//            if (string.endsWith("D") || string.endsWith("G")) {
+//                string = string.substring(0, string.length() - 1);
+//            }
+//            System.err.println("==========》" + string);
+//        }
+
 //
 //        List<String> selectUserDeptIdLeveCode = new ArrayList<>();
 //        selectUserDeptIdLeveCode.add("29G.35D.44D");
@@ -60,7 +91,6 @@ public class demoTest {
 //        System.out.println(deptLeveCodeList.toString());
 
         System.out.println(UUID.fromString(UUID.nameUUIDFromBytes(UUID.randomUUID().toString().getBytes()).toString()).toString());
-
 
 //        final String encodeToString = Base64Utils.encodeToString(json.getBytes(StandardCharsets.UTF_8));
 //

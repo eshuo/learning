@@ -123,16 +123,16 @@
     </encoder>
   </appender>
 
-  <!-- 系统模块日志级别控制  -->
-  <logger name="com.wyci" level="info"/>
-  <!-- Spring日志级别控制  -->
-  <logger name="org.springframework" level="warn"/>
+<!--  &lt;!&ndash; 系统模块日志级别控制  &ndash;&gt;-->
+<!--  <logger name="com.wyci" level="info"/>-->
+<!--  &lt;!&ndash; Spring日志级别控制  &ndash;&gt;-->
+<!--  <logger name="org.springframework" level="warn"/>-->
 
-  <!--HTTP监控-->
-  <logger name="org.zalando.logbook" level="TRACE" additivity="false">
-    <appender-ref ref="console"/>
-    <appender-ref ref="file_debug"/>
-  </logger>
+<!--  &lt;!&ndash;HTTP监控&ndash;&gt;-->
+<!--  <logger name="org.zalando.logbook" level="TRACE" additivity="false">-->
+<!--    <appender-ref ref="console"/>-->
+<!--    <appender-ref ref="file_debug"/>-->
+<!--  </logger>-->
 
 
   <!--系统操作日志-->
@@ -143,18 +143,18 @@
     <appender-ref ref="file_info"/>
   </root>
 
-  <!--修改自行包名-->
-  <logger name="com.wyci" level="DEBUG" additivity="false">
-    <appender-ref ref="console"/>
-    <appender-ref ref="file_error"/>
-    <appender-ref ref="file_debug"/>
-    <appender-ref ref="file_info"/>
-  </logger>
+<!--  &lt;!&ndash;修改自行包名&ndash;&gt;-->
+<!--  <logger name="com.wyci" level="DEBUG" additivity="false">-->
+<!--    <appender-ref ref="console"/>-->
+<!--    <appender-ref ref="file_error"/>-->
+<!--    <appender-ref ref="file_debug"/>-->
+<!--    <appender-ref ref="file_info"/>-->
+<!--  </logger>-->
 
-  <!--    切面-->
-  <logger name="com.wyci.utils.aop.IncrementalLogAspect" level="debug">
-    <appender-ref ref="log-aspect"/>
-  </logger>
+<!--  &lt;!&ndash;    切面&ndash;&gt;-->
+<!--  <logger name="com.wyci.utils.aop.IncrementalLogAspect" level="debug">-->
+<!--    <appender-ref ref="log-aspect"/>-->
+<!--  </logger>-->
 
 
 </configuration>

@@ -30,7 +30,7 @@ public class IdGenerator implements Serializable {
     }
 
     /**
-     * 当前项目 时间（yyyyMMddHHmm）(12)
+     * 当前项目 时间（yyyyMMddHHmmss）(14)
      *
      * @param c 传入的对象
      * @return 当前流水id

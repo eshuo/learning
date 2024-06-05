@@ -1,0 +1,15 @@
+
+demo:
+  redis:
+    enabled: true
+    ip: 10.3.43.160
+    port: 6379
+    password: eetrust
+    connectionTimeout: 2000
+    soTimeout: 2000
+    defaultTime: 1800
+    type: lettuce
+
+
+
+
