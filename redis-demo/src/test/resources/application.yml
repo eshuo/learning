@@ -2,7 +2,7 @@
 demo:
   redis:
     enabled: true
-    ip: 10.3.43.160
+    ip: 10.3.44.15
     port: 6379
     password: eetrust
     connectionTimeout: 2000

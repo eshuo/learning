@@ -6,14 +6,6 @@ package com.example.redisdemo.properties;
 
 public class RedisConstant {
 
-
-    public static final String PROPERTIES_PREFIX = "demo.redis";
-
-    public static final String REDIS_CLUSTER = "redisCluster";
-    public static final String REDIS = "redis";
-
-    public static final String CTG_CACHE = "ctgcache";
-
     /**
      * 单机
      */

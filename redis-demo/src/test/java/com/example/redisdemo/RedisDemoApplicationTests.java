@@ -1,14 +1,22 @@
 package com.example.redisdemo;
 
 import com.example.redisdemo.utils.RedisUtils;
-import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.Assert;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
 class RedisDemoApplicationTests {
 
@@ -18,6 +26,32 @@ class RedisDemoApplicationTests {
 
     @Autowired
     private RedisUtils redisUtils;
+
+
+    @Test
+    public void test() {
+        Random random = new Random();
+        for (int i = 0; i < 50; i++) {
+            redisUtils.hashIncrementByLong("zhangsan", "app" + i, random.nextInt(i + 1));
+        }
+
+        Map<Object, Object> objectObjectMap = redisUtils.hashGetAll("zhangsan");
+
+        objectObjectMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, v -> Integer.valueOf(v.getValue().toString()))).entrySet().stream()
+            .sorted(Entry.comparingByValue(Comparator.reverseOrder())).forEach(k -> System.out.println(k.getKey() + " " + k.getValue()));
+        for (int i = 0; i < 50; i++) {
+            redisUtils.hashIncrementByLong("zhangsan", "app" + i, random.nextInt(i + 1));
+        }
+
+        System.err.println("--------------------------------------------------");
+
+        objectObjectMap = redisUtils.hashGetAll("zhangsan");
+
+        objectObjectMap.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, v -> Integer.valueOf(v.getValue().toString()))).entrySet().stream()
+            .sorted(Entry.comparingByValue(Comparator.reverseOrder())).forEach(k -> System.out.println(k.getKey() + " " + k.getValue()));
+
+
+    }
 
 //  @Autowired
 //  private RedisUtils redisUtils;
@@ -74,11 +108,10 @@ class RedisDemoApplicationTests {
         //删除单点accessToken
         final String redisKey = "AUTH_SSO_TOKEN_KEY:".concat("user:Android:fb54b42edafa4f308270c94d8f37dec4");
 
+        redisUtils.listAddInEnd(redisKey, "demo1");
+        redisUtils.listAddInEnd(redisKey, "demo2");
 
-        redisUtils.listAddInEnd(redisKey,"demo1");
-        redisUtils.listAddInEnd(redisKey,"demo2");
-
-        redisUtils.expireKey(redisKey,1000);
+        redisUtils.expireKey(redisKey, 1000);
 
         List<Object> ssoAccessTokenList = redisUtils.listGetByRange(redisKey, 0, -1);
         if (null != ssoAccessTokenList) {
