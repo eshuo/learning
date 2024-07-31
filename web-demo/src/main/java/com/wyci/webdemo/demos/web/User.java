@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.eetrust.webdemo.demos.web;
+package com.wyci.webdemo.demos.web;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>

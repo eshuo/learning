@@ -1,18 +1,10 @@
-package com.eetrust.webdemo.demos.init;
+package com.wyci.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.boot.web.servlet.context.ServletWebServerInitializedEvent;
@@ -34,7 +26,9 @@ public class InitConfig implements ApplicationListener<ServletWebServerInitializ
     @Override
     public void onApplicationEvent(ServletWebServerInitializedEvent event) {
         //获取运行端口
-        System.err.println("InitConfig init, port: " + event.getWebServer().getPort());
+        if (null != event && null != event.getWebServer()) {
+            System.err.println("InitConfig init, port: " + event.getWebServer().getPort());
+        }
         //获取运行IP
         try {
             final InetAddress localHost = InetAddress.getLocalHost();
@@ -47,11 +41,7 @@ public class InitConfig implements ApplicationListener<ServletWebServerInitializ
         // 获取 git.properties
         final Properties gitProperties = getGitProperties();
 
-        if (null != gitProperties) {
-            gitProperties.forEach((k, v) -> System.err.println(k + " : " + v));
-        } else {
-            System.err.println("git.properties is null");
-        }
+        gitProperties.forEach((k, v) -> System.err.println(k + " : " + v));
 
 
     }

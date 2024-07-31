@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.eetrust.webdemo.demos.web;
+package com.wyci.webdemo.demos.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
