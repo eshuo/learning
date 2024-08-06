@@ -1,0 +1,39 @@
+
+server:
+  port: 8880
+spring:
+  application:
+    name: rabbitmq-producer
+  rabbitmq:
+    username: guest
+    password: guest
+    host: 127.0.0.1
+    port: 5672
+
+logging:
+  #????????
+  config: classpath:logback-spring.xml
+  level:
+    root: info
+    com.wyci: debug
+    org.zalando.logbook: TRACE
+
+# logbook??
+logbook:
+  exclude:
+  #    - /auth/api/v1/function/qr_code
+  #    - /auth/api/v1/function/query_qr
+  # include:
+  #   - /auth/**
+  format:
+    style: http
+  write:
+    chunk-size: 10000
+    level: info
+    max-body-size: 10000
+  obfuscate:
+    headers:
+    parameters:
+      - password
+#    write:
+#      chunk-size: 1000

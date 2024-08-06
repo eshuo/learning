@@ -4,7 +4,9 @@ import com.wyci.utils.uuid.IdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.apiguardian.api.API;
 import org.slf4j.MDC;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.zalando.logbook.CorrelationId;
 
@@ -17,7 +19,11 @@ import static org.apiguardian.api.API.Status.INTERNAL;
  * @Version V1.0
  */
 @Configuration
+@ComponentScan(
+    basePackages = {"com.wyci.*"}
+)
 public class LogbookConfiguration {
+
     public static final String LOG_ID = "LOG-THREAD-ID";
 
     @API(status = INTERNAL)

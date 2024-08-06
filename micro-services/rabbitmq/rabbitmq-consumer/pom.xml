@@ -10,17 +10,13 @@
     </parent>
 
     <artifactId>rabbitmq-consumer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>rabbitmq-consumer</name>
     <description>rabbitmq-consumer</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -35,10 +31,17 @@
 
 
         <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>rabbitmq-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
 
     <build>
