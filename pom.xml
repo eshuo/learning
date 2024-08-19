@@ -29,6 +29,7 @@
     <module>WebSocketDemo</module>
     <module>wyci-utils</module>
     <module>LeetCode</module>
+    <module>run-demo</module>
   </modules>
 
   <properties>
