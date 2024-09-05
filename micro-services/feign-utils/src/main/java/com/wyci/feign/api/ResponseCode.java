@@ -2,7 +2,7 @@ package com.wyci.feign.api;
 
 /**
  * 通用返回code值
- * @author eetrust
+ * @author
  */
 public enum ResponseCode {
     //系统通用

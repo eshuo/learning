@@ -11,7 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 /**
  * 客户端工具类
  *
- * @author EETrust
+ * @author
  */
 public class ServletUtils {
 

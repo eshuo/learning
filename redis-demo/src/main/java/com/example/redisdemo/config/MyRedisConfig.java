@@ -81,33 +81,7 @@ public class MyRedisConfig {
     public RedisUtils redisUtils() {
         return new RedisUtils(createRedisTemplate(lettuceConnectionFactory), redisProperties);
     }
-//
-//    /**
-//     * 集群
-//     *
-//     * @return
-//     */
-//    @ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE_CLUSTER)
-//    @ConditionalOnMissingBean
-//    @Bean("redisUtils")
-//    @Primary
-//    public RedisUtils redisUtilsCluster( LettuceConnectionFactory lettuceConnectionFactory) {
-//        return new RedisUtils(createRedisTemplate(lettuceConnectionFactory), redisProperties);
-//    }
 
-    /*@ConditionalOnProperty(prefix = RedisConstant.PROPERTIES_PREFIX, name = "type", havingValue = RedisConstant.LETTUCE)
-    @ConditionalOnMissingBean
-    @Bean
-    @Primary
-    public EetrustRedisConnectionFactory eetrustRedisConnectionFactory(RedisUtils redisUtils) {
-        return new LettuceEetrustRedisConnectionFactory(redisProperties, redisUtils);
-    }*/
-//    @PreDestroy
-//    public void destroy() {
-//        if(null != lettuceClusterConnectionFactoryBean()){
-//            lettuceClusterConnectionFactoryBean().destroy();
-//        }
-//    }
 
     /**
      * 缓存管理器

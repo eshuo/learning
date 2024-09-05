@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 /**
  * @author wangyu
  * @title: IpregionUtil
- * @projectName eetrust-zt-res
+ * @projectName
  * @description: TODO
  * @date 2022/12/2215:57
  */

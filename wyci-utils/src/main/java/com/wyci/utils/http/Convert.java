@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * 类型转换器
  *
- * @author EETrust
+ * @author
  */
 public class Convert {
     /**

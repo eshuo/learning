@@ -27,7 +27,7 @@ public class WebDemo {
         //获取jar版本
         Properties properties = new Properties();
         try {
-            properties.load(WebDemo.class.getResourceAsStream("/META-INF/maven/com.eetrust/web-demo/pom.properties"));
+            properties.load(WebDemo.class.getResourceAsStream("/META-INF/maven/com.wyci/web-demo/pom.properties"));
         } catch (Exception e) {
         }
         String version = properties.getProperty("version");
