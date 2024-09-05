@@ -30,6 +30,7 @@
     <module>wyci-utils</module>
     <module>LeetCode</module>
     <module>run-demo</module>
+    <module>web-demo</module>
   </modules>
 
   <properties>
