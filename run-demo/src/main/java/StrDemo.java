@@ -25,7 +25,18 @@ public class StrDemo {
         }
 
 
+        String match = "/auth/api/v1/function/sso.*";
+
+
+        System.out.println("/auth/api/v1/function/sso".matches(match));
+
+
+
+
     }
+
+
+
 
 
 }

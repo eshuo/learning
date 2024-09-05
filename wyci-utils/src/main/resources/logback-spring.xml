@@ -45,7 +45,7 @@
       <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
     </rollingPolicy>
     <encoder>
-      <pattern>${com.wyci.log.pattern}</pattern>
+      <pattern>${log.pattern}</pattern>
       <charset>UTF-8</charset>
     </encoder>
   </appender>
@@ -71,7 +71,7 @@
       <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
     </rollingPolicy>
     <encoder>
-      <pattern>${com.wyci.log.pattern}</pattern>
+      <pattern>${log.pattern}</pattern>
       <charset>UTF-8</charset>
     </encoder>
   </appender>
@@ -96,7 +96,7 @@
       <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
     </rollingPolicy>
     <encoder>
-      <pattern>${com.wyci.log.pattern}</pattern>
+      <pattern>${log.pattern}</pattern>
       <charset>UTF-8</charset>
     </encoder>
   </appender>
