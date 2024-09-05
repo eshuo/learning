@@ -44,4 +44,4 @@ log/
 *.pid
 *.orig
 temp/
-*/git.properties
+/**/resources/git.properties
