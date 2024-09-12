@@ -31,6 +31,7 @@
     <module>LeetCode</module>
     <module>run-demo</module>
     <module>web-demo</module>
+    <module>jpa-utils</module>
   </modules>
 
   <properties>
