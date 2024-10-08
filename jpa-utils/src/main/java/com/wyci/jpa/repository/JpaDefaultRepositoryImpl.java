@@ -1,7 +1,10 @@
 package com.wyci.jpa.repository;
 
+import com.wyci.jpa.condition.JpaConditionWrapper;
 import java.io.Serializable;
 import javax.persistence.EntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
@@ -28,13 +31,14 @@ public class JpaDefaultRepositoryImpl<T, ID extends Serializable> extends Simple
     }
 
     /**
-     * 根据实例条件删除
+     * 根据实例条件查询
      *
      * @param t
+     * @param pageable
+     * @return
      */
     @Override
-    public void removeAll(T t) {
-
-        //后续完善
+    public Page<T> findAll(JpaConditionWrapper<T> t, Pageable pageable) {
+        return findAll(t.toSpecification(), pageable);
     }
 }
