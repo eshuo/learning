@@ -32,6 +32,7 @@
     <module>run-demo</module>
     <module>web-demo</module>
     <module>jpa-utils</module>
+    <module>io-demo</module>
   </modules>
 
   <properties>

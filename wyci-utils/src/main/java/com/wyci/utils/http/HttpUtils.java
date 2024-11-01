@@ -2,6 +2,7 @@ package com.wyci.utils.http;
 
 import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
@@ -124,4 +125,16 @@ public class HttpUtils {
         }
         return StringUtils.EMPTY;
     }
+
+
+    public static void main(String[] args) {
+
+
+
+
+        System.out.print((2-1)&3);
+
+    }
+
+
 }

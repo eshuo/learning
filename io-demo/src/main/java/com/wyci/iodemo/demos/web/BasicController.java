@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package com.wyci.webdemo.demos.web;
+package com.wyci.iodemo.demos.web;
 
-import java.io.IOException;
-import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.view.RedirectView;
 
 /**
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
@@ -36,21 +28,11 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 public class BasicController {
 
-
-    @Value("${dmeo.xxx.list:}")
-    private List<String> demos;
-
     // http://127.0.0.1:8080/hello?name=lisi
     @RequestMapping("/hello")
     @ResponseBody
     public String hello(@RequestParam(name = "name", defaultValue = "unknown user") String name) {
-
-        if(null == demos){
-            return "hello";
-        }
-
-        return String.join(",", demos);
-//        return "Hello " + name;
+        return "Hello " + name;
     }
 
     // http://127.0.0.1:8080/user
@@ -82,18 +64,4 @@ public class BasicController {
         user.setName("zhangsan");
         user.setAge(18);
     }
-
-    @GetMapping("/demo")
-    public RedirectView demo() {
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("/hello");
-        return redirectView;
-    }
-
-    @GetMapping("/demo1")
-    public void demo1(HttpServletRequest httpRequest, HttpServletResponse response) throws ServletException, IOException {
-        httpRequest.getRequestDispatcher("/html").forward(httpRequest, response);
-    }
-
-
 }

@@ -9,3 +9,11 @@ spring:
 # 此处会被common覆盖
 server:
   port: 8088
+
+
+
+dmeo:
+  xxx:
+    list: zhangsan,lisi
+#      - zhangsan
+#      - lisi
