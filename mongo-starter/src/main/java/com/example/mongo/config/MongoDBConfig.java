@@ -45,10 +45,10 @@ public class MongoDBConfig {
     }
 
     @Bean
-    public MappingMongoConverter mappingMongoConverter() {
+    public MappingMongoConverter mappingMongoConverter(MongoDatabaseFactory mongoDbFactory) {
         mongoMappingContext.setAutoIndexCreation(true);
         mongoMappingContext.afterPropertiesSet();
-        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory());
+        DbRefResolver dbRefResolver = new DefaultDbRefResolver(mongoDbFactory);
         MappingMongoConverter converter = new MappingMongoConverter(dbRefResolver, mongoMappingContext);
         // 此处是去除插入数据库的 _class 字段
         converter.setTypeMapper(new DefaultMongoTypeMapper(null));
