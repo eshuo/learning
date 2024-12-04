@@ -170,16 +170,16 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
 
     @Override
     public Page<T> findPage(Page<T> page, Query query) {
-        logQuery(query);
         final long count = count(query);
+        query.with(page.toPageRequest());
         return new Page<>(findAll(query), page, count);
 
     }
 
     @Override
     public Page<T> findPage(Page<T> page, T t) {
-        final Query query = createQuery(t, page);
-        return findPage(page, query);
+        return findPage(page, createQuery(t));
+
     }
 
     @Override
