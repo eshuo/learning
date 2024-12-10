@@ -5,6 +5,9 @@
 
 package com.demo.etcommon;
 
+import lombok.Data;
+
+@Data
 public class ResultLong {
     public int result;
     public long data;

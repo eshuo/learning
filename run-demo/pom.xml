@@ -16,4 +16,11 @@
     <maven.compiler.target>8</maven.compiler.target>
   </properties>
 
+
+  <dependencies>
+    <dependency>
+      <groupId>com.example</groupId>
+      <artifactId>wyci-utils</artifactId>
+    </dependency>
+  </dependencies>
 </project>
