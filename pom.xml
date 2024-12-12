@@ -33,6 +33,7 @@
     <module>web-demo</module>
     <module>jpa-utils</module>
     <module>io-demo</module>
+    <module>wx-demo</module>
   </modules>
 
   <properties>
