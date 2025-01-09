@@ -1,18 +1,20 @@
 package com.wyci.utils.uuid;
 
-import com.wyci.utils.date.DateStyle;
 import com.wyci.utils.date.DateUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Description ID简单生成器
@@ -25,8 +27,40 @@ public class IdGenerator implements Serializable {
     private static final Map<String, IDEntity> CLASS_NAME_MAP = new ConcurrentHashMap<>();
 
 
+    /**
+     * 根据ID类名生成
+     * @return
+     */
     public static String nextId() {
         return nextId(IdGenerator.class);
+    }
+
+    /**
+     * 根据类名生成
+     * @param c
+     * @return
+     */
+    public static synchronized String nextId(Class c) {
+        return nextId(c, null, null);
+    }
+
+    /**
+     * 指定前缀
+     * @param prefix
+     * @return
+     */
+    public static synchronized String nextId(String prefix) {
+        return nextId(IdGenerator.class, prefix, null);
+    }
+
+    /**
+     * 指定前缀与减去时间
+     * @param prefix 前缀
+     * @param subDate 时间 yyyy yyyyMM yyyyMMdd yyyyMMddHH yyyyMMddHHmm  yyyyMMddHHmmss
+     * @return
+     */
+    public static synchronized String nextId(String prefix, String subDate) {
+        return nextId(IdGenerator.class, prefix, subDate);
     }
 
     /**
@@ -35,15 +69,17 @@ public class IdGenerator implements Serializable {
      * @param c 传入的对象
      * @return 当前流水id
      */
-    public static synchronized String nextId(Class c) {
-
-        String simpleName = c.getSimpleName().toUpperCase();
-        if (simpleName.length() > 14) {
-            simpleName = simpleName.replaceAll("\\.", "").substring(0, 14);
+    public static synchronized String nextId(Class c, String prefix, String subDate) {
+        String simpleName = prefix;
+        if (StringUtils.isBlank(prefix)) {
+            simpleName = c.getSimpleName().toUpperCase();
+            if (simpleName.length() > 14) {
+                simpleName = simpleName.replaceAll("\\.", "").substring(0, 14);
+            }
         }
 
-        final String dateStr = DateUtil.dateToString(new Date(), DateStyle.YYYYMMDDHHMMSS);
-
+//        Thread.currentThread().getId()
+        String dateStr = getDateStr(subDate);
         int andIncrement = 1;
         if (CLASS_NAME_MAP.containsKey(simpleName)) {
             final IDEntity idEntity = CLASS_NAME_MAP.get(simpleName);
@@ -61,8 +97,21 @@ public class IdGenerator implements Serializable {
                 CLASS_NAME_MAP.put(simpleName, new IDEntity(dateStr, new AtomicInteger(andIncrement)));
             }
         }
-        simpleName = simpleName.concat(dateStr).concat(String.format("%06d", andIncrement));
+        simpleName = simpleName.concat(dateStr).concat(String.format("%04d", andIncrement));
         return simpleName;
+    }
+
+    private static String getDateStr(String subDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss", Locale.CHINA);
+        String dateStr = formatter.format(LocalDateTime.now());
+        if (StringUtils.isNotBlank(subDate) && StringUtils.isNumericSpace(subDate)) {
+            if (subDate.length() < 14) {
+                subDate = String.format("%-14d", Long.parseLong(subDate)).replace(" ", "0");
+            }
+            dateStr = String.format("%014d", Long.parseLong(dateStr) - Long.parseLong(subDate));
+        }
+        dateStr += Math.abs(Arrays.hashCode(Thread.currentThread().getStackTrace()) % 9);
+        return dateStr;
     }
 
 
@@ -86,28 +135,77 @@ public class IdGenerator implements Serializable {
 
     public static void main(String[] args) {
 
+        //减去时间
+        System.out.println(IdGenerator.nextId("E", "2025"));
+        //指定前缀
+        System.out.println(IdGenerator.nextId("E"));
+
+        System.out.println(IdGenerator.nextId(IdGenerator.class));
 
         System.out.println(IdGenerator.nextId());
+        //thread
+        testNextIdMethod();
 
-        final int curTime = DateUtil.curTime();
-
-        List<String> list = new ArrayList<>();
-
-        for (; ; ) {
-            final String nextId = IdGenerator.nextId();
-            if (list.contains(nextId)) {
-                System.err.println(nextId);
-            } else {
-                list.add(nextId);
-            }
-            if (DateUtil.curTime() - curTime >= 130) {
-                break;
-            }
-        }
-
-        System.out.println("size => " + list.size());
-
+//        final int curTime = DateUtil.curTime();
+//
+//        List<String> list = new ArrayList<>();
+//
+//        for (; ; ) {
+//            final String nextId = IdGenerator.nextId();
+//            if (list.contains(nextId)) {
+//                System.err.println(nextId);
+//            } else {
+//                list.add(nextId);
+//            }
+//            if (DateUtil.curTime() - curTime >= 130) {
+//                break;
+//            }
+//        }
+//
+//        System.out.println("size => " + list.size());
 
     }
+
+
+    static void testNextIdMethod() {
+//        Thread thread1 = new Thread(new IdTestThread());
+//        Thread thread2 = new Thread(new IdTestThread());
+//        thread1.start();
+//        thread2.start();
+
+        for (int i = 0; i < 10; i++) {
+            Thread thread1 = new Thread(new IdTestThread());
+            thread1.start();
+        }
+
+    }
+
+    static class IdTestThread implements Runnable {
+
+        private static final List<String> strList = new ArrayList<>();
+
+        @Override
+        public void run() {
+            int time = DateUtil.curTime();
+            for (; ; ) {
+                final String nextId = IdGenerator.nextId(("E"));
+                synchronized (strList) {
+//                    System.out.println(nextId + ":" + strList.contains(nextId));
+                    if (strList.contains(nextId)) {
+                        System.err.println(nextId + ":" + strList.contains(nextId));
+                    } else {
+                        strList.add(nextId);
+                    }
+                }
+
+                if (DateUtil.curTime() - time >= 130) {
+                    break;
+                }
+
+            }
+            System.out.println("size => " + strList.size());
+        }
+    }
+
 
 }
