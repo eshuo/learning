@@ -29,6 +29,7 @@ public class IdGenerator implements Serializable {
 
     /**
      * 根据ID类名生成
+     *
      * @return
      */
     public static String nextId() {
@@ -37,6 +38,7 @@ public class IdGenerator implements Serializable {
 
     /**
      * 根据类名生成
+     *
      * @param c
      * @return
      */
@@ -46,6 +48,7 @@ public class IdGenerator implements Serializable {
 
     /**
      * 指定前缀
+     *
      * @param prefix
      * @return
      */
@@ -55,7 +58,8 @@ public class IdGenerator implements Serializable {
 
     /**
      * 指定前缀与减去时间
-     * @param prefix 前缀
+     *
+     * @param prefix  前缀
      * @param subDate 时间 yyyy yyyyMM yyyyMMdd yyyyMMddHH yyyyMMddHHmm  yyyyMMddHHmmss
      * @return
      */
@@ -143,8 +147,12 @@ public class IdGenerator implements Serializable {
         System.out.println(IdGenerator.nextId(IdGenerator.class));
 
         System.out.println(IdGenerator.nextId());
+        long startTime = System.currentTimeMillis();
         //thread
-        testNextIdMethod();
+//        testNextIdMethod();
+
+        System.out.println("zhangss".endsWith("ss"));
+
 
 //        final int curTime = DateUtil.curTime();
 //
@@ -173,7 +181,7 @@ public class IdGenerator implements Serializable {
 //        thread1.start();
 //        thread2.start();
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             Thread thread1 = new Thread(new IdTestThread());
             thread1.start();
         }
@@ -186,6 +194,7 @@ public class IdGenerator implements Serializable {
 
         @Override
         public void run() {
+            long startTime = System.currentTimeMillis();
             int time = DateUtil.curTime();
             for (; ; ) {
                 final String nextId = IdGenerator.nextId(("E"));
@@ -198,11 +207,28 @@ public class IdGenerator implements Serializable {
                     }
                 }
 
-                if (DateUtil.curTime() - time >= 130) {
+//                if (DateUtil.curTime() - time >= 1) {
+//                    break;
+//                }
+                if (System.currentTimeMillis() - startTime >= 1000) {
                     break;
                 }
 
             }
+
+//            for (int i = 0; i < 10000; i++) {
+//                final String nextId = IdGenerator.nextId(("E"));
+//                synchronized (strList) {
+////                    System.out.println(nextId + ":" + strList.contains(nextId));
+//                    if (strList.contains(nextId)) {
+//                        System.err.println(nextId + ":" + strList.contains(nextId));
+//                    } else {
+//                        strList.add(nextId);
+//                    }
+//                }
+//            }
+            //thread
+            System.out.println(Thread.currentThread().getName() + "==========Time:" + (System.currentTimeMillis() - startTime));
             System.out.println("size => " + strList.size());
         }
     }
