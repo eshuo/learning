@@ -3,6 +3,7 @@ package com.eshuo.dao;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import lombok.Data;
 
@@ -15,17 +16,40 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "report_comment")
-public class reportComment {
-
-//    评论  文章ID   评论人    评论内容   评论时间
+public class ReportComment {
 
     @Id
     @Column(nullable = false, length = 32)
     private String id;
 
 
+    /**
+     * 评论文章ID
+     */
+    private String reportId;
+
+    /**
+     * 评论人
+     */
+    private String userName;
+
+    /**
+     * 评论内容
+     */
+    @Lob
+    private String body;
 
 
+    /**
+     * 状态
+     */
+    private String status;
+
+
+    /**
+     * 评论时间
+     */
+    private Long createTime;
 
 
 }

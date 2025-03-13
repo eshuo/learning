@@ -1,13 +1,15 @@
-package com.eshuo.dto.resp;
+package com.eshuo.dto.response;
 
 import java.io.Serializable;
 import java.util.Map;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * Dify阻塞式调用响应.
  */
 @Data
+@ToString
 public class BlockResponse implements Serializable {
 
     /**
@@ -54,5 +56,6 @@ public class BlockResponse implements Serializable {
      * 创建时间戳.
      */
     private Long createdAt;
+
 
 }

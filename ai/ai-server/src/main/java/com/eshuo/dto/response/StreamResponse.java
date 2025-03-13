@@ -1,4 +1,4 @@
-package com.eshuo.dto.resp;
+package com.eshuo.dto.response;
 
 import java.io.Serializable;
 import lombok.Data;
