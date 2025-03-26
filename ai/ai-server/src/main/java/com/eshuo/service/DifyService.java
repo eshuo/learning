@@ -1,14 +1,13 @@
 package com.eshuo.service;
 
 import com.alibaba.fastjson2.JSON;
-import com.eshuo.dto.req.DifyRequestBody;
-import com.eshuo.dto.resp.BlockResponse;
-import com.eshuo.dto.resp.StreamResponse;
+import com.eshuo.dto.request.DifyRequestBody;
+import com.eshuo.dto.response.BlockResponse;
+import com.eshuo.dto.response.StreamResponse;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,8 +28,6 @@ import reactor.core.publisher.Flux;
 @RequiredArgsConstructor
 public class DifyService {
 
-    @Value("${dify.url}")
-    private String url;
 
     @Resource
     private RestTemplate restTemplate;
@@ -46,15 +43,14 @@ public class DifyService {
      * @param apiKey apiKey 通过 apiKey 获取权限并区分不同的 dify 应用
      * @return Flux 响应流
      */
-    public Flux<StreamResponse> streamingMessage(String query, Long userId, String apiKey) {
+    public Flux<StreamResponse> streamingMessage(String query, String userId, String apiKey,String url,String conversationId) {
         //1.设置请求体
         DifyRequestBody body = new DifyRequestBody();
         body.setInputs(new HashMap<>());
         body.setQuery(query);
         body.setResponseMode("streaming");
-        //TODO 2025/2/26 WangShuo: 调整用户
-        body.setConversationId("");
-        body.setUser(userId.toString());
+        body.setConversationId(conversationId);
+        body.setUser(userId);
         //2.使用webclient发送post请求
         return webClient.build().post()
             .uri(url)
@@ -76,15 +72,14 @@ public class DifyService {
      * @param apiKey apiKey 通过 apiKey 获取权限并区分不同的 dify 应用
      * @return BlockResponse
      */
-    public BlockResponse blockingMessage(String query, Long userId, String apiKey) {
+    public BlockResponse blockingMessage(String query, String userId, String apiKey,String url,String conversationId) {
         //1.设置请求体
         DifyRequestBody body = new DifyRequestBody();
         body.setInputs(new HashMap<>());
         body.setQuery(query);
         body.setResponseMode("blocking");
-        //TODO 2025/2/26 WangShuo: 调整用户
-        body.setConversationId("");
-        body.setUser(userId.toString());
+        body.setConversationId(conversationId);
+        body.setUser(userId);
         //2.设置请求头
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

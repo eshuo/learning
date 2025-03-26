@@ -1,4 +1,4 @@
-package com.eshuo.dto.req;
+package com.eshuo.dto.request;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import java.io.Serializable;

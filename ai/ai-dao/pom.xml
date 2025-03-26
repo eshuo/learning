@@ -26,6 +26,18 @@
       <artifactId>lombok</artifactId>
     </dependency>
 
+    <!-- MySQL 驱动 -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.github.xiaoymin</groupId>
+      <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
+      <version>4.4.0</version>
+    </dependency>
 
   </dependencies>
 
