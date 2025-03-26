@@ -37,20 +37,28 @@ public class Test {
 //        System.err.println( Crypt.DigitalEnc("18810585582", "500C6779CE15F06599B4B228D08AA576F4DA6362738E6835E48640FC037AEB71"));
 //
 
-
-        ResultLong  resultLong = new ResultLong(1);
-        resultLong.setData(123);
-        resultLong.setResult(2);
-
-        Map<?, ?> map = JsonUtil.pojoToMap(resultLong);
+        String param = "reqMessage=8pzM3u%2BunEBkNSwWmbLi9kmBy8JFOQG3Y446RuaKncAxf46QFmUiWyBurXaSj%2B07MRqaSR0LQJRmScDe3D80O8PNYd3Fw8jOWOmPEFnKE0M4y%2FWwZcD"
+            + "%2BAJIS7Zck8RhFguVXl8EdPEQbKQZM3S7iq6yFWcvCXFp1T9px4sUFf6LQVsK14T1GttaU4lRsEgGv6SxZFJ7lRtKjIcElx%2B2qrnQH0uW66iCTWrDlmgM2cEYn70TtFtlopQ9Mm"
+             +"S9c8D2Uw1%2FWEOVwokmk1cRSM2axxdZOZPsbzXiDzGriuG2QhxBaCgFFhoKjPHfDfYka9IOOtSTpv6xIvORwqJdsE0KWnNaK1NVfyGVT";
 
 
-        map.forEach((k,v)->{
-            System.err.println("k="+k);
-            System.err.println("v="+v);
-        });
+            for (String s : param.split("&")) {
+                if (s.contains("reqMessage=")) {
+                  System.err.println(s.split("reqMessage=")[1]);
+                }
+            }
 
-
+//        ResultLong  resultLong = new ResultLong(1);
+//        resultLong.setData(123);
+//        resultLong.setResult(2);
+//
+//        Map<?, ?> map = JsonUtil.pojoToMap(resultLong);
+//
+//
+//        map.forEach((k,v)->{
+//            System.err.println("k="+k);
+//            System.err.println("v="+v);
+//        });
 
     }
 }
