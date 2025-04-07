@@ -1,0 +1,31 @@
+spring:
+  thymeleaf:
+    cache: true  # 启用模板缓存（默认值：true）
+    check-template: true  # 检查模板是否存在，然后再执行
+    check-template-location: true  # 检查模板位置是否正确（默认值：true）
+    content-type: text/html  # Content-Type的值（默认值：text/html）
+    enabled: true  # 启用MVC Thymeleaf 视图解析（默认值：true）
+    encoding: UTF-8  # 模板编码
+    excluded-view-names: []  # 需要排除在解析之外的视图名称列表
+    mode: HTML5  # 模板模式，支持 HTML5（默认值：HTML5）
+    prefix: classpath:/templates/  # 模板路径前缀（默认值：classpath:/templates/）
+    suffix: .html  # 模板文件的后缀（默认值：.html）
+
+server:
+  #    接入修改
+  port: 18081  # 服务端口
+
+# 请求地址 ip+端口/sso
+# 回掉地址   ip+端口/sso
+
+demo:
+  oauth:
+#    接入修改 IAM接入的appCode
+    appCode: demo
+    #    接入修改 IAM颁发的secret
+    secret: RpVIWPmD5T
+    #    接入修改 IAM地址
+    url: http://127.0.0.1:8091
+    redirect: ${demo.oauth.url}/sso/api/v1.0/oauth/authorize?response_type=code&service=&state=pipe&client_id=${demo.oauth.appCode}&redirect_uri=ip:${server.port}/accessToken
+    accessToken: ${demo.oauth.url}/sso/api/v1.0/oauth/accessToken
+    userInfo: ${demo.oauth.url}/sso/api/v1.0/ssoToken/getUserInfo

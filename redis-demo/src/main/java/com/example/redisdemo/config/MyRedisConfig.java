@@ -10,6 +10,9 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import io.lettuce.core.ClientOptions;
+import io.lettuce.core.cluster.ClusterClientOptions;
+import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.HashMap;
@@ -37,6 +40,7 @@ import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration.LettucePoolingClientConfigurationBuilder;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -191,14 +195,16 @@ public class MyRedisConfig {
 
     }
 
+
     private LettuceConnectionFactory getLettuceConnectionFactory(RedisProperties redisProperties) {
         final RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisProperties.getIp(), redisProperties.getPort());
         configuration.setDatabase(redisProperties.getDatabase());
-        if (redisProperties.getPassword() != null && !redisProperties.getPassword().equals("")) {
+        if (redisProperties.getPassword() != null && !"".equals(redisProperties.getPassword())) {
             configuration.setPassword(redisProperties.getPassword());
         }
 
-        final LettuceConnectionFactory factory = new LettuceConnectionFactory(configuration, getLettucePoolingClientConfiguration(redisProperties));
+
+        final LettuceConnectionFactory factory = new LettuceConnectionFactory(configuration, getLettucePoolingClientConfiguration(redisProperties, null));
         factory.afterPropertiesSet();
         return factory;
     }
@@ -206,17 +212,16 @@ public class MyRedisConfig {
     private LettuceConnectionFactory getLettuceClusterConnectionFactory(RedisProperties redisProperties) {
 
         RedisClusterConfiguration redisClusterConfiguration = new RedisClusterConfiguration();
-        if (redisProperties.getPassword() != null && !redisProperties.getPassword().equals("")) {
+        if (redisProperties.getPassword() != null && !"".equals(redisProperties.getPassword())) {
             redisClusterConfiguration.setPassword(redisProperties.getPassword());
         }
         if (redisProperties.getClusterNodes() == null || redisProperties.getClusterNodes().isEmpty()) {
             throw new RuntimeException("当前为redis集群模式，redis node配置错误: 应该为 ip:port,ip:port 格式");
         }
         List<String> clusterNodes = redisProperties.getClusterNodes();
-        for (int i = 0; i < clusterNodes.size(); i++) {
-            String s = clusterNodes.get(i);
+        for (String s : clusterNodes) {
             String[] split = s.split(":");
-            if (split == null || split.length != 2) {
+            if (split.length != 2) {
                 throw new RuntimeException("redis 节点配置错误: " + s + " 应该为 ip:port 格式");
             }
             Integer port = null;
@@ -231,26 +236,44 @@ public class MyRedisConfig {
 
         }
 
-        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisClusterConfiguration, getLettucePoolingClientConfiguration(redisProperties));
+        //开启 自适应集群拓扑刷新和周期拓扑刷新
+// Configure the topology refreshment optionts
+        final ClusterTopologyRefreshOptions topologyOptions =
+            ClusterTopologyRefreshOptions.builder()
+                .enableAllAdaptiveRefreshTriggers()
+                .enablePeriodicRefresh()
+                .build();
+
+        // https://github.com/lettuce-io/lettuce-core/wiki/Client-Options
+        ClientOptions clientOptions = ClusterClientOptions.builder()
+            .topologyRefreshOptions(topologyOptions)
+            .build();
+
+
+        LettuceConnectionFactory factory = new LettuceConnectionFactory(redisClusterConfiguration, getLettucePoolingClientConfiguration(redisProperties, clientOptions));
         factory.afterPropertiesSet();
         return factory;
 
 
     }
 
-    private LettucePoolingClientConfiguration getLettucePoolingClientConfiguration(RedisProperties redisProperties) {
+    private LettucePoolingClientConfiguration getLettucePoolingClientConfiguration(RedisProperties redisProperties, ClientOptions clientOptions) {
 
         GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
         poolConfig.setMaxIdle(redisProperties.getMaxIdle());
         poolConfig.setMinIdle(redisProperties.getMinIdle());
         poolConfig.setMaxTotal(redisProperties.getMaxActive());
-
-        final LettucePoolingClientConfiguration lettucePoolingClientConfiguration = LettucePoolingClientConfiguration.builder().
+        LettucePoolingClientConfigurationBuilder lettucePoolingClientConfigurationBuilder = LettucePoolingClientConfiguration.builder().
             commandTimeout(Duration.ofMillis(redisProperties.getConnectionTimeout()))
             .shutdownTimeout(Duration.ofMillis(redisProperties.getSoTimeout()))
-            .poolConfig(poolConfig)
+            .poolConfig(poolConfig);
+        if (null != clientOptions) {
+            lettucePoolingClientConfigurationBuilder
+                .clientOptions(clientOptions);
+        }
+        return lettucePoolingClientConfigurationBuilder
             .build();
-        return lettucePoolingClientConfiguration;
+
     }
 
     /**
