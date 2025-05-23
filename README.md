@@ -18,5 +18,7 @@
 
 ### MQ
 
+- A simple Java project scaffolding designed to help learners quickly get started. It includes various learning demos and showcases the latest technologies, providing a practical foundation for understanding and mastering Java development.
+
 - <a href="https://www.jetbrains.com"><img src="https://bkimg.cdn.bcebos.com/pic/b3fb43166d224f4a20a4541007a587529822720e7b2c?x-bce-process=image/resize,m_lfit,w_536,limit_1/format,f_auto" 
   width="100px" alt="jetbrains">**thanks JetBrains = License**</a>
