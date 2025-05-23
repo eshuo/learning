@@ -1106,15 +1106,33 @@ public class DateUtil {
     }
 
 
+    /**
+     * 时间计算
+     * @param date 要计算的时间
+     * @param field Calendar.DAY_OF_MONTH 等常量
+     * @param offset 正数加，负数减
+     * @return
+     */
+    public static Date offset(Date date,Integer field,int offset){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(field,offset);
+        return calendar.getTime();
+    }
+
+
     public static void main(String[] args) {
 
 
-        final Date firstDayOfCurrentMonth = getFirstDayOfCurrentMonth();
+//        final Date firstDayOfCurrentMonth = getFirstDayOfCurrentMonth();
+//
+//        System.out.println(firstDayOfCurrentMonth);
+//
+//
+//        System.out.println(getLastDayOfCurrentMonth());
+//
 
-        System.out.println(firstDayOfCurrentMonth);
-
-
-        System.out.println(getLastDayOfCurrentMonth());
+        System.out.println(getDate(offset(new Date(),Calendar.YEAR,-1)));
 
 
     }
