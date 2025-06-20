@@ -1,6 +1,7 @@
 package com.example.redisdemo.utils;
 
 import com.example.redisdemo.properties.RedisProperties;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -612,9 +613,23 @@ public class RedisUtils {
      */
 
     public Long listAddInEnd(String key, Object value) {
+//        key = getPrefixKey(key);
+        try {
+            return listAddInEnd(key, value, -1L);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return 0L;
+    }
+
+    public Long listAddInEnd(String key, Object value, Long time) {
         key = getPrefixKey(key);
         try {
-            return redisTemplate.opsForList().rightPush(key, value);
+            Long l = redisTemplate.opsForList().rightPush(key, value);
+            if (time > 0) {
+                redisTemplate.expire(key, Duration.ofSeconds(time));
+            }
+            return l;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -629,10 +644,24 @@ public class RedisUtils {
      * @return
      */
 
-    public Long listAddAllInEnd(String key, Collection<Object> values) {
+    public <T> Long listAddAllInEnd(String key, Collection<T> values) {
         key = getPrefixKey(key);
         try {
-            return redisTemplate.opsForList().rightPushAll(key, values);
+            return listAddAllInEnd(key, values,-1);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return 0L;
+    }
+
+    public <T> Long listAddAllInEnd(String key, Collection<T> values,long time) {
+        key = getPrefixKey(key);
+        try {
+            Long l = redisTemplate.opsForList().rightPushAll(key, values);
+            if (time > 0) {
+                redisTemplate.expire(key, Duration.ofSeconds(time));
+            }
+            return l;
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -682,9 +711,9 @@ public class RedisUtils {
      * @return
      */
 
-    public List<Object> listGetByRange(String key, long start, long end) {
+    public <T> List<T> listGetByRange(String key, long start, long end) {
         key = getPrefixKey(key);
-        return redisTemplate.opsForList().range(key, start, end);
+        return (List<T>) redisTemplate.opsForList().range(key, start, end);
     }
 
     /**
