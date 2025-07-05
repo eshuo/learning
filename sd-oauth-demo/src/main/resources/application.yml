@@ -30,6 +30,6 @@ demo:
     accessToken: ${demo.oauth.url}/sso/api/v1.0/oauth/accessToken
     userInfo: ${demo.oauth.url}/sso/api/v1.0/ssoToken/getUserInfo
   ticket:
-    iamUrl: http://10.3.44.180:18091 #IAM服务地址
+    iamUrl: http://127.0.0.1:18091 #IAM服务地址
     applyUrl: /auth/api/v1/function/sso #申请票据地址
     userInfoUrl: /sso/api/v1.0/ssoToken/getUserInfo #单点获取用户信息统一接口
