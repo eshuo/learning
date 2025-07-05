@@ -1,4 +1,4 @@
-package com.wyci.sdoauthdemo;
+package com.wyci.sso.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

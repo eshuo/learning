@@ -1,4 +1,4 @@
-package com.wyci.sdoauthdemo.demos.web;
+package com.wyci.sso.demo.demos.web;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -79,9 +79,13 @@ public class OauthDemoController {
     }
 
 
+    //iam配置对应应用编码 单点地址为:http://ip:8080/sso
+
+    //浏览器访问 http://ip:8080/sso
     @GetMapping(path = {"/accessToken", "/token", "/sso"})
     public Object accessToken(@RequestParam(value = "code", required = false) String code, HttpServletResponse response) throws IOException {
 
+        //如果code为空  就重定向到申请code地址
         if (ObjectUtils.isEmpty(code)) {
             response.sendRedirect(redirect);
             return "redirect:" + redirect;
@@ -90,6 +94,8 @@ public class OauthDemoController {
         System.err.println("获取code==============" + code);
         try {
             RestTemplate restTemplate = new RestTemplate();
+
+            //申请令牌
             String getTokenURL =
                 accessToken + "?grant_type=authorization_code" + "&client_id=" + appCode + "&client_secret=" + secret + "&code=" + code + "&redirect_uri=xxx";
 
@@ -119,12 +125,5 @@ public class OauthDemoController {
             return e.getMessage();
         }
     }
-
-
-    public class OauthData {
-
-
-    }
-
 
 }

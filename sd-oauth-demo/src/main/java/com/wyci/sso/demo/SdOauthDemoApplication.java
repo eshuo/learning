@@ -1,4 +1,4 @@
-package com.wyci.sdoauthdemo;
+package com.wyci.sso.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

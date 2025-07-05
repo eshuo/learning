@@ -34,6 +34,8 @@
     <module>jpa-utils</module>
     <module>io-demo</module>
     <module>wx-demo</module>
+    <module>sd-oauth-demo</module>
+    <module>ai</module>
   </modules>
 
   <properties>
