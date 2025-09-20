@@ -6,13 +6,22 @@ import com.example.mongo.utils.ReflectUtil;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.convert.MongoConverter;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.QueryMapper;
 import org.springframework.data.mongodb.core.convert.UpdateMapper;
 import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
@@ -21,21 +30,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @Description
  * @Author wangshuo
  * @Date 2022-08-08 10:57
  * @Version V1.0
  */
-abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
+public abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
 
     private final static Logger log = LoggerFactory.getLogger(AbstractMongoServiceImpl.class);
 
@@ -43,7 +44,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     protected MongoTemplate mongoTemplate;
 
     @Autowired
-    protected MongoConverter mongoConverter;
+    protected MappingMongoConverter mappingMongoConverter;
 
     protected QueryMapper queryMapper;
 
@@ -60,8 +61,8 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
 
     @PostConstruct
     public void init() {
-        queryMapper = new QueryMapper(mongoConverter);
-        updateMapper = new UpdateMapper(mongoConverter);
+        queryMapper = new QueryMapper(mappingMongoConverter);
+        updateMapper = new UpdateMapper(mappingMongoConverter);
     }
 
 
@@ -179,7 +180,6 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     @Override
     public Page<T> findPage(Page<T> page, T t) {
         return findPage(page, createQuery(t));
-
     }
 
     @Override
@@ -207,8 +207,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
 
     public static <T> Update createUpdate(T t) {
         Update update = new Update();
-        Field[] fields = t.getClass().getDeclaredFields();
-        for (Field field : fields) {
+        for (Field field : getAllFields(t.getClass())) {
             field.setAccessible(true);
             try {
                 Object value = field.get(t);
@@ -239,7 +238,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
         if (t == null) {
             return query;
         }
-        for (Field field : t.getClass().getDeclaredFields()) {
+        for (Field field :getAllFields(t.getClass())) {
             field.setAccessible(true);
             try {
                 Object value = field.get(t);
@@ -268,6 +267,26 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
             query.with(page.toPageRequest());
         }
         return query;
+    }
+
+
+    public static List<Field> getAllFields(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        List<Class<?>> classHierarchy = new ArrayList<>();
+
+        // 先收集继承链（Object 不要）
+        while (clazz != null && clazz != Object.class) {
+            classHierarchy.add(clazz);
+            clazz = clazz.getSuperclass();
+        }
+
+        // 逆序遍历：先父类，再子类
+        Collections.reverse(classHierarchy);
+
+        for (Class<?> c : classHierarchy) {
+            Collections.addAll(fields, c.getDeclaredFields());
+        }
+        return fields;
     }
 
     /**
@@ -302,7 +321,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
 
         if (index >= params.length || index < 0) {
             log.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: "
-                    + params.length);
+                + params.length);
             return Object.class;
         }
         if (!(params[index] instanceof Class)) {
@@ -322,7 +341,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     private void logQuery(Query query) {
         if (print) {
             Class<?> clazz = this.getEntityClass();
-            MongoPersistentEntity<?> entity = mongoConverter.getMappingContext().getPersistentEntity(clazz);
+            MongoPersistentEntity<?> entity = mappingMongoConverter.getMappingContext().getPersistentEntity(clazz);
             Document mappedQuery = queryMapper.getMappedObject(query.getQueryObject(), entity);
             Document mappedField = queryMapper.getMappedObject(query.getFieldsObject(), entity);
             Document mappedSort = queryMapper.getMappedObject(query.getSortObject(), entity);
@@ -362,7 +381,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     private void logCount(Query query) {
         if (print) {
             Class<?> clazz = this.getEntityClass();
-            MongoPersistentEntity<?> entity = mongoConverter.getMappingContext().getPersistentEntity(clazz);
+            MongoPersistentEntity<?> entity = mappingMongoConverter.getMappingContext().getPersistentEntity(clazz);
             Document mappedQuery = queryMapper.getMappedObject(query.getQueryObject(), entity);
 
             String logStr = "\ndb." + FormatUtils.lowerFirst(clazz.getSimpleName()) + ".find(";
@@ -381,7 +400,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     private void logDelete(Query query) {
         if (print) {
             Class<?> clazz = this.getEntityClass();
-            MongoPersistentEntity<?> entity = mongoConverter.getMappingContext().getPersistentEntity(clazz);
+            MongoPersistentEntity<?> entity = mappingMongoConverter.getMappingContext().getPersistentEntity(clazz);
             Document mappedQuery = queryMapper.getMappedObject(query.getQueryObject(), entity);
 
             String logStr = "\ndb." + FormatUtils.lowerFirst(clazz.getSimpleName()) + ".remove(";
@@ -399,7 +418,7 @@ abstract class AbstractMongoServiceImpl<T> implements IMongoBaseService<T> {
     private void logUpdate(Query query, Update update) {
         if (print) {
             Class<?> clazz = this.getEntityClass();
-            MongoPersistentEntity<?> entity = mongoConverter.getMappingContext().getPersistentEntity(clazz);
+            MongoPersistentEntity<?> entity = mappingMongoConverter.getMappingContext().getPersistentEntity(clazz);
             Document mappedQuery = queryMapper.getMappedObject(query.getQueryObject(), entity);
             Document mappedUpdate = updateMapper.getMappedObject(update.getUpdateObject(), entity);
 
