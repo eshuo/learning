@@ -1,8 +1,12 @@
 package com.example.mongo.utils;
 
+import com.example.mongo.entity.DistributedLock;
 import com.example.mongo.rest.Page;
+import com.example.mongo.service.DistributedLockService;
+import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -31,8 +35,11 @@ public class MongoUtils implements Serializable {
     private final MongoTemplate mongoTemplate;
 
 
-    public MongoUtils(MongoTemplate mongoTemplate) {
+    private final DistributedLockService distributedLockService;
+
+    public MongoUtils(MongoTemplate mongoTemplate, DistributedLockService distributedLockService) {
         this.mongoTemplate = mongoTemplate;
+        this.distributedLockService = distributedLockService;
     }
 
     /**
@@ -364,5 +371,59 @@ public class MongoUtils implements Serializable {
 
 
     //TODO 关联查询     AggregationOperation            Aggregation         mongoTemplate.aggregate
+
+    /**
+     * 加锁(默认30分钟)
+     *
+     * @param key
+     * @return
+     */
+    public boolean lock(String key) {
+        return lock(key, 3600L);
+    }
+
+    /**
+     * 尝试获取锁（使用 findAndModify 原子操作）
+     *
+     * @param key           加锁key
+     * @param expireSeconds 过期时间(s)
+     * @return
+     */
+    public boolean lock(String key, long expireSeconds) {
+        Long now = new Date().getTime();
+        Long expireAt = now + expireSeconds * 1000;
+
+        try {
+            try {
+                // 1. 原子插入（唯一键冲突表示锁存在）
+                DistributedLock distributedLock = new DistributedLock(key, expireAt);
+                distributedLockService.getMongoTemplate().insert(distributedLock);
+                return true;
+            } catch (DuplicateKeyException e) {
+                // 2. 已存在锁，判断是否过期
+                DistributedLock distributedLock = distributedLockService.findById(key);
+                if (null != distributedLock) {
+                    if (distributedLock.getExpire() > now) {
+                        return false;
+                    }
+                    distributedLock.setExpire(expireAt);
+                    return distributedLockService.updateFirst(distributedLock);
+                } else {
+                    return lock(key, expireSeconds);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("lock error:", e);
+            return false;
+        }
+    }
+
+    /**
+     * 释放锁
+     */
+    public void unlock(String key) {
+        distributedLockService.deleteById(key);
+    }
 
 }

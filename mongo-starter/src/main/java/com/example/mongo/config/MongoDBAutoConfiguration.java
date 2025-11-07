@@ -1,5 +1,6 @@
 package com.example.mongo.config;
 
+import com.example.mongo.service.DistributedLockService;
 import com.example.mongo.utils.MongoUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +19,8 @@ public class MongoDBAutoConfiguration {
 
 
     @Bean
-    public MongoUtils mongoUtils(MongoTemplate mongoTemplate) {
-        return new MongoUtils(mongoTemplate);
+    public MongoUtils mongoUtils(MongoTemplate mongoTemplate, DistributedLockService distributedLockService) {
+        return new MongoUtils(mongoTemplate,distributedLockService);
     }
 
 }
