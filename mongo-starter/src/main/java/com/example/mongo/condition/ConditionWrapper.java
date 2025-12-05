@@ -1,6 +1,7 @@
 package com.example.mongo.condition;
 
 import com.example.mongo.rest.Page;
+import com.example.mongo.service.AbstractMongoServiceImpl;
 import com.example.mongo.utils.ReflectUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -125,7 +126,7 @@ public class ConditionWrapper<T> {
         List<Criteria> criteriaOrList = new ArrayList<>(5);
 
         if (null != modal) {
-            for (Field field : modal.getClass().getDeclaredFields()) {
+            for (Field field : AbstractMongoServiceImpl.getAllFields(modal.getClass())) {
                 convertCriteria(criteriaAddList,modal,field,null);
             }
         }
@@ -157,8 +158,8 @@ public class ConditionWrapper<T> {
             final ClassLoader classLoader = value.getClass().getClassLoader();
             if (null != classLoader) {
                 try {
-                    final Field[] declaredFields = value.getClass().getDeclaredFields();
-                    if (declaredFields.length > 0) {
+                    final List<Field> declaredFields =  AbstractMongoServiceImpl.getAllFields(value.getClass());
+                    if (!declaredFields.isEmpty()) {
                         for (Field declaredField : declaredFields) {
                             convertCriteria(criteriaAddList, value, declaredField, fieIdName);
                         }
@@ -273,13 +274,13 @@ public class ConditionWrapper<T> {
             return "";
         }
         return String.valueOf(str).replace("\\", "\\\\").replace("*", "\\*")//
-                .replace("+", "\\+").replace("|", "\\|")//
-                .replace("{", "\\{").replace("}", "\\}")//
-                .replace("(", "\\(").replace(")", "\\)")//
-                .replace("^", "\\^").replace("$", "\\$")//
-                .replace("[", "\\[").replace("]", "\\]")//
-                .replace("?", "\\?").replace(",", "\\,")//
-                .replace(".", "\\.").replace("&", "\\&");
+            .replace("+", "\\+").replace("|", "\\|")//
+            .replace("{", "\\{").replace("}", "\\}")//
+            .replace("(", "\\(").replace(")", "\\)")//
+            .replace("^", "\\^").replace("$", "\\$")//
+            .replace("[", "\\[").replace("]", "\\]")//
+            .replace("?", "\\?").replace(",", "\\,")//
+            .replace(".", "\\.").replace("&", "\\&");
     }
 
 
